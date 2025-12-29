@@ -27,7 +27,8 @@ disp = st7789.ST7789(
     width=240,
     height=240,
     x_offset=0,  # Try 0 or 80 if image is shifted
-    y_offset=0   # Try 0 or 80 if image is shifted
+    y_offset=80,   # Try 0 or 80 if image is shifted
+    rotation=90,
 )
 
 # Initialize backlight (if connected to D23)
