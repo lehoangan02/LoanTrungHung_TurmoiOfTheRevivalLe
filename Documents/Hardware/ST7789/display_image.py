@@ -1,73 +1,60 @@
 import time
 import digitalio
 import board
-from PIL import Image, ImageOps
+from PIL import Image
 from adafruit_rgb_display import st7789
 
-# --- Configuration for 1.54" 240x240 Display ---
-
-# Define pins
+# --- Hardware Setup ---
 cs_pin = digitalio.DigitalInOut(board.D8)
 dc_pin = digitalio.DigitalInOut(board.D24)
 reset_pin = digitalio.DigitalInOut(board.D25)
-
-# Config for SPI
-BAUDRATE = 24000000  # 24 MHz
 spi = board.SPI()
 
-# Initialize Display
-# Note: Some generic displays require rotation=90 or offsets.
-# If colors are wrong, try invert=True or False.
+# --- Display Initialization ---
+# Critical: 'y_offset=80' is required to fix the 
+# static rainbow bar and aspect ratio on this specific 240x240 module.
 disp = st7789.ST7789(
     spi,
     cs=cs_pin,
     dc=dc_pin,
     rst=reset_pin,
-    baudrate=BAUDRATE,
+    baudrate=24000000,
     width=240,
     height=240,
-    x_offset=0,  # Try 0 or 80 if image is shifted
-    y_offset=80,   # Try 0 or 80 if image is shifted
-    rotation=90,
+    x_offset=0,
+    y_offset=80, 
+    rotation=90
 )
 
-# Initialize backlight (if connected to D23)
+# Attempt to turn on backlight (if wired to D23)
 try:
     backlight = digitalio.DigitalInOut(board.D23)
-    backlight.switch_to_output()
-    backlight.value = True
-except:
-    pass # Backlight might be hardwired to VCC
+    backlight.switch_to_output(value=True)
+except Exception:
+    pass
 
-# Create blank image for drawing
-# Make sure to create an image with the same dimensions as the display
+# --- Load & Display Image ---
+image_path = "image.jpeg"
 width = disp.width
 height = disp.height
 
-# --- Load and Process Image ---
-
-image_path = "image.jpeg"
-
 try:
-    print(f"Loading {image_path}...")
     image = Image.open(image_path)
-
-    # Resize the image to fit the screen (240x240)
-    # ANTIALIAS is renamed to Resampling.LANCZOS in newer Pillow versions
+    
+    # Handle resizing for different Pillow versions
     try:
         resample_filter = Image.Resampling.LANCZOS
     except AttributeError:
         resample_filter = Image.ANTIALIAS
-        
-    image = image.resize((width, height), resample_filter)
 
-    # Display the image
-    print("Displaying image...")
+    # Resize and display
+    image = image.resize((width, height), resample_filter)
     disp.image(image)
+    print(f"Displayed {image_path} successfully.")
 
 except FileNotFoundError:
-    print(f"Error: Could not find {image_path}. Please check the filename.")
+    print(f"Error: Could not find {image_path}")
 
-# Keep the script running so the image stays up
+# Keep script running
 while True:
     time.sleep(1)
