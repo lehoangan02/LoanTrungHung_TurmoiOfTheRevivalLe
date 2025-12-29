@@ -1,0 +1,6 @@
+KY-040 Pin,Raspberry Pi Pin,Function
+GND,"GND (Physical Pin 6, 9, etc.)",Ground
+"+ (VCC)","3.3V (Physical Pin 1 or 17)",Power
+SW,"GPIO 22 (Physical Pin 15)",Button Switch
+DT,"GPIO 18 (Physical Pin 12)",Direction Signal
+CLK,"GPIO 17 (Physical Pin 11)",Clock Signal
