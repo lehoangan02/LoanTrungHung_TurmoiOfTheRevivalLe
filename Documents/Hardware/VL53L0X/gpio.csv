@@ -1,0 +1,5 @@
+VL53L0X Pin,Raspberry Pi Pin,Pin Number (Physical),Function
+VCC / VIN,3.3V,Pin 1,Power
+GND,GND,Pin 6,Ground
+SDA,GPIO 2,Pin 3,Data (I2C)
+SCL,GPIO 3,Pin 5,Clock (I2C)
