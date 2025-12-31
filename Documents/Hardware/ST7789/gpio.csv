@@ -1,0 +1,9 @@
+ST7789 Pin,Raspberry Pi Pin,GPIO Number,Function
+VCC,Pin 1 or 17,3.3V,Power
+GND,"Pin 6, 9, etc.",GND,Ground
+SCL / SCK,Pin 23,GPIO 11,SPI0 SCLK
+SDA / MOSI,Pin 19,GPIO 10,SPI0 MOSI
+RES / RST,Pin 22,GPIO 25,Reset
+DC,Pin 21,GPIO 9,Data/Command
+CS,Pin 24,GPIO 8,SPI0 CE0
+BLK,(Optional),-,Backlight (can leave floating or 3.3V)
