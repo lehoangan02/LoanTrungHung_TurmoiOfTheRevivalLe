@@ -80,6 +80,12 @@ class ST7789Screen:
             pass
         finally:
             cap.release()
+    def display_frame(self, frame):
+        frame = cv2.resize(frame, (self.width, self.height))
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = Image.fromarray(frame)
+        self.disp.image(image)
+
 
     def clear(self):
         self.disp.image(Image.new("RGB", (self.width, self.height), (0, 0, 0)))
