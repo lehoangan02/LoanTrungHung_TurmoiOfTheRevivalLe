@@ -16,6 +16,7 @@ function GameManager:start()
 end
 function GameManager:update(dt)
     inputManager:update()
+    GameManager.currentLevel:update(dt)
 end
 function GameManager:pause()
 end
