@@ -23,7 +23,7 @@ disp = st7789.ST7789(
     height=240,
     x_offset=0,
     y_offset=80, 
-    rotation=90
+    rotation=270
 )
 
 # Attempt to turn on backlight (if wired to D23)
