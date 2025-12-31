@@ -5,3 +5,6 @@ def main():
     path = "./Water_lily_opening_bloom_20fps.ogv"
     screen.display_video(path, loop=False)
     screen.clear()
+
+if __name__ == "__main__":
+    main()
