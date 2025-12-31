@@ -54,7 +54,3 @@ try:
 
 except FileNotFoundError:
     print(f"Error: Could not find {image_path}")
-
-# Keep script running
-while True:
-    time.sleep(1)
