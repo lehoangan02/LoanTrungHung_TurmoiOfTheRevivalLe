@@ -42,3 +42,6 @@ luac.out
 Documents/Hardware/.DS_Store
 Documents/.DS_Store
 Learn/.DS_Store
+/.env
+.DS_Store
+.DS_Store
