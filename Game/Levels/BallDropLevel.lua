@@ -20,7 +20,7 @@ function BallDropLevel:load()
     local camera = require("Game.Libraries.camera")
     BallDropLevel.cam = camera()
     local wf = require("Game/Libraries/windfield")
-    BallDropLevel.worldGravity = 2000
+    BallDropLevel.worldGravity = 300
     BallDropLevel.world = wf.newWorld(0, BallDropLevel.worldGravity, false)
     BallDropLevel.worldRotation = 0
     BallDropLevel.walls = {}
@@ -46,27 +46,13 @@ function BallDropLevel:update(dt)
         local tx = -gny
         local ty = gnx
 
-        local tangentialSpeed = -(velX * tx + velY * ty)
+        local tangentialSpeed = -(velX * tx + velY * ty) * 3
 
         BallDropLevel.ballRotation =
             BallDropLevel.ballRotation + (tangentialSpeed / BallDropLevel.ballRadius) * dt
     end
 
     InputManager = require("Game.InputManager")
-
-    local vx, vy = 0, 0
-    if InputManager:isKeyRightPressed() then
-        vx = vx + BallDropLevel.ballMoveSpeed
-    end
-    if InputManager:isKeyLeftPressed() then
-        vx = vx - BallDropLevel.ballMoveSpeed
-    end
-    if InputManager:isKeyDownPressed() then
-        vy = vy + BallDropLevel.ballMoveSpeed
-    end
-    if InputManager:isKeyUpPressed() then
-        vy = vy - BallDropLevel.ballMoveSpeed
-    end
     if InputManager:isRightRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
         BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed)
@@ -79,7 +65,6 @@ function BallDropLevel:update(dt)
     gx = BallDropLevel.worldGravity * math.sin(BallDropLevel.worldRotation)
     gy = BallDropLevel.worldGravity * math.cos(BallDropLevel.worldRotation)
     BallDropLevel.world:setGravity(gx, gy)
-    BallDropLevel.ballCollider:setLinearVelocity(vx, vy)
     BallDropLevel.world:update(dt)
     BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
     BallDropLevel.cam:lookAt(120, BallDropLevel.ballY)
