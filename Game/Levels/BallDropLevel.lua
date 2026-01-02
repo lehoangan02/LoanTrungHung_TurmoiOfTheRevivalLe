@@ -11,7 +11,6 @@ function BallDropLevel:load()
     BallDropLevel.ballImage = love.graphics.newImage("Resources/Images/Cannon_ball.png")
     BallDropLevel.ballImage:setFilter("nearest", "nearest")
     BallDropLevel.ballRotation = 0
-    BallDropLevel.ballRotationSpeed = 5
     BallDropLevel.ballRadius = 7
     BallDropLevel.ballMoveSpeed = 100
     BallDropLevel.worldRotateSpeed = 2
@@ -33,6 +32,7 @@ function BallDropLevel:load()
     end
 
     BallDropLevel.ballCollider = BallDropLevel.world:newCircleCollider(BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRadius)
+    BallDropLevel.ballCollider:setRestitution(0.4)
 end
 function BallDropLevel:update(dt)
     local velX, velY = BallDropLevel.ballCollider:getLinearVelocity()
@@ -47,10 +47,18 @@ function BallDropLevel:update(dt)
         local ty = gnx
 
         local tangentialSpeed = -(velX * tx + velY * ty) * 3
+        local rotateSpeedLimit = 120
+        if tangentialSpeed > rotateSpeedLimit then
+            tangentialSpeed = rotateSpeedLimit
+        elseif tangentialSpeed < -rotateSpeedLimit then
+            tangentialSpeed = -rotateSpeedLimit
+        end
 
         BallDropLevel.ballRotation =
             BallDropLevel.ballRotation + (tangentialSpeed / BallDropLevel.ballRadius) * dt
+    
     end
+
 
     InputManager = require("Game.InputManager")
     if InputManager:isRightRudderPressed() then
@@ -70,6 +78,7 @@ function BallDropLevel:update(dt)
     BallDropLevel.cam:lookAt(120, BallDropLevel.ballY)
 end
 function BallDropLevel:draw(windowWidth, windowHeight)
+    love.graphics.clear(176/255, 174/255, 167/255, 1)
     local scaleX = windowHeight / BASE_H
     local scaleY = windowWidth / BASE_W
     local centerX = windowWidth / 2
