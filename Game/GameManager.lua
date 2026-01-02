@@ -1,6 +1,6 @@
 local LevelEnum = require("Game.Levels.LevelEnum")
 local levelLoader = require("Game.Levels.LevelLoader")
-local inputManager = require("Game.InputManager")
+local inputManager = require("Game.Input.InputManager")
 
 local GameManager = {}
 GameManager.__index = GameManager
