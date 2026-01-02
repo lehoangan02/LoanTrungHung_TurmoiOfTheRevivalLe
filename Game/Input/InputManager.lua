@@ -3,7 +3,7 @@ local InputManager = {}
 function InputManager:load()
     InputManager.wasPauseKeyPressed = false
     InputManager.pauseSignaled = false
-    KY040 = require("Game.Services.KY040")
+    InputManager.KY040 = require("Game.Services.KY040")
 
 end
 
@@ -11,7 +11,7 @@ function InputManager:update()
     local isCurrentlyPressed = love.keyboard.isDown("p")
     self.pauseSignaled = isCurrentlyPressed and not self.wasPauseKeyPressed
     self.wasPauseKeyPressed = isCurrentlyPressed
-    KY040:update()
+    InputManager.KY040:update()
 end
 
 function InputManager:isEventPauseKeyPressed()
