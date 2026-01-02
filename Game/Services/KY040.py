@@ -3,7 +3,7 @@ from UdpInputTransport import UdpInputTransport
 
 class KY040Encoder:
     def __init__(self, transport: UdpInputTransport, clk=17, dt=18, sw=22):
-        self.encoder = RotaryEncoder(a=clk, b=dt, max_steps=0, bounce_time=0.0005)
+        self.encoder = RotaryEncoder(a=clk, b=dt, max_steps=0, bounce_time=0.003, pull_up=True)
         self.button = Button(sw)
         self.transport = transport
 
