@@ -60,12 +60,12 @@ function BallDropLevel:update(dt)
     end
 
 
-    InputManager = require("Game.InputManager")
-    if InputManager:isRightRudderPressed() then
+    InputManager = require("Game.Input.InputManager")
+    if InputManager:isRightRudderPressed()  or InputManager:isEventKY040RightTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
         BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed)
     end
-    if InputManager:isLeftRudderPressed() then
+    if InputManager:isLeftRudderPressed() or InputManager:isEventKY040LeftTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
         BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed)
     end

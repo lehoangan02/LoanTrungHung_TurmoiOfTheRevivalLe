@@ -1,12 +1,17 @@
 local InputManager = {}
 
-InputManager.wasPauseKeyPressed = false
-InputManager.pauseSignaled = false
+function InputManager:load()
+    InputManager.wasPauseKeyPressed = false
+    InputManager.pauseSignaled = false
+    KY040 = require("Game.Services.KY040")
+
+end
 
 function InputManager:update()
     local isCurrentlyPressed = love.keyboard.isDown("p")
     self.pauseSignaled = isCurrentlyPressed and not self.wasPauseKeyPressed
     self.wasPauseKeyPressed = isCurrentlyPressed
+    KY040:update()
 end
 
 function InputManager:isEventPauseKeyPressed()
@@ -35,6 +40,18 @@ end
 
 function InputManager:isRightRudderPressed()
     return love.keyboard.isDown("e")
+end
+
+function InputManager:isEventKY040ButtonPressed()
+    return KY040:isButtonPressed()
+end
+
+function InputManager:isEventKY040RightTurned()
+    return KY040:isRightTurned()
+end
+
+function InputManager:isEventKY040LeftTurned()
+    return KY040:isLeftTurned()
 end
 
 return InputManager

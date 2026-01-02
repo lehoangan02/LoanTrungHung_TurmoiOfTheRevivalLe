@@ -67,3 +67,8 @@ sudo pip3 install adafruit-circuitpython-vl53l0x
 sudo apt-get install python3-pil
 sudo pip3 install pillow
 ```
+
+# Receive UDP in Lua
+```
+sudo apt install lua-socket
+```
