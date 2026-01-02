@@ -13,9 +13,12 @@ class KY040Encoder:
 
     def _on_left(self):
         self.transport.send("ENCODER_LEFT")
+        print("Left")
 
     def _on_right(self):
         self.transport.send("ENCODER_RIGHT")
+        print("Right")
 
     def _on_press(self):
         self.transport.send("ENCODER_BUTTON")
+        print("Button Pressed")
