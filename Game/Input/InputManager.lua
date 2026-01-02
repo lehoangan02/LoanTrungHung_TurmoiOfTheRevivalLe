@@ -3,7 +3,7 @@ local InputManager = {}
 function InputManager:load()
     InputManager.wasPauseKeyPressed = false
     InputManager.pauseSignaled = false
-    InputManager.KY040 = require("Game.Services.KY040")
+    InputManager.KY040 = require("Game.Input.KY040")
 
 end
 
@@ -43,15 +43,15 @@ function InputManager:isRightRudderPressed()
 end
 
 function InputManager:isEventKY040ButtonPressed()
-    return KY040:isButtonPressed()
+    return InputManager.KY040:isEventPressed("ENCODER_BUTTON")
 end
 
 function InputManager:isEventKY040RightTurned()
-    return KY040:isRightTurned()
+    return InputManager.KY040:isEventPressed("ENCODER_RIGHT")
 end
 
 function InputManager:isEventKY040LeftTurned()
-    return KY040:isLeftTurned()
+    return InputManager.KY040:isEventPressed("ENCODER_LEFT")
 end
 
 return InputManager
