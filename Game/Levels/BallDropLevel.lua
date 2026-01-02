@@ -70,10 +70,10 @@ function BallDropLevel:update(dt)
     end
     if InputManager:isEventKY040RightTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed * 3
-        BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed)
+        BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed * 3)
     elseif InputManager:isEventKY040LeftTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed * 3
-        BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed)
+        BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed * 3)
     end
     local gx, gy
     gx = BallDropLevel.worldGravity * math.sin(BallDropLevel.worldRotation)
