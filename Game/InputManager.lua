@@ -29,4 +29,12 @@ function InputManager:isKeyDownPressed()
     return love.keyboard.isDown("down") or love.keyboard.isDown("s")
 end
 
+function InputManager:isLeftRudderPressed()
+    return love.keyboard.isDown("q")
+end
+
+function InputManager:isRightRudderPressed()
+    return love.keyboard.isDown("e")
+end
+
 return InputManager
