@@ -149,7 +149,7 @@ function BallDropLevel:controlEnvironment(dt)
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
         BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed)
     end
-    local handCrankMultiplier = 2.5
+    local handCrankMultiplier = 3
     if InputManager:isEventKY040RightTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed * handCrankMultiplier
         BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed * handCrankMultiplier)
