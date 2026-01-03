@@ -14,8 +14,6 @@ function InputManager:update()
     self.wasPauseKeyPressed = isCurrentlyPressed
     InputManager.KY040:update()
     InputManager.Controller:update()
-    print("Left Stick: ", InputManager.Controller:getLeftStick())
-    print("Right Stick: ", InputManager.Controller:getRightStick())
 end
 
 function InputManager:isEventPauseKeyPressed()

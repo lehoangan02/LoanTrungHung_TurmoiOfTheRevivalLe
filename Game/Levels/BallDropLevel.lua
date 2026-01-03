@@ -16,6 +16,12 @@ function BallDropLevel:load()
     BallDropLevel.worldRotateSpeed = 2
     BallDropLevel.ballX = 100
     BallDropLevel.ballY = 50
+    BallDropLevel.cameraX = 120
+    BallDropLevel.cameraY = BallDropLevel.ballY
+    BallDropLevel.upperCameraLimitY = nil
+    BallDropLevel.lowerCameraLimitY = nil
+    BallDropLevel.currentZoom = 1.0
+    BallDropLevel.zoomSpeed = 0.15
     local camera = require("Game.Libraries.camera")
     BallDropLevel.cam = camera()
     local wf = require("Game/Libraries/windfield")
@@ -35,6 +41,58 @@ function BallDropLevel:load()
     BallDropLevel.ballCollider:setRestitution(0.6)
 end
 function BallDropLevel:update(dt)
+    BallDropLevel:rotateBall(dt)
+
+    BallDropLevel:controlEnvironment(dt)
+    
+    local gx, gy
+    gx = BallDropLevel.worldGravity * math.sin(BallDropLevel.worldRotation)
+    gy = BallDropLevel.worldGravity * math.cos(BallDropLevel.worldRotation)
+    BallDropLevel.world:setGravity(gx, gy)
+    BallDropLevel.world:update(dt)
+    BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
+    BallDropLevel:trackBall(dt)
+end
+
+function BallDropLevel:trackBall(dt)
+    local lookAhead = 30
+    local upperThres = 40
+    local lowerThres = -40
+    local targetY
+    local deltaY = BallDropLevel.ballY - BallDropLevel.cameraY
+    local deltaX = BallDropLevel.ballX - BallDropLevel.cameraX
+    local lookAheadStrength = 0.8
+    local localLookStrengthY = 0.5
+    if (deltaY > upperThres) then
+        targetY = BallDropLevel.ballY + lookAhead
+        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
+    elseif (deltaY < lowerThres) then
+        targetY = BallDropLevel.ballY - lookAhead / 2
+        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
+    else 
+        targetY = BallDropLevel.ballY
+        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * localLookStrengthY
+    end
+    local localLookStrengthX = 0.1
+    local targetX = BallDropLevel.ballX * 0.4 + 120 * 0.6
+    BallDropLevel.cameraX = BallDropLevel.cameraX + (targetX - BallDropLevel.cameraX) * dt * localLookStrengthX
+    
+    local desiredZoom = 1.0
+
+    if BallDropLevel.ballX < 60 or BallDropLevel.ballX > 180 then
+        desiredZoom = 1.1
+    end
+
+    BallDropLevel.currentZoom =
+        BallDropLevel.currentZoom +
+        (desiredZoom - BallDropLevel.currentZoom) * dt * BallDropLevel.zoomSpeed
+
+    BallDropLevel.cam:zoomTo(BallDropLevel.currentZoom)
+
+    BallDropLevel.cam:lookAt(BallDropLevel.cameraX, BallDropLevel.cameraY)
+end
+
+function BallDropLevel:rotateBall(dt)
     local velX, velY = BallDropLevel.ballCollider:getLinearVelocity()
 
     local gx, gy = BallDropLevel.world:getGravity()
@@ -58,8 +116,9 @@ function BallDropLevel:update(dt)
             BallDropLevel.ballRotation + (tangentialSpeed / BallDropLevel.ballRadius) * dt
     
     end
+end
 
-
+function BallDropLevel:controlEnvironment(dt)
     InputManager = require("Game.Input.InputManager")
     if InputManager:isRightRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
@@ -76,13 +135,19 @@ function BallDropLevel:update(dt)
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed * handCrankMultiplier
         BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed * handCrankMultiplier)
     end
-    local gx, gy
-    gx = BallDropLevel.worldGravity * math.sin(BallDropLevel.worldRotation)
-    gy = BallDropLevel.worldGravity * math.cos(BallDropLevel.worldRotation)
-    BallDropLevel.world:setGravity(gx, gy)
-    BallDropLevel.world:update(dt)
-    BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
-    BallDropLevel.cam:lookAt(120, BallDropLevel.ballY)
+    local joystickMultiplier = 4
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager.Controller:leftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
+    BallDropLevel.cam:rotate(InputManager.Controller:leftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager.Controller:rightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
+    BallDropLevel.cam:rotate(InputManager.Controller:rightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
+
+    local triggerMultiplier = 0.8 
+    local leftTriggerValue = InputManager.Controller:leftTriggerValue()
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + leftTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier
+    BallDropLevel.cam:rotate(leftTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier)
+    local rightTriggerValue = InputManager.Controller:rightTriggerValue()
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation - rightTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier
+    BallDropLevel.cam:rotate(-rightTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier)
 end
 function BallDropLevel:draw(windowWidth, windowHeight)
     love.graphics.clear(176/255, 174/255, 167/255, 1)
@@ -97,6 +162,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Background"])
         BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Wall"])
         BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["NonCollidable"])
+        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Enemies"])
         BallDropLevel.world:draw()
         love.graphics.draw(BallDropLevel.ballImage, BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRotation, 1, 1, 8, 8)
     BallDropLevel.cam:detach()
