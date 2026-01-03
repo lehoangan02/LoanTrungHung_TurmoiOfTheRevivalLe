@@ -36,22 +36,44 @@ function BallDropLevel:load()
             table.insert(BallDropLevel.walls, wall)
         end
     end
-
+    BallDropLevel.enemies = {}
+    BallDropLevel.world:addCollisionClass("Enemies")
+    if BallDropLevel.gameMap.layers["Enemies"] then
+        for i, obj in pairs(BallDropLevel.gameMap.layers["EnemiesCollidable"].objects)
+        do
+            local enemy = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            enemy:setType("static")
+            enemy:setCollisionClass("Enemies")
+            table.insert(BallDropLevel.enemies, enemy)
+        end
+    end
     BallDropLevel.ballCollider = BallDropLevel.world:newCircleCollider(BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRadius)
     BallDropLevel.ballCollider:setRestitution(0.6)
 end
 function BallDropLevel:update(dt)
+    BallDropLevel.gameMap:update(dt)
+
     BallDropLevel:rotateBall(dt)
 
     BallDropLevel:controlEnvironment(dt)
     
+    BallDropLevel:adjustGravity()
+    
+    BallDropLevel.world:update(dt)
+
+    if BallDropLevel.ballCollider:enter("Enemies") then
+        print("Collided with enemies")
+    end
+
+    BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
+    BallDropLevel:trackBall(dt)
+end
+
+function BallDropLevel:adjustGravity()
     local gx, gy
     gx = BallDropLevel.worldGravity * math.sin(BallDropLevel.worldRotation)
     gy = BallDropLevel.worldGravity * math.cos(BallDropLevel.worldRotation)
     BallDropLevel.world:setGravity(gx, gy)
-    BallDropLevel.world:update(dt)
-    BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
-    BallDropLevel:trackBall(dt)
 end
 
 function BallDropLevel:trackBall(dt)
