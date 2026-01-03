@@ -1,0 +1,4 @@
+Universal Game Crank by GameOfKnowing on Thingiverse: https://www.thingiverse.com/thing:3684105
+
+Summary:
+In Spring, 2019, software company Panic obliterated the gaming status quo with the announcement of its Playmate portable system. While its graphics were nothing to write home about, the Playmate's innovative crank controller interface revolutionized the ways in which players could interact with digital worlds. Shockingly, the crank could be turned both clockwise and counterclockwise. Needless to say, every other electronic device was rendered obsolete. Now, for the first time, you can bring the magic of a Playmate-inspired crank to all the devices in your life with this 3D-printable design. Stick one to your NES, your car, or your next electronic sculpture for improved performance and market-disrupting pizzazz.6/12/19: Loosened some tolerances. You can edit the design to fit your printer's unique characteristics by opening the .f3d file in Fusion. 

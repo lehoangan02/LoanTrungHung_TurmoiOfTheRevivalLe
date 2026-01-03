@@ -7,7 +7,7 @@ function BallDropLevel:load()
     BallDropLevel.gameMap = sti("Game/Maps/testMap.lua")
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
-    musicManager:playBackgroundMusic(MusicEnum.Sakura_Cherry_Blossom)
+    -- musicManager:playBackgroundMusic(MusicEnum.Sakura_Cherry_Blossom)
     BallDropLevel.ballImage = love.graphics.newImage("Resources/Images/Cannon_ball.png")
     BallDropLevel.ballImage:setFilter("nearest", "nearest")
     BallDropLevel.ballRotation = 0
@@ -15,11 +15,11 @@ function BallDropLevel:load()
     BallDropLevel.ballMoveSpeed = 100
     BallDropLevel.worldRotateSpeed = 2
     BallDropLevel.ballX = 100
-    BallDropLevel.ballY = 100
+    BallDropLevel.ballY = 50
     local camera = require("Game.Libraries.camera")
     BallDropLevel.cam = camera()
     local wf = require("Game/Libraries/windfield")
-    BallDropLevel.worldGravity = 300
+    BallDropLevel.worldGravity = 200
     BallDropLevel.world = wf.newWorld(0, BallDropLevel.worldGravity, false)
     BallDropLevel.worldRotation = 0
     BallDropLevel.walls = {}
@@ -32,7 +32,7 @@ function BallDropLevel:load()
     end
 
     BallDropLevel.ballCollider = BallDropLevel.world:newCircleCollider(BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRadius)
-    BallDropLevel.ballCollider:setRestitution(0.4)
+    BallDropLevel.ballCollider:setRestitution(0.6)
 end
 function BallDropLevel:update(dt)
     local velX, velY = BallDropLevel.ballCollider:getLinearVelocity()

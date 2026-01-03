@@ -4,7 +4,8 @@ function InputManager:load()
     InputManager.wasPauseKeyPressed = false
     InputManager.pauseSignaled = false
     InputManager.KY040 = require("Game.Input.KY040")
-
+    local controller = require("Game.Input.Controller")
+    InputManager.Controller = controller:new()
 end
 
 function InputManager:update()
@@ -12,6 +13,9 @@ function InputManager:update()
     self.pauseSignaled = isCurrentlyPressed and not self.wasPauseKeyPressed
     self.wasPauseKeyPressed = isCurrentlyPressed
     InputManager.KY040:update()
+    InputManager.Controller:update()
+    print("Left Stick: ", InputManager.Controller:getLeftStick())
+    print("Right Stick: ", InputManager.Controller:getRightStick())
 end
 
 function InputManager:isEventPauseKeyPressed()
