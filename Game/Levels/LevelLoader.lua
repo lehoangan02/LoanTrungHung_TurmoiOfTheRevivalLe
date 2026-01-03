@@ -10,7 +10,7 @@ function LevelLoader:loadLevel(level)
         currentLevel = MenuLevel
     end
     if (level == LevelEnum.BallDrop) then
-        local BallDropLevel = require("Game.Levels.BallDropLevel")
+        local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
         BallDropLevel:load()
         currentLevel = BallDropLevel
     end

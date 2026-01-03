@@ -4,12 +4,17 @@ BallDropLevel.__index = BallDropLevel
 
 function BallDropLevel:load()
     local sti = require "Game/Libraries/sti"
+    local anim8 = require "Game/Libraries/anim8"
     BallDropLevel.gameMap = sti("Game/Maps/testMap.lua")
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
     -- musicManager:playBackgroundMusic(MusicEnum.Sakura_Cherry_Blossom)
     BallDropLevel.ballImage = love.graphics.newImage("Resources/Images/Cannon_ball.png")
     BallDropLevel.ballImage:setFilter("nearest", "nearest")
+    BallDropLevel.explodeSpriteSheet = love.graphics.newImage("Resources/Images/explode_large.png")
+    BallDropLevel.explodeGrid = anim8.newGrid(32, 32, BallDropLevel.explodeSpriteSheet:getWidth(), BallDropLevel.explodeSpriteSheet:getHeight())
+    BallDropLevel.explodeAnimation = anim8.newAnimation(BallDropLevel.explodeGrid('1-4', 1), 0.2, 'pauseAtEnd')
+    BallDropLevel.exploded = false
     BallDropLevel.ballRotation = 0
     BallDropLevel.ballRadius = 7
     BallDropLevel.ballMoveSpeed = 100
@@ -52,21 +57,31 @@ function BallDropLevel:load()
 end
 function BallDropLevel:update(dt)
     BallDropLevel.gameMap:update(dt)
-
-    BallDropLevel:rotateBall(dt)
-
-    BallDropLevel:controlEnvironment(dt)
-    
-    BallDropLevel:adjustGravity()
-    
     BallDropLevel.world:update(dt)
-
-    if BallDropLevel.ballCollider:enter("Enemies") then
-        print("Collided with enemies")
+    BallDropLevel:adjustGravity()
+    if not BallDropLevel.exploded then
+        BallDropLevel:rotateBall(dt)
+        BallDropLevel:controlEnvironment(dt)
+        BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
+        if BallDropLevel.ballCollider:enter("Enemies") then
+            print("Collided with enemies")
+            BallDropLevel:explodeBall()
+        end
+    end
+    InputManager = require("Game.Input.InputManager")
+    if InputManager:isEventFKeyPressed() and not BallDropLevel.exploded then
+        BallDropLevel:explodeBall()
     end
 
-    BallDropLevel.ballX, BallDropLevel.ballY = BallDropLevel.ballCollider:getPosition()
+    BallDropLevel.explodeAnimation:update(dt)
     BallDropLevel:trackBall(dt)
+end
+
+function BallDropLevel:explodeBall()
+    BallDropLevel.exploded = true
+    BallDropLevel.explodeAnimation:gotoFrame(1)
+    BallDropLevel.explodeAnimation:resume()
+    BallDropLevel.ballCollider:destroy()
 end
 
 function BallDropLevel:adjustGravity()
@@ -186,8 +201,20 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["NonCollidable"])
         BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Enemies"])
         BallDropLevel.world:draw()
-        love.graphics.draw(BallDropLevel.ballImage, BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRotation, 1, 1, 8, 8)
+        if not BallDropLevel.exploded then
+            love.graphics.draw(BallDropLevel.ballImage, BallDropLevel.ballX, BallDropLevel.ballY, BallDropLevel.ballRotation, 1, 1, 8, 8)
+        end
+        if BallDropLevel.exploded and BallDropLevel.explodeAnimation.status ~= "paused" then
+            BallDropLevel.explodeAnimation:draw(BallDropLevel.explodeSpriteSheet, BallDropLevel.ballX - 16, BallDropLevel.ballY - 16)
+        end
     BallDropLevel.cam:detach()
+    -- draw fps
+    love.graphics.push()
+    love.graphics.origin()
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.pop()
 end
 function BallDropLevel:unload()
 end
