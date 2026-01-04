@@ -7,6 +7,9 @@ local fSignaled = false
 local KY040 = require("Game.Input.KY040")
 local Controller = require("Game.Input.Controller")
 local controller = Controller:new()
+local handCrankMultiplier = 3
+local joystickMultiplier = 4
+local triggerMultiplier = 0.8
 
 
 function InputManager:load()
@@ -82,6 +85,18 @@ end
 
 function InputManager:getRightTriggerValue()
     return controller:rightTriggerValue()
+end
+
+function InputManager:getHandCrankMultiplier()
+    return handCrankMultiplier
+end
+
+function InputManager:getJoystickMultiplier()
+    return joystickMultiplier
+end
+
+function InputManager:getTriggerMultiplier()
+    return triggerMultiplier
 end
 
 return InputManager
