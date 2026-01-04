@@ -33,6 +33,12 @@ function Ball:update(dt, worldRotation)
             print("Collided with enemies")
             self:explode()
         end
+        if self.ballCollider:enter("Stars") then
+            print("Collided with stars")
+        end
+    end
+    if self.ballCollider:enter("Stars") then
+            print("Collided with stars")
     end
     self.explodeAnimation:update(dt)
 end

@@ -13,8 +13,6 @@ function BallDropLevel:load()
     BallDropLevel.worldRotateSpeed = 2
     BallDropLevel.cameraX = 120
     BallDropLevel.cameraY = 50
-    BallDropLevel.upperCameraLimitY = nil
-    BallDropLevel.lowerCameraLimitY = nil
     BallDropLevel.currentZoom = 1.0
     BallDropLevel.zoomSpeed = 0.15
     
@@ -24,10 +22,16 @@ function BallDropLevel:load()
     local wf = require("Game/Libraries/windfield")
     BallDropLevel.worldGravity = 200
     BallDropLevel.world = wf.newWorld(0, BallDropLevel.worldGravity, false)
+    
+    -- 1. Setup Collision Classes
+    BallDropLevel.world:addCollisionClass("Enemies")
+    BallDropLevel.world:addCollisionClass("Stars", {ignores = {"Enemies"}})
+    
     BallDropLevel.worldRotation = 0
     BallDropLevel.cameraRotation = 0
     BallDropLevel.rotationSharpness = 12
     
+    -- 2. Load Static Walls
     BallDropLevel.walls = {}
     if BallDropLevel.gameMap.layers["StaticCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
@@ -37,9 +41,9 @@ function BallDropLevel:load()
         end
     end
     
+    -- 3. Load Enemies (EnemiesCollidable)
     BallDropLevel.enemies = {}
-    BallDropLevel.world:addCollisionClass("Enemies")
-    if BallDropLevel.gameMap.layers["Enemies"] then
+    if BallDropLevel.gameMap.layers["EnemiesCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["EnemiesCollidable"].objects) do
             local enemy = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
             enemy:setType("static")
@@ -48,7 +52,21 @@ function BallDropLevel:load()
         end
     end
 
-    -- Instantiate the Ball
+    -- 4. Load Stars (Fixed Logic for Sprite and Collider positioning)
+    BallDropLevel.stars = {}
+    if BallDropLevel.gameMap.layers["Stars"] then
+        for i, obj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
+            local star = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            star:setType("static")
+            star:setCollisionClass("Stars")
+            star:setSensor(true) 
+            star.tiledObject = obj 
+            table.insert(BallDropLevel.stars, star)
+        end
+    end
+
+    -- 5. Instantiate the Ball
+    -- Ensure BallClass.new returns an object where self.collider is defined.
     BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 50)
 end
 
@@ -72,6 +90,18 @@ function BallDropLevel:update(dt)
     BallDropLevel.cameraRotation = BallDropLevel.cameraRotation + angleCamStep
 
     BallDropLevel:trackBall(dt)
+
+    -- 6. Star Collection Logic (Fixed Collider Reference)
+    -- If your Ball class uses a different name (e.g., self.body), change 'collider' to that name.
+    local ballCollider = BallDropLevel.ball.collider 
+    if ballCollider and ballCollider:enter('Stars') then
+        local collision_data = ballCollider:getEnterCollisionData('Stars')
+        local starCollider = collision_data.collider
+        if starCollider.tiledObject then
+            starCollider.tiledObject.visible = false 
+        end
+        starCollider:destroy()
+    end
 end
 
 function BallDropLevel:adjustGravity()
@@ -116,40 +146,40 @@ end
 
 function BallDropLevel:controlEnvironment(dt)
     InputManager = require("Game.Input.InputManager")
-    -- Left/Right Rudder
     if InputManager:isRightRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
     elseif InputManager:isLeftRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
     end
-    -- Hand Crank
+    
     if InputManager:isEventKY040RightTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
     elseif InputManager:isEventKY040LeftTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
     end
-    -- Sticks
+
     local stickRot = InputManager:getLeftStickRotation() + InputManager:getRightStickRotation()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation + stickRot * dt * BallDropLevel.worldRotateSpeed * InputManager:getJoystickMultiplier()
 
-    -- Triggers
     local triggerVal = InputManager:getLeftTriggerValue() - InputManager:getRightTriggerValue()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation + triggerVal * dt * BallDropLevel.worldRotateSpeed * InputManager:getTriggerMultiplier()
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
     love.graphics.clear(176/255, 174/255, 167/255, 1)
-    local scale = math.min(windowHeight / BASE_H, windowWidth / BASE_W)
+    
+    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 320))
     love.graphics.scale(scale, scale)
     love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
     
     BallDropLevel.cam:attach()
-        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Background"])
-        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Wall"])
-        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["NonCollidable"])
-        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Enemies"])
-        BallDropLevel.gameMap:drawLayer(BallDropLevel.gameMap.layers["Stars"])
-        BallDropLevel.world:draw()
+        local layers = BallDropLevel.gameMap.layers
+        if layers["Background"] then BallDropLevel.gameMap:drawLayer(layers["Background"]) end
+        if layers["Wall"] then BallDropLevel.gameMap:drawLayer(layers["Wall"]) end
+        if layers["NonCollidable"] then BallDropLevel.gameMap:drawLayer(layers["NonCollidable"]) end
+        if layers["Enemies"] then BallDropLevel.gameMap:drawLayer(layers["Enemies"]) end
+        
+        BallDropLevel.world:draw() 
         BallDropLevel.ball:draw()
     BallDropLevel.cam:detach()
 
@@ -162,6 +192,10 @@ function BallDropLevel:draw(windowWidth, windowHeight)
 end
 
 function BallDropLevel:unload()
+    if BallDropLevel.world then
+        BallDropLevel.world:destroy()
+        BallDropLevel.world = nil
+    end
 end
 
 return BallDropLevel
