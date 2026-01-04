@@ -26,7 +26,7 @@ function BallDropLevel:load()
     BallDropLevel.world = wf.newWorld(0, BallDropLevel.worldGravity, false)
     BallDropLevel.worldRotation = 0
     BallDropLevel.cameraRotation = 0
-    BallDropLevel.rotationSmoothing = 3
+    BallDropLevel.rotationSharpness = 12
     
     BallDropLevel.walls = {}
     if BallDropLevel.gameMap.layers["StaticCollidable"] then
@@ -65,6 +65,12 @@ function BallDropLevel:update(dt)
     end
 
     BallDropLevel:controlEnvironment(dt)
+
+    local angleGap = BallDropLevel.worldRotation - BallDropLevel.cameraRotation
+    local angleCamStep = angleGap * dt * BallDropLevel.rotationSharpness
+    BallDropLevel.cam:rotate(angleCamStep)
+    BallDropLevel.cameraRotation = BallDropLevel.cameraRotation + angleCamStep
+
     BallDropLevel:trackBall(dt)
 end
 
@@ -113,28 +119,22 @@ function BallDropLevel:controlEnvironment(dt)
     -- Left/Right Rudder
     if InputManager:isRightRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
-        BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed)
     elseif InputManager:isLeftRudderPressed() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
-        BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed)
     end
     -- Hand Crank
     if InputManager:isEventKY040RightTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
-        BallDropLevel.cam:rotate(dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier())
     elseif InputManager:isEventKY040LeftTurned() then
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
-        BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier())
     end
     -- Sticks
     local stickRot = InputManager:getLeftStickRotation() + InputManager:getRightStickRotation()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation + stickRot * dt * BallDropLevel.worldRotateSpeed * InputManager:getJoystickMultiplier()
-    BallDropLevel.cam:rotate(stickRot * dt * BallDropLevel.worldRotateSpeed * InputManager:getJoystickMultiplier())
 
     -- Triggers
     local triggerVal = InputManager:getLeftTriggerValue() - InputManager:getRightTriggerValue()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation + triggerVal * dt * BallDropLevel.worldRotateSpeed * InputManager:getTriggerMultiplier()
-    BallDropLevel.cam:rotate(triggerVal * dt * BallDropLevel.worldRotateSpeed * InputManager:getTriggerMultiplier())
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
