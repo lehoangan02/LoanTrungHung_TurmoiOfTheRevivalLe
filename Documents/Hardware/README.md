@@ -17,34 +17,43 @@ Before wiring, enable the necessary communication protocols in the Raspberry Pi 
 ---
 
 ## 2. Wiring Configuration (Pinout)
-Connect the components to the Raspberry Pi GPIO header. This setup ensures no conflicts between the devices.
+Connect the components to the Raspberry Pi GPIO header. This setup ensures no conflicts between the devices using your specific pin requirements.
 
-| Device | Pin Name | RPi Pin # | RPi GPIO Function | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **ST7789** | VCC | 2 or 4 | 5V / 3.3V | Check screen specs (usually 3.3V) |
-| *(Display)* | GND | 6 | GND | Ground |
-| | SCL / SCK | 23 | GPIO 11 (SPI0 SCLK) | SPI Clock |
-| | SDA / MOSI | 19 | GPIO 10 (SPI0 MOSI) | SPI Data |
-| | RES / RST | 22 | GPIO 25 | Reset (Configurable) |
-| | DC | 18 | GPIO 24 | Data/Command (Configurable) |
-| | BLK / BL | -- | -- | (Optional) Backlight control |
-| | CS | 24 | GPIO 8 (SPI0 CE0) | Chip Select |
-| **VL53L0X** | VIN / VCC | 1 | 3.3V | Voltage Input |
-| *(Sensor)* | GND | 9 | GND | Ground |
-| | SDA | 3 | GPIO 2 (I2C1 SDA) | I2C Data |
-| | SCL | 5 | GPIO 3 (I2C1 SCL) | I2C Clock |
-| **KY-040** | VCC / + | 17 | 3.3V | Encoder Power |
-| *(Encoder)* | GND | 20 | GND | Ground |
-| | DT | 29 | GPIO 5 | Signal A (Configurable) |
-| | CLK | 31 | GPIO 6 | Signal B (Configurable) |
-| | SW | 33 | GPIO 13 | Button Switch (Optional) |
 
-> **Note:** The ST7789 often comes without a CS pin (meaning it is always selected). If yours has no CS pin, you can skip connecting GPIO 8, but ensure no other SPI device shares the bus.
+
+### ST7789 (TFT Display)
+| ST7789 Pin | Raspberry Pi Pin | GPIO Number | Function |
+| :--- | :--- | :--- | :--- |
+| **VCC** | Pin 1 or 17 | 3.3V | Power |
+| **GND** | Pin 6, 9, etc. | GND | Ground |
+| **SCL / SCK** | Pin 23 | GPIO 11 | SPI0 SCLK |
+| **SDA / MOSI** | Pin 19 | GPIO 10 | SPI0 MOSI |
+| **RES / RST** | Pin 22 | GPIO 25 | Reset |
+| **DC** | Pin 18 | GPIO 24 | Data/Command |
+| **CS** | Pin 24 | GPIO 8 | SPI0 CE0 |
+| **BLK** | Pin 16 | GPIO 23 | Backlight (can leave floating or 3.3V) |
+
+### KY-040 (Rotary Encoder)
+| KY-040 Pin | Raspberry Pi Pin | Function |
+| :--- | :--- | :--- |
+| **GND** | GND (Physical Pin 6, 9, etc.) | Ground |
+| **+ (VCC)** | 3.3V (Physical Pin 1 or 17) | Power |
+| **SW** | GPIO 22 (Physical Pin 15) | Button Switch |
+| **DT** | GPIO 18 (Physical Pin 12) | Direction Signal |
+| **CLK** | GPIO 17 (Physical Pin 11) | Clock Signal |
+
+### VL53L0X (Distance Sensor)
+| VL53L0X Pin | Raspberry Pi Pin | Pin Number (Physical) | Function |
+| :--- | :--- | :--- | :--- |
+| **VCC / VIN** | 3.3V | Pin 1 | Power |
+| **GND** | GND | Pin 6 | Ground |
+| **SDA** | GPIO 2 | Pin 3 | Data (I2C) |
+| **SCL** | GPIO 3 | Pin 5 | Clock (I2C) |
 
 ---
 
 ## 3. Software & Libraries
-You will need Python libraries to drive these components. The standard is to use **CircuitPython** libraries (via Blinka) for the sensors/display and `RPi.GPIO` or `gpiozero` for the encoder.
+You will need Python libraries to drive these components and `lua-socket` for UDP communication.
 
 **Install the dependencies:**
 
@@ -66,9 +75,6 @@ sudo pip3 install adafruit-circuitpython-vl53l0x
 # Install Image processing (required for display)
 sudo apt-get install python3-pil
 sudo pip3 install pillow
-```
 
-# Receive UDP in Lua
-```
+# Install UDP support for Lua
 sudo apt install lua-socket
-```
