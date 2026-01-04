@@ -1,32 +1,35 @@
 local InputManager = {}
 
+local wasPauseKeyPressed = false
+local pauseSignaled = false
+local wasFKeyPressed = false
+local fSignaled = false
+local KY040 = require("Game.Input.KY040")
+local Controller = require("Game.Input.Controller")
+local controller = Controller:new()
+
+
 function InputManager:load()
-    InputManager.wasPauseKeyPressed = false
-    InputManager.pauseSignaled = false
-    InputManager.wasFKeyPressed = false
-    InputManager.fSignaled = false
-    InputManager.KY040 = require("Game.Input.KY040")
-    local controller = require("Game.Input.Controller")
-    InputManager.Controller = controller:new()
+    
 end
 
 function InputManager:update()
     local isCurrentlyPressed = love.keyboard.isDown("p")
-    self.pauseSignaled = isCurrentlyPressed and not self.wasPauseKeyPressed
+    pauseSignaled = isCurrentlyPressed and not wasPauseKeyPressed
     local isFCurrentlyPressed = love.keyboard.isDown("f")
-    self.fSignaled = isFCurrentlyPressed and not self.wasFKeyPressed
-    self.wasFKeyPressed = isFCurrentlyPressed
-    self.wasPauseKeyPressed = isCurrentlyPressed
-    InputManager.KY040:update()
-    InputManager.Controller:update()
+    fSignaled = isFCurrentlyPressed and not wasFKeyPressed
+    wasFKeyPressed = isFCurrentlyPressed
+    wasPauseKeyPressed = isCurrentlyPressed
+    KY040:update()
+    controller:update()
 end
 
 function InputManager:isEventFKeyPressed()
-    return self.fSignaled
+    return fSignaled
 end
 
 function InputManager:isEventPauseKeyPressed()
-    return self.pauseSignaled
+    return pauseSignaled
 end
 
 function InputManager:isKeyRightPressed()
@@ -46,23 +49,39 @@ function InputManager:isKeyDownPressed()
 end
 
 function InputManager:isLeftRudderPressed()
-    return love.keyboard.isDown("q")
+    return love.keyboard.isDown("j")
 end
-
+    
 function InputManager:isRightRudderPressed()
-    return love.keyboard.isDown("e")
+    return love.keyboard.isDown("k")
 end
 
 function InputManager:isEventKY040ButtonPressed()
-    return InputManager.KY040:isEventPressed("ENCODER_BUTTON")
+    return KY040:isEventPressed("ENCODER_BUTTON")
 end
 
 function InputManager:isEventKY040RightTurned()
-    return InputManager.KY040:isEventPressed("ENCODER_RIGHT")
+    return KY040:isEventPressed("ENCODER_RIGHT")
 end
 
 function InputManager:isEventKY040LeftTurned()
-    return InputManager.KY040:isEventPressed("ENCODER_LEFT")
+    return KY040:isEventPressed("ENCODER_LEFT")
+end
+
+function InputManager:getLeftStickRotation()
+    return controller:leftStickRotation()
+end
+
+function InputManager:getRightStickRotation()
+    return controller:rightStickRotation()
+end
+
+function InputManager:getLeftTriggerValue()
+    return controller:leftTriggerValue()
+end
+
+function InputManager:getRightTriggerValue()
+    return controller:rightTriggerValue()
 end
 
 return InputManager

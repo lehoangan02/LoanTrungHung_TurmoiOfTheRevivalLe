@@ -8,7 +8,7 @@ function BallDropLevel:load()
     BallDropLevel.gameMap = sti("Game/Maps/testMap.lua")
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
-    musicManager:playBackgroundMusic(MusicEnum.Sakura_Cherry_Blossom)
+    -- musicManager:playBackgroundMusic(MusicEnum.Sakura_Cherry_Blossom)
     BallDropLevel.ballImage = love.graphics.newImage("Resources/Images/Cannon_ball.png")
     BallDropLevel.ballImage:setFilter("nearest", "nearest")
     BallDropLevel.explodeSpriteSheet = love.graphics.newImage("Resources/Images/explode_large.png")
@@ -173,16 +173,16 @@ function BallDropLevel:controlEnvironment(dt)
         BallDropLevel.cam:rotate(-dt * BallDropLevel.worldRotateSpeed * handCrankMultiplier)
     end
     local joystickMultiplier = 4
-    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager.Controller:leftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
-    BallDropLevel.cam:rotate(InputManager.Controller:leftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
-    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager.Controller:rightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
-    BallDropLevel.cam:rotate(InputManager.Controller:rightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager:getLeftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
+    BallDropLevel.cam:rotate(InputManager:getLeftStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + InputManager:getRightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier
+    BallDropLevel.cam:rotate(InputManager:getRightStickRotation() * dt * BallDropLevel.worldRotateSpeed * joystickMultiplier)
 
     local triggerMultiplier = 0.8
-    local leftTriggerValue = InputManager.Controller:leftTriggerValue()
+    local leftTriggerValue = InputManager:getLeftTriggerValue()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation + leftTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier
     BallDropLevel.cam:rotate(leftTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier)
-    local rightTriggerValue = InputManager.Controller:rightTriggerValue()
+    local rightTriggerValue = InputManager:getRightTriggerValue()
     BallDropLevel.worldRotation = BallDropLevel.worldRotation - rightTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier
     BallDropLevel.cam:rotate(-rightTriggerValue * dt * BallDropLevel.worldRotateSpeed * triggerMultiplier)
 end
