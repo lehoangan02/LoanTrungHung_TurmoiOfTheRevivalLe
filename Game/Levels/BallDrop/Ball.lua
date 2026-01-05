@@ -21,20 +21,22 @@ function Ball.new(world, x, y)
     instance.ballCollider = world:newCollider("Circle", {instance.ballX, instance.ballY, instance.ballRadius})
     instance.ballCollider:setRestitution(0.6)
     
-    -- Store reference to ball instance in collider for collision callbacks
     instance.ballCollider.ball = instance
     
-    -- Get CATEGORY_BALL from BallDropLevel
     local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
     instance.ballCollider.fixture:setCategory(BallDropLevel.CATEGORY_BALL)
     
-    -- Set up collision callback
     function instance.ballCollider:enter(other, collision)
         if other.isEnemy then
             print("Collided with enemies")
             self.ball:explode()
         elseif other.isStar then
             print("Collided with stars")
+
+            local starX, starY = other:getPosition()
+            local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
+            BallDropLevel.starActivateAnimation:play(starX, starY)
+
             if other.tiledObject then
                 other.tiledObject.visible = false
             end

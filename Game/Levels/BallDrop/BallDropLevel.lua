@@ -35,11 +35,9 @@ function BallDropLevel:load()
     BallDropLevel.cameraRotation = 0
     BallDropLevel.rotationSharpness = 12
     
-    -- 2. Load Static Walls
     BallDropLevel.walls = {}
     if BallDropLevel.gameMap.layers["StaticCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
-            -- Rectangle shapes are centered, so offset by half width/height
             local wall = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             wall:setType("static")
             wall.fixture:setCategory(BallDropLevel.CATEGORY_WALLS)
@@ -47,11 +45,9 @@ function BallDropLevel:load()
         end
     end
     
-    -- 3. Load Enemies (EnemiesCollidable)
     BallDropLevel.enemies = {}
     if BallDropLevel.gameMap.layers["EnemiesCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["EnemiesCollidable"].objects) do
-            -- Rectangle shapes are centered, so offset by half width/height
             local enemy = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             enemy:setType("static")
             enemy.fixture:setCategory(BallDropLevel.CATEGORY_ENEMIES)
@@ -60,11 +56,9 @@ function BallDropLevel:load()
         end
     end
 
-    -- 4. Load Stars (Fixed Logic for Sprite and Collider positioning)
     BallDropLevel.stars = {}
     if BallDropLevel.gameMap.layers["Stars"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
-            -- Rectangle shapes are centered, so offset by half width/height
             local star = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             star:setType("static")
             star.fixture:setCategory(BallDropLevel.CATEGORY_STARS)
@@ -74,9 +68,8 @@ function BallDropLevel:load()
             table.insert(BallDropLevel.stars, star)
         end
     end
+    BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
-    -- 5. Instantiate the Ball
-    -- Ensure BallClass.new returns an object where self.collider is defined.
     BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 50)
 end
 
@@ -91,6 +84,8 @@ function BallDropLevel:update(dt)
     if InputManager:isEventFKeyPressed() and not BallDropLevel.ball.exploded then
         BallDropLevel.ball:explode()
     end
+
+    BallDropLevel.starActivateAnimation:update(dt)
 
     BallDropLevel:controlEnvironment(dt)
 
@@ -178,6 +173,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         if layers["Enemies"] then BallDropLevel.gameMap:drawLayer(layers["Enemies"]) end
         
         TiledUtils.drawTileObjectLayer(BallDropLevel.gameMap, "Stars")
+        BallDropLevel.starActivateAnimation:draw()
         
         BallDropLevel.world:draw() 
         BallDropLevel.ball:draw()

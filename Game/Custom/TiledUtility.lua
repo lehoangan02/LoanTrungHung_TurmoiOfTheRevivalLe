@@ -15,7 +15,7 @@ function TiledUtils.drawTileObjectLayer(gameMap, layerName)
                     local img = tileset.image
                     local x = obj.x
                     local y = obj.y
-
+                    
                     love.graphics.draw(img, quad, x, y)
                 end
             end
@@ -23,7 +23,6 @@ function TiledUtils.drawTileObjectLayer(gameMap, layerName)
     end
 end
 
--- Draw multiple tile object layers at once
 function TiledUtils.drawTileObjectLayers(gameMap, layerNames)
     for _, layerName in ipairs(layerNames) do
         TiledUtils.drawTileObjectLayer(gameMap, layerName)
