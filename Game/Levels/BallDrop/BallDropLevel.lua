@@ -21,13 +21,15 @@ function BallDropLevel:load()
     local camera = require("Game.Libraries.camera")
     BallDropLevel.cam = camera()
     
-    local wf = require("Game/Libraries/windfield")
+    local bf = require("Game/Libraries/breezefield-master")
     BallDropLevel.worldGravity = 200
-    BallDropLevel.world = wf.newWorld(0, BallDropLevel.worldGravity, false)
+    BallDropLevel.world = bf.newWorld(0, BallDropLevel.worldGravity, false)
     
-    -- 1. Setup Collision Classes
-    BallDropLevel.world:addCollisionClass("Enemies")
-    BallDropLevel.world:addCollisionClass("Stars", {ignores = {"Enemies"}})
+    -- Collision categories for breezefield (using love.physics categories/masks)
+    BallDropLevel.CATEGORY_BALL = 1
+    BallDropLevel.CATEGORY_ENEMIES = 2
+    BallDropLevel.CATEGORY_STARS = 3
+    BallDropLevel.CATEGORY_WALLS = 4
     
     BallDropLevel.worldRotation = 0
     BallDropLevel.cameraRotation = 0
@@ -37,8 +39,10 @@ function BallDropLevel:load()
     BallDropLevel.walls = {}
     if BallDropLevel.gameMap.layers["StaticCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
-            local wall = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            -- Rectangle shapes are centered, so offset by half width/height
+            local wall = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             wall:setType("static")
+            wall.fixture:setCategory(BallDropLevel.CATEGORY_WALLS)
             table.insert(BallDropLevel.walls, wall)
         end
     end
@@ -47,9 +51,11 @@ function BallDropLevel:load()
     BallDropLevel.enemies = {}
     if BallDropLevel.gameMap.layers["EnemiesCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["EnemiesCollidable"].objects) do
-            local enemy = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            -- Rectangle shapes are centered, so offset by half width/height
+            local enemy = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             enemy:setType("static")
-            enemy:setCollisionClass("Enemies")
+            enemy.fixture:setCategory(BallDropLevel.CATEGORY_ENEMIES)
+            enemy.isEnemy = true
             table.insert(BallDropLevel.enemies, enemy)
         end
     end
@@ -58,11 +64,13 @@ function BallDropLevel:load()
     BallDropLevel.stars = {}
     if BallDropLevel.gameMap.layers["Stars"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
-            local star = BallDropLevel.world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            -- Rectangle shapes are centered, so offset by half width/height
+            local star = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             star:setType("static")
-            star:setCollisionClass("Stars")
-            star:setSensor(true) 
-            star.tiledObject = obj 
+            star.fixture:setCategory(BallDropLevel.CATEGORY_STARS)
+            star.fixture:setSensor(true) 
+            star.tiledObject = obj
+            star.isStar = true
             table.insert(BallDropLevel.stars, star)
         end
     end
@@ -92,18 +100,6 @@ function BallDropLevel:update(dt)
     BallDropLevel.cameraRotation = BallDropLevel.cameraRotation + angleCamStep
 
     BallDropLevel:trackBall(dt)
-
-    -- 6. Star Collection Logic (Fixed Collider Reference)
-    -- If your Ball class uses a different name (e.g., self.body), change 'collider' to that name.
-    local ballCollider = BallDropLevel.ball.collider 
-    if ballCollider and ballCollider:enter('Stars') then
-        local collision_data = ballCollider:getEnterCollisionData('Stars')
-        local starCollider = collision_data.collider
-        if starCollider.tiledObject then
-            starCollider.tiledObject.visible = false 
-        end
-        starCollider:destroy()
-    end
 end
 
 function BallDropLevel:adjustGravity()
