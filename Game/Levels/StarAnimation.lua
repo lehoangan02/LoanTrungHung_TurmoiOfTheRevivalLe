@@ -11,7 +11,7 @@ function StarActivateAnimation.new()
 end
 
 function StarActivateAnimation:play(x, y)
-    table.insert(self.jobList, {x = x, y = y, animation = self.anim8.newAnimation(self.grid('1-4', 1), 0.2, 'pauseAtEnd')})
+    table.insert(self.jobList, {x = x, y = y, animation = self.anim8.newAnimation(self.grid('1-4', 1), 0.1, 'pauseAtEnd')})
     print("Playing star animation at:", x, y)
 end
 
