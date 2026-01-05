@@ -18,12 +18,14 @@ function TiledUtils.drawTileObjectLayer(gameMap, layerName, elapsed)
                     local y = obj.y
 
                     if tile.animation then
-                        local totalDuration = 0
-                        for _, frame in ipairs(tile.animation) do
-                            totalDuration = totalDuration + frame.duration
+                        if not tile.animation.totalDuration then
+                            tile.animation.totalDuration = 0
+                            for _, frame in ipairs(tile.animation) do
+                                tile.animation.totalDuration = tile.animation.totalDuration + frame.duration
+                            end
                         end
                         
-                        local currentTime = (elapsed * 1000) % totalDuration  -- Convert to milliseconds
+                        local currentTime = (elapsed * 1000) % tile.animation.totalDuration
                         local accumulatedTime = 0
                         
                         for _, frame in ipairs(tile.animation) do
