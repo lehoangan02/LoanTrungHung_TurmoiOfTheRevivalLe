@@ -1,6 +1,7 @@
 local TiledUtils = {}
 
-function TiledUtils.drawTileObjectLayer(gameMap, layerName)
+function TiledUtils.drawTileObjectLayer(gameMap, layerName, elapsed)
+    elapsed = elapsed or 0
     local objectLayer = gameMap.layers[layerName]
     if not objectLayer then return end
     
@@ -15,7 +16,30 @@ function TiledUtils.drawTileObjectLayer(gameMap, layerName)
                     local img = tileset.image
                     local x = obj.x
                     local y = obj.y
-                    
+
+                    if tile.animation then
+                        local totalDuration = 0
+                        for _, frame in ipairs(tile.animation) do
+                            totalDuration = totalDuration + frame.duration
+                        end
+                        
+                        local currentTime = (elapsed * 1000) % totalDuration  -- Convert to milliseconds
+                        local accumulatedTime = 0
+                        
+                        for _, frame in ipairs(tile.animation) do
+                            accumulatedTime = accumulatedTime + frame.duration
+                            if currentTime < accumulatedTime then
+                                -- Convert local tileid to global gid
+                                local globalId = tileset.firstgid + frame.tileid
+                                local frameTile = gameMap.tiles[globalId]
+                                if frameTile and frameTile.quad then
+                                    quad = frameTile.quad
+                                end
+                                break
+                            end
+                        end
+                    end
+
                     love.graphics.draw(img, quad, x, y)
                 end
             end
@@ -23,9 +47,9 @@ function TiledUtils.drawTileObjectLayer(gameMap, layerName)
     end
 end
 
-function TiledUtils.drawTileObjectLayers(gameMap, layerNames)
+function TiledUtils.drawTileObjectLayers(gameMap, layerNames, elapsed)
     for _, layerName in ipairs(layerNames) do
-        TiledUtils.drawTileObjectLayer(gameMap, layerName)
+        TiledUtils.drawTileObjectLayer(gameMap, layerName, elapsed)
     end
 end
 

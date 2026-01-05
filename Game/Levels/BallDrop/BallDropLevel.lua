@@ -172,7 +172,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         if layers["NonCollidable"] then BallDropLevel.gameMap:drawLayer(layers["NonCollidable"]) end
         if layers["Enemies"] then BallDropLevel.gameMap:drawLayer(layers["Enemies"]) end
         
-        TiledUtils.drawTileObjectLayer(BallDropLevel.gameMap, "Stars")
+        TiledUtils.drawTileObjectLayer(BallDropLevel.gameMap, "Stars", love.timer.getTime())
         BallDropLevel.starActivateAnimation:draw()
         
         BallDropLevel.world:draw() 
