@@ -3,6 +3,8 @@ local BallClass = require "Game.Levels.BallDrop.Ball"
 local BallDropLevel = setmetatable({}, {__index = Level})
 BallDropLevel.__index = BallDropLevel
 
+local TiledUtils = require "Game.Custom.TiledUtility"
+
 function BallDropLevel:load()
     local sti = require "Game/Libraries/sti"
     BallDropLevel.gameMap = sti("Game/Maps/testMap.lua")
@@ -179,28 +181,8 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         if layers["NonCollidable"] then BallDropLevel.gameMap:drawLayer(layers["NonCollidable"]) end
         if layers["Enemies"] then BallDropLevel.gameMap:drawLayer(layers["Enemies"]) end
         
-        local objectLayer = BallDropLevel.gameMap.layers["Stars"]
-        if objectLayer then
-            for _, obj in ipairs(objectLayer.objects) do
-                if obj.gid and obj.visible ~= false then
-                    local tile = BallDropLevel.gameMap.tiles[obj.gid]
-                    if tile then
-                        -- Get the actual tileset object using the tileset index
-                        local tileset = BallDropLevel.gameMap.tilesets[tile.tileset]
-                        
-                        if tileset then
-                            local quad = tile.quad
-                            local img = tileset.image
-
-                            local x = obj.x
-                            local y = obj.y
-
-                            love.graphics.draw(img, quad, x, y)
-                        end
-                    end
-                end
-            end
-        end
+        TiledUtils.drawTileObjectLayer(BallDropLevel.gameMap, "Stars")
+        
         BallDropLevel.world:draw() 
         BallDropLevel.ball:draw()
     BallDropLevel.cam:detach()
