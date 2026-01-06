@@ -3,9 +3,41 @@ local BallClass = require "Game.Levels.BallDrop.Ball"
 local BallDropLevel = setmetatable({}, {__index = Level})
 BallDropLevel.__index = BallDropLevel
 
+local LoadScreen = require "Game.Levels.LoadScreen.LoadScreen"
+
 local TiledUtils = require "Game.Custom.TiledUtility"
 
 function BallDropLevel:load()
+
+    BallDropLevel.loadScreen = LoadScreen.new()
+    BallDropLevel.loadScreen:reset()
+
+    BallDropLevel.loadScreen:addTask(function()
+        print("Dummy task 1 - waiting...")
+        love.timer.sleep(1)
+        print("Dummy task 1 - done!")
+    end, 20)
+
+    BallDropLevel.loadScreen:addTask(function()
+        print("Dummy task 2 - waiting...")
+        love.timer.sleep(1.5)
+        print("Dummy task 2 - done!")
+    end, 25)
+
+    BallDropLevel.loadScreen:addTask(function()
+        print("Dummy task 3 - waiting...")
+        love.timer.sleep(2)
+        print("Dummy task 3 - done!")
+    end, 30)
+
+    BallDropLevel.loadScreen:addTask(function()
+        print("Dummy task 4 - loading actual level...")
+        love.timer.sleep(2)
+        print("Dummy task 4 - done!")
+    end, 25)
+
+    BallDropLevel.loadScreen:start()
+
     local sti = require "Game/Libraries/sti"
     BallDropLevel.gameMap = sti("Game/Maps/testMap.lua")
     local musicManager = require("Game.Music.MusicManager")
@@ -74,6 +106,12 @@ function BallDropLevel:load()
 end
 
 function BallDropLevel:update(dt)
+
+    if not BallDropLevel.loadScreen:isDone() then
+        BallDropLevel.loadScreen:update(dt)
+        return -1
+    end
+
     BallDropLevel.gameMap:update(dt)
     BallDropLevel.world:update(dt)
     BallDropLevel:adjustGravity()
@@ -95,6 +133,7 @@ function BallDropLevel:update(dt)
     BallDropLevel.cameraRotation = BallDropLevel.cameraRotation + angleCamStep
 
     BallDropLevel:trackBall(dt)
+    return -1
 end
 
 function BallDropLevel:adjustGravity()
@@ -159,6 +198,12 @@ function BallDropLevel:controlEnvironment(dt)
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
+
+    if not BallDropLevel.loadScreen:isDone() then
+        BallDropLevel.loadScreen:draw()
+        return
+    end
+
     love.graphics.clear(176/255, 174/255, 167/255, 1)
     
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 320))

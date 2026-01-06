@@ -17,7 +17,11 @@ function GameManager:start()
 end
 function GameManager:update(dt)
     inputManager:update()
-    GameManager.currentLevel:update(dt)
+    local LevelEnum = require("Game.Levels.LevelEnum")
+    if (GameManager.currentLevel:update(dt) ~= LevelEnum.Nothing) then
+        GameManager.currentLevel:unload()
+        GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.StartMenu)
+    end
 end
 function GameManager:pause()
 end
