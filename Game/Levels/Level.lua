@@ -1,5 +1,6 @@
 -- interface for levle
 local Level = {}
+Level.__index = Level
 
 function Level:load()
    error("Level.load not implemented")

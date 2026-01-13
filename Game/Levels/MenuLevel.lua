@@ -3,11 +3,12 @@ local MenuLevel = setmetatable({}, {__index = Level})
 MenuLevel.__index = MenuLevel
 
 function MenuLevel:load()
-    MenuLevel.background = love.graphics.newImage("Resources/Pictures/Menu.png")
+    MenuLevel.background = love.graphics.newImage("Resources/Images/Menu.png")
     MenuLevel.background:setFilter("nearest", "nearest")
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
     musicManager:playBackgroundMusic(MusicEnum.Test)
+    print("Menu Level loaded")
     MenuLevel.progress = 0
 end
 function MenuLevel:update(dt)
@@ -19,6 +20,8 @@ function MenuLevel:update(dt)
         end
         print("Progress: " .. MenuLevel.progress)
     end
+    local LevelEnum = require("Game.Levels.LevelEnum")
+    return LevelEnum.Nothing
 end
 function MenuLevel:draw()
     love.graphics.draw(MenuLevel.background, 0, 0)
