@@ -7,28 +7,25 @@ function MenuLevel:load()
     MenuLevel.background:setFilter("nearest", "nearest")
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
-    musicManager:playBackgroundMusic(MusicEnum.Test)
+    -- musicManager:playBackgroundMusic(MusicEnum.Test)
     print("Menu Level loaded")
-    MenuLevel.progress = 0
+    local HoldButton = require("Game.UI.HoldButton")
+    MenuLevel.startButton = HoldButton:new(70, 200, 100, 20, function()
+        print("Start Button Completed")
+    end)
 end
 function MenuLevel:update(dt)
-    local SPEED = 70
     if love.keyboard.isDown("down") then
-        MenuLevel.progress = MenuLevel.progress + SPEED * dt
-        if (MenuLevel.progress > 100) then
-            MenuLevel.progress = 100
-        end
-        print("Progress: " .. MenuLevel.progress)
+        MenuLevel.startButton:update(dt, true)
+    else
+        MenuLevel.startButton:update(dt, false)
     end
     local LevelEnum = require("Game.Levels.LevelEnum")
     return LevelEnum.Nothing
 end
 function MenuLevel:draw()
     love.graphics.draw(MenuLevel.background, 0, 0)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 70, 200, MenuLevel.progress, 20)
-    love.graphics.setColor(1, 1, 1)
-
+    MenuLevel.startButton:draw()
 end
 function MenuLevel:unload()
 end

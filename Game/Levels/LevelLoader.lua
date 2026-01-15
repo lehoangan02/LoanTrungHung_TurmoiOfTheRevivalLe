@@ -5,7 +5,7 @@ local LevelLoader = {}
 function LevelLoader:loadLevel(level)
     LevelEnum = require("Game.Levels.LevelEnum")
     if (level == LevelEnum.StartMenu) then
-        local MenuLevel = require("Game.Levels.MenuLevel")
+        local MenuLevel = require("Game.Levels.Menu.MenuLevel")
         MenuLevel:load()
         currentLevel = MenuLevel
     end
