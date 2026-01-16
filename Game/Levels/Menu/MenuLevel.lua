@@ -14,7 +14,7 @@ function MenuLevel:load()
     local HoldTextButton = require("Game.UI.HoldTextButton")
     MenuLevel.startButton = HoldTextButton:new(70, 200, 100, 20, function()
         print("Start Button Completed")
-    end, Color.Red, "START")
+    end, Color:new(200/255, 200/255, 200/255, 1), "START")
 end
 function MenuLevel:update(dt)
     if love.keyboard.isDown("down") then

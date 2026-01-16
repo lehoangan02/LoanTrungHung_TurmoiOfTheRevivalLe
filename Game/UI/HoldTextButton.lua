@@ -3,7 +3,7 @@ HoldTextButton.__index = HoldTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
-local font = fontLoader:loadFonts()
+local font = fontLoader:loadDefaultFonts()
 
 if not font then
     error("Failed to load font in HoldTextButton")
@@ -54,11 +54,12 @@ function HoldTextButton:draw()
     love.graphics.rectangle("fill", self.x, self.y, self.progress / 100 * self.width, self.height, r)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setColor(0, 0, 0, 1)
-    local FontLoader = require("Game.Fonts.FontLoader")
-    local fontLoader = FontLoader:getInstance()
-    local font = fontLoader:loadFonts()
+    local textWidth = font:getWidth(self.text)
+    local textHeight = font:getHeight()
+    local textX = math.floor(self.centerX - (textWidth) / 2)
+    local textY = math.floor(self.centerY - (textHeight) / 2)
     love.graphics.setFont(font)
-    love.graphics.print(self.text, self.centerX, self.centerY)
+    love.graphics.print(self.text, textX, textY)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()
 end

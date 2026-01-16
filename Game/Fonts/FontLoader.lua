@@ -9,9 +9,15 @@ function FontLoader:getInstance()
     return instance
 end
 
-function FontLoader:loadFonts()
-    self.defaultFont = love.graphics.newFont("Resources/Fonts/Pattaya/Pattaya-Regular.ttf", 16)
+function FontLoader:loadDefaultFonts()
+    self.defaultFont = love.graphics.newFont("Resources/Fonts/Itim/Itim-Regular.ttf", 16)
     return self.defaultFont
+end
+
+function FontLoader:loadFont(name)
+    local fontPath = "Resources/Fonts/" .. name .. "/" .. name .. "-Regular.ttf"
+    local font = love.graphics.newFont(fontPath, 16)
+    return font
 end
 
 return FontLoader
