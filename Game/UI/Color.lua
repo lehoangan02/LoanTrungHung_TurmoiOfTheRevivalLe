@@ -9,4 +9,10 @@ function Color:new(r, g, b, a)
     return self
 end
 
+Color.White = Color:new(1, 1, 1, 1)
+Color.Black = Color:new(0, 0, 0, 1)
+Color.Red = Color:new(1, 0, 0, 1)
+Color.Green = Color:new(0, 1, 0, 1)
+Color.Blue = Color:new(0, 0, 1, 1)
+
 return Color
