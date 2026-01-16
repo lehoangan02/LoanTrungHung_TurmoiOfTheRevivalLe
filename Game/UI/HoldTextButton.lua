@@ -21,7 +21,12 @@ function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     self.centerX = x + width / 2
     self.centerY = y + height / 2
     self.text = text or ""
+    self.infocus = false
     return self
+end
+
+function HoldTextButton:setFocus(isFocused)
+    self.infocus = isFocused
 end
 
 function HoldTextButton:update(dt, isHeld)
@@ -53,7 +58,11 @@ function HoldTextButton:draw()
     local pad = 3
     local borderRadius = math.min(8, self.progress / 2) + pad
 
-    love.graphics.setColor(0, 0, 0, 1)
+    if self.infocus then
+        love.graphics.setColor(0, 0, 0, 1)
+    else
+        love.graphics.setColor(0.8, 0.8, 0.8, 1)
+    end
     love.graphics.setLineWidth(2)
     love.graphics.rectangle(
         "line",
