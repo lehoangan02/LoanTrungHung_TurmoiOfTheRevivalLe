@@ -198,7 +198,7 @@ function BallDropLevel:controlEnvironment(dt)
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
-
+    love.graphics.push()
     if not BallDropLevel.loadScreen:isDone() then
         BallDropLevel.loadScreen:draw()
         return
@@ -206,7 +206,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
 
     love.graphics.clear(176/255, 174/255, 167/255, 1)
     
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 320))
+    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
     love.graphics.scale(scale, scale)
     love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
     
@@ -229,6 +229,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
     love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.pop()
     love.graphics.pop()
 end
 

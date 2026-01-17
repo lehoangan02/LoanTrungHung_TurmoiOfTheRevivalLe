@@ -33,7 +33,19 @@ function MenuLevel:update(dt)
     end
     return LevelEnum.Nothing
 end
-function MenuLevel:draw()
+function MenuLevel:draw(windowWidth, windowHeight)
+    love.graphics.push()
+
+    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    local centerX = windowWidth / 2
+    local centerY = windowHeight / 2
+    local gameWidth = BASE_W * scale
+    local gameHeight = BASE_H * scale
+    local offsetX = centerX - gameWidth / 2
+    local offsetY = centerY - gameHeight / 2
+    love.graphics.translate(offsetX, offsetY)
+    love.graphics.scale(scale, scale)
+
     love.graphics.draw(MenuLevel.background, 0, 0)
     MenuLevel.buttonGrid:draw()
     local FontLoader = require("Game.Fonts.FontLoader")
@@ -42,13 +54,13 @@ function MenuLevel:draw()
     local font = fontLoader:loadFont("BirthstoneBounce", 30)
     love.graphics.setFont(font)
     love.graphics.setColor(0, 0, 0, 1)
-    local centerX = love.graphics.getWidth() / 2
+    
     local text = "Loạn Trung Hưng"
     local textWidth = font:getWidth(text)
-    love.graphics.print(text, centerX - textWidth / 2, 10)
+    love.graphics.print(text, BASE_W / 2 - textWidth / 2, 10)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(defaultFont)
-
+    love.graphics.pop()
 end
 function MenuLevel:unload()
 end
