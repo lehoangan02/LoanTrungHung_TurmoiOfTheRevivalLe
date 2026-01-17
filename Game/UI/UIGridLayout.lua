@@ -53,6 +53,12 @@ function UIGridLayout:update()
         end
         self.grid[self.focus.y][self.focus.x]:setFocus(true)
     end
+    for i = 1, self.numCellY do
+        for j = 1, self.numCellX do
+            local element = self.grid[i][j]
+            element:update()
+        end
+    end
 end
 
 function UIGridLayout:draw()

@@ -10,7 +10,9 @@ function UIElement:new(x, y, width, height)
     return self
 end
 
-
+function UIElement:update(dt)
+    error("UIElement:update() not implemented")
+end
 
 function UIElement:draw()
     error("UIElement:draw() not implemented")

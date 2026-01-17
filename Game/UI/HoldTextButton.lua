@@ -6,6 +6,8 @@ local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
 local font = fontLoader:loadDefaultFonts()
 
+local InputManager = require("Game.Input.InputManager")
+
 if not font then
     error("Failed to load font in HoldTextButton")
 end
@@ -30,7 +32,8 @@ function HoldTextButton:setFocus(isFocused)
     self.infocus = isFocused
 end
 
-function HoldTextButton:update(dt, isHeld)
+function HoldTextButton:update(dt)
+    local isHeld = self.infocus and InputManager:isLeftRudderPressed()
     local SPEED = 230
     local DECAY_SPEED = 20
     local remaining = (100 - self.progress) / 100
