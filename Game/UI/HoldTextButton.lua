@@ -1,4 +1,5 @@
-local HoldTextButton = {}
+local UIElement = require("Game.UI.UIElement")
+local HoldTextButton = setmetatable({}, UIElement)
 HoldTextButton.__index = HoldTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
@@ -11,8 +12,8 @@ end
 
 function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     local self = setmetatable({}, HoldTextButton)
-    self.x = x
-    self.y = y
+    self.x = x or 0
+    self.y = y or 0
     self.width = width
     self.height = height
     self.onComplete = onComplete

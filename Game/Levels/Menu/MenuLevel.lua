@@ -28,8 +28,16 @@ end
 function MenuLevel:draw()
     love.graphics.draw(MenuLevel.background, 0, 0)
     MenuLevel.startButton:draw()
-    -- draw black helloworld text
-    
+    local FontLoader = require("Game.Fonts.FontLoader")
+    local fontLoader = FontLoader:getInstance()
+    local font = fontLoader:loadFont("BirthstoneBounce", 30)
+    love.graphics.setFont(font)
+    love.graphics.setColor(0, 0, 0, 1)
+    local centerX = love.graphics.getWidth() / 2
+    local text = "Loạn Trung Hưng"
+    local textWidth = font:getWidth(text)
+    love.graphics.print(text, centerX - textWidth / 2, 10)
+    love.graphics.setColor(1, 1, 1, 1)
 
 end
 function MenuLevel:unload()

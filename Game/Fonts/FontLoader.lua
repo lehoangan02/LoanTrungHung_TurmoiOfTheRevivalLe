@@ -14,9 +14,10 @@ function FontLoader:loadDefaultFonts()
     return self.defaultFont
 end
 
-function FontLoader:loadFont(name)
+function FontLoader:loadFont(name, fontSize)
+    local fontSize = fontSize or 16
     local fontPath = "Resources/Fonts/" .. name .. "/" .. name .. "-Regular.ttf"
-    local font = love.graphics.newFont(fontPath, 16)
+    local font = love.graphics.newFont(fontPath, fontSize)
     return font
 end
 
