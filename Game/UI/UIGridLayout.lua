@@ -75,12 +75,12 @@ function UIGridLayout:update(dt)
     end
 end
 
-function UIGridLayout:draw()
+function UIGridLayout:draw(scale, offsetX, offsetY)
     for i = 1, self.rows do
         for j = 1, self.cols do
             local element = self.grid[i][j]
             if element then
-                element:draw()
+                element:draw(scale, offsetX, offsetY)
             end
         end
     end

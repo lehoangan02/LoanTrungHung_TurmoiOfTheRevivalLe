@@ -17,7 +17,7 @@ function MenuLevel:load()
     MenuLevel.startButton = HoldTextButton:new(70, 200, 100, 20, function()
         print("Start Button Completed")
         MenuLevel.nextLevel = require("Game.Levels.LevelEnum").BallDrop
-    end, Color:new(200/255, 200/255, 200/255, 1), "START", true)
+    end, Color:new(200/255, 200/255, 200/255, 1), "START")
     MenuLevel.continueButton = HoldTextButton:new(70, 250, 100, 20, function()
         print("Continue Button Completed")
     end, Color:new(200/255, 200/255, 200/255, 1), "CONTINUE")
@@ -36,7 +36,8 @@ end
 function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.push()
 
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    local scale = math.max(1, math.floor(
+    math.min(windowHeight / BASE_H, windowWidth / BASE_W)))
     local centerX = windowWidth / 2
     local centerY = windowHeight / 2
     local gameWidth = BASE_W * scale
@@ -47,19 +48,24 @@ function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.scale(scale, scale)
 
     love.graphics.draw(MenuLevel.background, 0, 0)
-    MenuLevel.buttonGrid:draw()
+    love.graphics.pop()
+    MenuLevel.buttonGrid:draw(scale, offsetX, offsetY)
+    love.graphics.push()
     local FontLoader = require("Game.Fonts.FontLoader")
     local fontLoader = FontLoader:getInstance()
     local defaultFont = love.graphics.getFont()
-    local font = fontLoader:loadFont("BirthstoneBounce", 30)
+    local fontSize = 30 * scale
+    if fontSize < 1 then fontSize = 1 end
+    local font = fontLoader:loadFont("BirthstoneBounce", fontSize)
     love.graphics.setFont(font)
     love.graphics.setColor(0, 0, 0, 1)
     
     local text = "Loạn Trung Hưng"
     local textWidth = font:getWidth(text)
-    love.graphics.print(text, BASE_W / 2 - textWidth / 2, 10)
+    love.graphics.print(text, math.floor(windowWidth / 2 - textWidth / 2), math.floor(offsetY + 10))
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(defaultFont)
+
     love.graphics.pop()
 end
 function MenuLevel:unload()

@@ -4,13 +4,8 @@ HoldTextButton.__index = HoldTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
-local font = fontLoader:loadDefaultFonts()
 
 local InputManager = require("Game.Input.InputManager")
-
-if not font then
-    error("Failed to load font in HoldTextButton")
-end
 
 function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     local self = setmetatable({}, HoldTextButton)
@@ -63,8 +58,11 @@ function HoldTextButton:update(dt)
     end
 end
 
-function HoldTextButton:draw()
-
+function HoldTextButton:draw(scale, offsetX, offsetY)
+    love.graphics.push()
+     love.graphics.translate(offsetX, offsetY)
+    love.graphics.scale(scale, scale)
+   
     local pad = 3
     local borderRadius = math.min(8, self.progress / 2) + pad
 
@@ -93,17 +91,24 @@ function HoldTextButton:draw()
         self.height,
         r
     )
+    love.graphics.pop()
+    love.graphics.push()
     local defaultFont = love.graphics.getFont()
+    local font = fontLoader:loadFont("Itim", 16 * scale)
     love.graphics.setFont(font)
     love.graphics.setColor(0, 0, 0, 1)
 
     local textWidth = font:getWidth(self.text)
     local textHeight = font:getHeight()
-    local textX = math.floor(self.centerX - textWidth / 2)
-    local textY = math.floor(self.centerY - textHeight / 2)
+    local screenCenterX = offsetX + self.centerX * scale
+    local screenCenterY = offsetY + self.centerY * scale
+
+    local textX = math.floor(screenCenterX - textWidth / 2)
+    local textY = math.floor(screenCenterY - textHeight / 2)
 
     love.graphics.print(self.text, textX, textY)
 
+    love.graphics.pop()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(defaultFont)
 end

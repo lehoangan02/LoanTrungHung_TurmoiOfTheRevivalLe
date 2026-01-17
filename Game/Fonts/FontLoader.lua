@@ -9,11 +9,6 @@ function FontLoader:getInstance()
     return instance
 end
 
-function FontLoader:loadDefaultFonts()
-    self.defaultFont = love.graphics.newFont("Resources/Fonts/Itim/Itim-Regular.ttf", 16)
-    return self.defaultFont
-end
-
 function FontLoader:loadFont(name, fontSize)
     local fontSize = fontSize or 16
     local fontPath = "Resources/Fonts/" .. name .. "/" .. name .. "-Regular.ttf"

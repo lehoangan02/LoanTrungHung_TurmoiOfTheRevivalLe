@@ -18,7 +18,7 @@ function UIElement:setPosition(x, y)
     error("UIElement:setPosition() not implemented")
 end
 
-function UIElement:draw()
+function UIElement:draw(scale)
     error("UIElement:draw() not implemented")
 end
 
