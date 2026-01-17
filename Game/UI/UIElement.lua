@@ -14,6 +14,10 @@ function UIElement:update(dt)
     error("UIElement:update() not implemented")
 end
 
+function UIElement:setPosition(x, y)
+    error("UIElement:setPosition() not implemented")
+end
+
 function UIElement:draw()
     error("UIElement:draw() not implemented")
 end

@@ -3,6 +3,8 @@ local MenuLevel = setmetatable({}, {__index = Level})
 MenuLevel.__index = MenuLevel
 
 local Color = require("Game.UI.Color")
+local HoldTextButton = require("Game.UI.HoldTextButton")
+local UIGridLayout = require("Game.UI.UIGridLayout")
 
 function MenuLevel:load()
     MenuLevel.background = love.graphics.newImage("Resources/Images/MenuScreen.png")
@@ -11,18 +13,19 @@ function MenuLevel:load()
     local MusicEnum = require("Game.Music.MusicEnum")
     -- musicManager:playBackgroundMusic(MusicEnum.Test)
     print("Menu Level loaded")
-    local HoldTextButton = require("Game.UI.HoldTextButton")
     MenuLevel.startButton = HoldTextButton:new(70, 200, 100, 20, function()
         print("Start Button Completed")
     end, Color:new(200/255, 200/255, 200/255, 1), "START")
+    MenuLevel.continueButton = HoldTextButton:new(70, 250, 100, 20, function()
+        print("Continue Button Completed")
+    end, Color:new(200/255, 200/255, 200/255, 1), "CONTINUE")
+    MenuLevel.buttonGrid = UIGridLayout:new(70, 200, 100, 20, 2, 1)
+    MenuLevel.buttonGrid:addUIElement(MenuLevel.startButton, 1, 1)
+    MenuLevel.buttonGrid:addUIElement(MenuLevel.continueButton, 1, 2)
 end
-function MenuLevel:update(dt)
-    if love.keyboard.isDown("down") then
-        MenuLevel.startButton:update(dt, true)
-    else
-        MenuLevel.startButton:update(dt, false)
-    end
+function MenuLevel:update(dt) 
     local LevelEnum = require("Game.Levels.LevelEnum")
+    MenuLevel.buttonGrid:update(dt)
     return LevelEnum.Nothing
 end
 function MenuLevel:draw()

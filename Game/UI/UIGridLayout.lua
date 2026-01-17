@@ -3,20 +3,20 @@ UIGridLayout.__index = UIGridLayout
 
 local InputManager = require("Game.Input.InputManager")
 
-function UIGridLayout:new(rows, cols, width, height, numCellX, numCellY)
+function UIGridLayout:new(x, y, width, height, rows, cols)
     local self = setmetatable({}, UIGridLayout)
+    self.x = x
+    self.y = y
     self.rows = rows
     self.cols = cols
     self.width = width
     self.height = height
-    self.numCellX = numCellX
-    self.numCelly = numCellY
-    self.cellWidth = width / numCellX
-    self.cellHeight = height / numCellY
+    self.cellWidth = width / cols
+    self.cellHeight = height / rows
     self.grid = {}
-    for i = 1, numCellY do
+    for i = 1, rows do
         self.grid[i] = {}
-        for j = 1, numCellX do
+        for j = 1, cols do
             self.grid[i][j] = nil
         end
     end
@@ -25,19 +25,18 @@ function UIGridLayout:new(rows, cols, width, height, numCellX, numCellY)
 end
 
 function UIGridLayout:addUIElement(element, cellIndexX, cellIndexY)
-    if cellIndexX < 1 or cellIndexX > self.numCellX or cellIndexY < 1 or cellIndexY > self.numCellY then
+    if cellIndexX < 1 or cellIndexX > self.cols or cellIndexY < 1 or cellIndexY > self.rows then
         error("Cell index out of bounds")
     end
     self.grid[cellIndexY][cellIndexX] = element
-    local centerX = self.x + (cellIndexX - 1) * self.numCellX + self.cellWidth
+    local centerX = self.x + (cellIndexX - 1) * self.cellWidth + self.cellWidth
     local leftX = centerX - element.width
-    element.x = leftX
-    local centerY = self.y + (cellIndexY - 1) * self.numCellY + self.cellHeight
+    local centerY = self.y + (cellIndexY - 1) * self.cellHeight + self.cellHeight
     local topY = centerY - element.height
-    element.y = topY
+    element:setPosition(leftX, topY)
 end
 
-function UIGridLayout:update()
+function UIGridLayout:update(dt)
     if InputManager:isEventLeftKeyPressed() then
         self.grid[self.focus.y][self.focus.x]:setFocus(false)
         self.focus.x = self.focus.x - 1
@@ -48,22 +47,36 @@ function UIGridLayout:update()
     elseif InputManager:isEventRightKeyPressed() then
         self.grid[self.focus.y][self.focus.x]:setFocus(false)
         self.focus.x = self.focus.x + 1
-        if self.focus.x > self.numCellX then
-            self.focus.x = self.numCellX
+        if self.focus.x > self.cols then
+            self.focus.x = self.cols
+        end
+        self.grid[self.focus.y][self.focus.x]:setFocus(true)
+    elseif InputManager:isEventUpKeyPressed() then
+        self.grid[self.focus.y][self.focus.x]:setFocus(false)
+        self.focus.y = self.focus.y - 1
+        if self.focus.y < 1 then
+            self.focus.y = 1
+        end
+        self.grid[self.focus.y][self.focus.x]:setFocus(true)
+    elseif InputManager:isEventDownKeyPressed() then
+        self.grid[self.focus.y][self.focus.x]:setFocus(false)
+        self.focus.y = self.focus.y + 1
+        if self.focus.y > self.rows then
+            self.focus.y = self.rows
         end
         self.grid[self.focus.y][self.focus.x]:setFocus(true)
     end
-    for i = 1, self.numCellY do
-        for j = 1, self.numCellX do
+    for i = 1, self.rows do
+        for j = 1, self.cols do
             local element = self.grid[i][j]
-            element:update()
+            element:update(dt)
         end
     end
 end
 
 function UIGridLayout:draw()
-    for i = 1, self.numCellY do
-        for j = 1, self.numCellX do
+    for i = 1, self.rows do
+        for j = 1, self.cols do
             local element = self.grid[i][j]
             if element then
                 element:draw()
@@ -71,3 +84,5 @@ function UIGridLayout:draw()
         end
     end
 end
+
+return UIGridLayout

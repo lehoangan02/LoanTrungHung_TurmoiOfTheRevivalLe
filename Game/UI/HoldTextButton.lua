@@ -28,6 +28,13 @@ function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     return self
 end
 
+function HoldTextButton:setPosition(x, y)
+    self.x = x
+    self.y = y
+    self.centerX = x + self.width / 2
+    self.centerY = y + self.height / 2
+end
+
 function HoldTextButton:setFocus(isFocused)
     self.infocus = isFocused
 end
