@@ -7,17 +7,6 @@ function UIElement:new(x, y, width, height)
     self.y = y
     self.width = width
     self.height = height
-    self.numCellX = numCellX
-    self.numCelly = numCellY
-    self.cellWidthX = width / numCellX
-    self.cellWidthY = height / numCellY
-    self.grid = {}
-    for i = 1, numCellY do
-        self.grid[i] = {}
-        for j = 1, numCellX do
-            self.grid[i][j] = nil
-        end
-    end
     return self
 end
 
