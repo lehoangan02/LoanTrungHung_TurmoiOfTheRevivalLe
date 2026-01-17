@@ -7,6 +7,7 @@ local HoldTextButton = require("Game.UI.HoldTextButton")
 local UIGridLayout = require("Game.UI.UIGridLayout")
 
 function MenuLevel:load()
+    MenuLevel.nextLevel = nil
     MenuLevel.background = love.graphics.newImage("Resources/Images/MenuScreen.png")
     MenuLevel.background:setFilter("nearest", "nearest")
     local musicManager = require("Game.Music.MusicManager")
@@ -15,7 +16,8 @@ function MenuLevel:load()
     print("Menu Level loaded")
     MenuLevel.startButton = HoldTextButton:new(70, 200, 100, 20, function()
         print("Start Button Completed")
-    end, Color:new(200/255, 200/255, 200/255, 1), "START")
+        MenuLevel.nextLevel = require("Game.Levels.LevelEnum").BallDrop
+    end, Color:new(200/255, 200/255, 200/255, 1), "START", true)
     MenuLevel.continueButton = HoldTextButton:new(70, 250, 100, 20, function()
         print("Continue Button Completed")
     end, Color:new(200/255, 200/255, 200/255, 1), "CONTINUE")
@@ -26,6 +28,9 @@ end
 function MenuLevel:update(dt) 
     local LevelEnum = require("Game.Levels.LevelEnum")
     MenuLevel.buttonGrid:update(dt)
+    if (MenuLevel.nextLevel ~= nil) then
+        return MenuLevel.nextLevel
+    end
     return LevelEnum.Nothing
 end
 function MenuLevel:draw()
@@ -33,6 +38,7 @@ function MenuLevel:draw()
     MenuLevel.buttonGrid:draw()
     local FontLoader = require("Game.Fonts.FontLoader")
     local fontLoader = FontLoader:getInstance()
+    local defaultFont = love.graphics.getFont()
     local font = fontLoader:loadFont("BirthstoneBounce", 30)
     love.graphics.setFont(font)
     love.graphics.setColor(0, 0, 0, 1)
@@ -41,6 +47,7 @@ function MenuLevel:draw()
     local textWidth = font:getWidth(text)
     love.graphics.print(text, centerX - textWidth / 2, 10)
     love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setFont(defaultFont)
 
 end
 function MenuLevel:unload()

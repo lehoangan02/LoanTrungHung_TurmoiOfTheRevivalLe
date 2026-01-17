@@ -64,7 +64,6 @@ function HoldTextButton:update(dt)
 end
 
 function HoldTextButton:draw()
-    love.graphics.push()
 
     local pad = 3
     local borderRadius = math.min(8, self.progress / 2) + pad
@@ -94,7 +93,7 @@ function HoldTextButton:draw()
         self.height,
         r
     )
-
+    local defaultFont = love.graphics.getFont()
     love.graphics.setFont(font)
     love.graphics.setColor(0, 0, 0, 1)
 
@@ -106,7 +105,7 @@ function HoldTextButton:draw()
     love.graphics.print(self.text, textX, textY)
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.pop()
+    love.graphics.setFont(defaultFont)
 end
 
 return HoldTextButton

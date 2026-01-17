@@ -37,6 +37,7 @@ function UIGridLayout:addUIElement(element, cellIndexX, cellIndexY)
 end
 
 function UIGridLayout:update(dt)
+    self.grid[self.focus.y][self.focus.x]:setFocus(true)
     if InputManager:isEventLeftKeyPressed() then
         self.grid[self.focus.y][self.focus.x]:setFocus(false)
         self.focus.x = self.focus.x - 1
