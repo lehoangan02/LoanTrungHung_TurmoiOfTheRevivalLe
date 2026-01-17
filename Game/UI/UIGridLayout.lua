@@ -1,6 +1,8 @@
 local UIGridLayout = {}
 UIGridLayout.__index = UIGridLayout
 
+local InputManager = require("Game.Input.InputManager")
+
 function UIGridLayout:new(rows, cols, width, height, numCellX, numCellY)
     local self = setmetatable({}, UIGridLayout)
     self.rows = rows
@@ -18,6 +20,7 @@ function UIGridLayout:new(rows, cols, width, height, numCellX, numCellY)
             self.grid[i][j] = nil
         end
     end
+    self.focus = {x = 1, y = 1}
     return self
 end
 
@@ -35,7 +38,21 @@ function UIGridLayout:addUIElement(element, cellIndexX, cellIndexY)
 end
 
 function UIGridLayout:update()
-    
+    if InputManager:isEventLeftKeyPressed() then
+        self.grid[self.focus.y][self.focus.x]:setFocus(false)
+        self.focus.x = self.focus.x - 1
+        if self.focus.x < 1 then
+            self.focus.x = 1
+        end
+        self.grid[self.focus.y][self.focus.x]:setFocus(true)
+    elseif InputManager:isEventRightKeyPressed() then
+        self.grid[self.focus.y][self.focus.x]:setFocus(false)
+        self.focus.x = self.focus.x + 1
+        if self.focus.x > self.numCellX then
+            self.focus.x = self.numCellX
+        end
+        self.grid[self.focus.y][self.focus.x]:setFocus(true)
+    end
 end
 
 function UIGridLayout:draw()

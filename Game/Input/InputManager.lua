@@ -8,6 +8,13 @@ local wasUpKeyPressed = false
 local upSignaled = false
 local wasDownKeyPressed = false
 local downSignaled = false
+local wasLeftKeyPressed = false
+local leftSignaled = false
+local wasRightKeyPressed = false
+local rightSignaled = false
+
+
+
 local KY040 = require("Game.Input.KY040")
 local Controller = require("Game.Input.Controller")
 local controller = Controller:new()
@@ -33,6 +40,13 @@ function InputManager:update()
     local isDownCurrentlyPressed = love.keyboard.isDown("down") or love.keyboard.isDown("s")
     downSignaled = isDownCurrentlyPressed and not wasDownKeyPressed
     wasDownKeyPressed = isDownCurrentlyPressed
+    local isLeftCurrentlyPressed = love.keyboard.isDown("left") or love.keyboard.isDown("a")
+    leftSignaled = isLeftCurrentlyPressed and not wasLeftKeyPressed
+    wasLeftKeyPressed = isLeftCurrentlyPressed
+    local isRightCurrentlyPressed = love.keyboard.isDown("right") or love.keyboard.isDown("d")
+    rightSignaled = isRightCurrentlyPressed and not wasRightKeyPressed
+    wasRightKeyPressed = isRightCurrentlyPressed
+
     KY040:update()
     controller:update()
 end
@@ -47,6 +61,18 @@ end
 
 function InputManager:isEventUpKeyPressed()
     return upSignaled
+end
+
+function InputManager:isEventDownKeyPressed()
+    return downSignaled
+end
+
+function InputManager:isEventLeftKeyPressed()
+    return leftSignaled
+end
+
+function InputManager:isEventRightKeyPressed()
+    return rightSignaled
 end
 
 function InputManager:isKeyRightPressed()
