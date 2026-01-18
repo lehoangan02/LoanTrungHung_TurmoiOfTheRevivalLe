@@ -8,11 +8,16 @@ function LevelLoader:loadLevel(level)
         local MenuLevel = require("Game.Levels.Menu.MenuLevel")
         MenuLevel:load()
         currentLevel = MenuLevel
-    end
-    if (level == LevelEnum.BallDrop) then
+    elseif (level == LevelEnum.BallDrop) then
         local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
         BallDropLevel:load()
         currentLevel = BallDropLevel
+    elseif (level == LevelEnum.NgocHoi) then
+        local NgocHoi = require("Game.Levels.NgocHoi.NgocHoi")
+        NgocHoi:load()
+        currentLevel = NgocHoi
+    else
+        error("Unknown level: " .. tostring(level))
     end
     return currentLevel
 end

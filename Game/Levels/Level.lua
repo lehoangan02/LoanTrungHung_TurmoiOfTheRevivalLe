@@ -10,7 +10,7 @@ function Level:update(dt)
    error("Level.update not implemented")
 end
 
-function Level:draw()
+function Level:draw(windowWidth, windowHeight)
    error("Level.draw not implemented")
 end
 
