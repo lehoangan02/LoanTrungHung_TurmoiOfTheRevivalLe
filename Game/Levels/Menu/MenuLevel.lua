@@ -16,7 +16,7 @@ function MenuLevel:load()
     print("Menu Level loaded")
     MenuLevel.startButton = HoldTextButton:new(70, 200, 100, 20, function()
         print("Start Button Completed")
-        MenuLevel.nextLevel = require("Game.Levels.LevelEnum").BallDrop
+        MenuLevel.nextLevel = require("Game.Levels.LevelEnum").NgocHoi
     end, Color:new(200/255, 200/255, 200/255, 1), "START")
     MenuLevel.continueButton = HoldTextButton:new(70, 250, 100, 20, function()
         print("Continue Button Completed")

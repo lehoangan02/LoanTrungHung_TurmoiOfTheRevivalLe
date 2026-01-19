@@ -13,7 +13,7 @@ end
 
 function GameManager:start()
     inputManager:load()
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.NgocHoi)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.StartMenu)
 end
 function GameManager:update(dt)
     inputManager:update()
