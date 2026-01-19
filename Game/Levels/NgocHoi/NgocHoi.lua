@@ -3,6 +3,7 @@ local NgocHoi = setmetatable({}, Level)
 NgocHoi.__index = NgocHoi
 
 local FontLoader = require("Game.Fonts.FontLoader")
+local anim8 = require "Game/Libraries/anim8"
 
 function NgocHoi:load()
 
@@ -24,12 +25,28 @@ function NgocHoi:load()
     NgocHoi.siege_tower:setFilter("nearest", "nearest")
     NgocHoi.straw_straight = love.graphics.newImage("Resources/Images/Straw_straight.png")
     NgocHoi.straw_straight:setFilter("nearest", "nearest")
+    NgocHoi.strawTimers = {0, 0, 0}
+    NgocHoi.strawIntervals = {0.8, 1.3, 1.9}
+    NgocHoi.strawOffsets = {0, 0, 0}
+
+
     NgocHoi.straw = love.graphics.newImage("Resources/Images/Straw.png")
     NgocHoi.straw:setFilter("nearest", "nearest")
     NgocHoi.ground = love.graphics.newImage("Resources/Images/Ground.png")
     NgocHoi.ground:setFilter("nearest", "nearest")
-    NgocHoi.soldier = love.graphics.newImage("Resources/Images/Soldier-24ex.png")
-    NgocHoi.soldier:setFilter("nearest", "nearest")
+    NgocHoi.soldier_spritesheet = love.graphics.newImage("Resources/Images/Soldier-24-sprite-sheet.png")
+    NgocHoi.soldier_spritesheet:setFilter("nearest", "nearest")
+    NgocHoi.soldier_grid = anim8.newGrid(24, 37, NgocHoi.soldier_spritesheet:getWidth(), NgocHoi.soldier_spritesheet:getHeight())
+    NgocHoi.soldier_animations = {}
+    for i = 1, 3 do
+        local anim = anim8.newAnimation(
+            NgocHoi.soldier_grid('1-12', 1),
+            0.2
+        )
+        anim:gotoFrame((i - 1) * 4 + 1)
+        NgocHoi.soldier_animations[i] = anim
+    end
+
     NgocHoi.groundWidth = NgocHoi.ground:getWidth()
     NgocHoi.groundPositionX = 0
 end
@@ -53,6 +70,19 @@ function NgocHoi:update(dt)
     if (NgocHoi.groundPositionX <= -NgocHoi.groundWidth) then
         NgocHoi.groundPositionX = NgocHoi.groundPositionX + NgocHoi.groundWidth
     end
+    for i = 1, 3 do
+        NgocHoi.soldier_animations[i]:update(dt)
+    end
+
+    for i = 1, 3 do
+        NgocHoi.strawTimers[i] = NgocHoi.strawTimers[i] + dt
+        if NgocHoi.strawTimers[i] >= NgocHoi.strawIntervals[i] then
+            NgocHoi.strawTimers[i] = NgocHoi.strawTimers[i] - NgocHoi.strawIntervals[i]
+            NgocHoi.strawOffsets[i] = math.random() < 0.5 and 0 or 2
+        end
+    end
+
+
     return LevelEnum.Nothing
 end
 
@@ -78,10 +108,14 @@ function NgocHoi:draw(windowWidth, windowHeight)
         love.graphics.draw(NgocHoi.straw, 100, 63)
         love.graphics.draw(NgocHoi.straw, 140, 63)
 
-        love.graphics.draw(NgocHoi.soldier, 68, 182)
-        love.graphics.draw(NgocHoi.straw_straight, 65, 180)
-        love.graphics.draw(NgocHoi.straw_straight, 32, 181)
-        love.graphics.draw(NgocHoi.straw_straight, -2, 180)
+        NgocHoi.soldier_animations[1]:draw(NgocHoi.soldier_spritesheet, 70, 183)
+        NgocHoi.soldier_animations[2]:draw(NgocHoi.soldier_spritesheet, 35, 186)
+        NgocHoi.soldier_animations[3]:draw(NgocHoi.soldier_spritesheet, 0, 187)
+
+
+        love.graphics.draw(NgocHoi.straw_straight, 65, 178 + NgocHoi.strawOffsets[1])
+        love.graphics.draw(NgocHoi.straw_straight, 32, 180 + NgocHoi.strawOffsets[2])
+        love.graphics.draw(NgocHoi.straw_straight, -2, 182 + NgocHoi.strawOffsets[3])
         
     NgocHoi.cam:detach()
 
