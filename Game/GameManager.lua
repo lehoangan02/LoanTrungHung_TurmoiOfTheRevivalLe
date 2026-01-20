@@ -38,7 +38,7 @@ function GameManager:draw(windowWidth, windowHeight)
     love.graphics.setScissor()
     love.graphics.origin()
 
-    -- compute SAME values as level scaling
+
     local scale = math.min(
         windowWidth / BASE_W,
         windowHeight / BASE_H
@@ -50,7 +50,6 @@ function GameManager:draw(windowWidth, windowHeight)
     local offsetX = (windowWidth - gameWidth) / 2
     local offsetY = (windowHeight - gameHeight) / 2
 
-    -- draw border around GAME area
     love.graphics.setColor(1, 0, 0, 1)
     love.graphics.setLineWidth(2)
     love.graphics.rectangle(
