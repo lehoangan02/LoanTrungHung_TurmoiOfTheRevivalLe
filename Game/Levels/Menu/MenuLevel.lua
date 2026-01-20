@@ -35,7 +35,7 @@ function MenuLevel:update(dt)
 end
 function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.push()
-
+    love.graphics.clear(1, 1, 1, 1)
     local scale = math.max(1, math.floor(
     math.min(windowHeight / BASE_H, windowWidth / BASE_W)))
     local centerX = windowWidth / 2

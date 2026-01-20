@@ -4,6 +4,7 @@ NgocHoi.__index = NgocHoi
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local anim8 = require "Game/Libraries/anim8"
+local InputManager = require("Game.Input.InputManager")
 
 function NgocHoi:load()
 
@@ -49,7 +50,21 @@ function NgocHoi:load()
 
     NgocHoi.groundWidth = NgocHoi.ground:getWidth()
     NgocHoi.groundPositionX = 0
+
+    NgocHoi.shakeTime = 0
+    NgocHoi.shakeDuration = 0
+    NgocHoi.shakeMagnitude = 0
+    NgocHoi.shakeX = 0
+    NgocHoi.shakeY = 0
+
 end
+
+function NgocHoi:shake(duration, magnitude)
+    NgocHoi.shakeDuration = duration
+    NgocHoi.shakeTime = duration
+    NgocHoi.shakeMagnitude = magnitude
+end
+
 
 function NgocHoi:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
@@ -65,7 +80,14 @@ function NgocHoi:update(dt)
     end
     local rotationSpeed = 120
     NgocHoi.wheelRotation = NgocHoi.wheelRotation + rotationSpeed * dt
-    NgocHoi.cam:lookAt(NgocHoi.cameraX, NgocHoi.cameraY)
+    -- NgocHoi.cam:lookAt(NgocHoi.cameraX, NgocHoi.cameraY)
+
+    NgocHoi.cam:lookAt(
+        NgocHoi.cameraX + NgocHoi.shakeX,
+        NgocHoi.cameraY + NgocHoi.shakeY
+    )
+
+
     NgocHoi.groundPositionX = NgocHoi.groundPositionX - 17 * dt
     if (NgocHoi.groundPositionX <= -NgocHoi.groundWidth) then
         NgocHoi.groundPositionX = NgocHoi.groundPositionX + NgocHoi.groundWidth
@@ -82,11 +104,27 @@ function NgocHoi:update(dt)
         end
     end
 
+    if NgocHoi.shakeTime > 0 then
+    NgocHoi.shakeTime = NgocHoi.shakeTime - dt
+        local t = NgocHoi.shakeTime / NgocHoi.shakeDuration
+        local strength = NgocHoi.shakeMagnitude * t
+
+        NgocHoi.shakeX = love.math.random(-strength, strength)
+        NgocHoi.shakeY = love.math.random(-strength, strength)
+    else
+        NgocHoi.shakeX = 0
+        NgocHoi.shakeY = 0
+    end
+
+    if (InputManager:isEventFKeyPressed()) then
+        NgocHoi:shake(0.05, 1)
+    end
 
     return LevelEnum.Nothing
 end
 
 function NgocHoi:draw(windowWidth, windowHeight)
+    love.graphics.push()
     love.graphics.clear(1, 1, 1, 1)
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
@@ -118,6 +156,7 @@ function NgocHoi:draw(windowWidth, windowHeight)
         love.graphics.draw(NgocHoi.straw_straight, -2, 182 + NgocHoi.strawOffsets[3])
         
     NgocHoi.cam:detach()
+    love.graphics.pop()
 
     
  

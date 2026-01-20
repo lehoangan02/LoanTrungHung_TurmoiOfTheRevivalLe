@@ -32,7 +32,39 @@ function GameManager:quit()
 end
 function GameManager:draw(windowWidth, windowHeight)
     GameManager.currentLevel:draw(windowWidth, windowHeight)
+
+    -- RESET to screen space
+    love.graphics.setCanvas()
+    love.graphics.setScissor()
+    love.graphics.origin()
+
+    -- compute SAME values as level scaling
+    local scale = math.min(
+        windowWidth / BASE_W,
+        windowHeight / BASE_H
+    )
+
+    local gameWidth = BASE_W * scale
+    local gameHeight = BASE_H * scale
+
+    local offsetX = (windowWidth - gameWidth) / 2
+    local offsetY = (windowHeight - gameHeight) / 2
+
+    -- draw border around GAME area
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.setLineWidth(2)
+    love.graphics.rectangle(
+        "line",
+        offsetX,
+        offsetY,
+        gameWidth,
+        gameHeight
+    )
+
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setLineWidth(1)
 end
+
 
 
 return GameManager
