@@ -34,7 +34,14 @@ function SiegeTower.new(world, x, y)
     self.guy1StatefulObject:addState("sprite", self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
 
+    self.guy2StatefulObject = StatefulObject:new()
+    self.guy2Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy2_1.png")
+    self.guy2StatefulObject:addState("sprite", self.guy2Sprite1)
+    self.guy2Sprite2 = love.graphics.newImage("Resources/Images/siege_tower_guy2_2.png")
+    self.guy2StatefulObject:addState("sprite", self.guy2Sprite2)
+    self.guy2StatefulObject:setState(1)
 
+    self.guy34Sprite = love.graphics.newImage("Resources/Images/siege_tower_guy34.png")
 
     return self
 end
