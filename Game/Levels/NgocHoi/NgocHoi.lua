@@ -8,6 +8,10 @@ local InputManager = require("Game.Input.InputManager")
 
 function NgocHoi:load()
 
+    local bf = require("Game/Libraries/breezefield-master")
+    NgocHoi.worldGravity = 250
+    NgocHoi.world = bf.newWorld(0, NgocHoi.worldGravity, false)
+
     NgocHoi.TitleTime = 2.5
     NgocHoi.TitleAlpha = 1
     NgocHoi.FadeSpeed = 0.9
@@ -33,7 +37,8 @@ function NgocHoi:load()
     NgocHoi.strawTimers = {0, 0, 0}
     NgocHoi.strawIntervals = {0.8, 1.3, 1.9}
     NgocHoi.strawOffsets = {0, 0, 0}
-
+    NgocHoi.siege_tower_collider = NgocHoi.world:newCollider("Rectangle", NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY, NgocHoi.siege_tower:getWidth(), NgocHoi.siege_tower:getHeight())
+    NgocHoi.siege_tower_collider:setType("static")
 
     NgocHoi.straw = love.graphics.newImage("Resources/Images/Straw.png")
     NgocHoi.straw:setFilter("nearest", "nearest")
@@ -107,9 +112,7 @@ function NgocHoi:load()
     NgocHoi.shakeX = 0
     NgocHoi.shakeY = 0
 
-    local bf = require("Game/Libraries/breezefield-master")
-    NgocHoi.worldGravity = 250
-    NgocHoi.world = bf.newWorld(0, NgocHoi.worldGravity, false)
+    
 
     local Ball = require("Game.Levels.NgocHoi.Ball")
     NgocHoi.cannonBall1 = Ball.new(NgocHoi.world, -230)
@@ -279,7 +282,8 @@ end
 
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
-    love.graphics.clear(1, 1, 1, 1)
+    -- love.graphics.clear(1, 1, 1, 1)
+    love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
