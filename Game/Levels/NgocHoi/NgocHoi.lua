@@ -37,7 +37,7 @@ function NgocHoi:load()
     NgocHoi.strawTimers = {0, 0, 0}
     NgocHoi.strawIntervals = {0.8, 1.3, 1.9}
     NgocHoi.strawOffsets = {0, 0, 0}
-    NgocHoi.siege_tower_collider = NgocHoi.world:newCollider("Rectangle", NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY, NgocHoi.siege_tower:getWidth(), NgocHoi.siege_tower:getHeight())
+    NgocHoi.siege_tower_collider = NgocHoi.world:newCollider("Rectangle", {NgocHoi.siege_tower_positionX + NgocHoi.siege_tower:getWidth() / 2, NgocHoi.siege_tower_positionY + NgocHoi.siege_tower:getHeight() / 2, NgocHoi.siege_tower:getWidth(), NgocHoi.siege_tower:getHeight()})
     NgocHoi.siege_tower_collider:setType("static")
 
     NgocHoi.straw = love.graphics.newImage("Resources/Images/Straw.png")
@@ -83,22 +83,22 @@ function NgocHoi:load()
 
     NgocHoi.cannon2_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
     NgocHoi.cannon2_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon2_grid = anim8.newGrid(60, 40, NgocHoi.cannon2_spritesheet:getWidth(), NgocHoi.cannon2_spritesheet:getHeight())
-    NgocHoi.cannon2_animation = anim8.newAnimation(NgocHoi.cannon2_grid('1-6', 1), 0.2, 'pauseAtEnd')
+    NgocHoi.cannon2_grid = anim8.newGrid(70, 40, NgocHoi.cannon2_spritesheet:getWidth(), NgocHoi.cannon2_spritesheet:getHeight())
+    NgocHoi.cannon2_animation = anim8.newAnimation(NgocHoi.cannon2_grid('1-6', 1), 0.15, 'pauseAtEnd')
     NgocHoi.TimeCannon2 = 10.5
     NgocHoi.cannon2Fired = false
 
     NgocHoi.cannon3_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
     NgocHoi.cannon3_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon3_grid = anim8.newGrid(60, 40, NgocHoi.cannon3_spritesheet:getWidth(), NgocHoi.cannon3_spritesheet:getHeight())
-    NgocHoi.cannon3_animation = anim8.newAnimation(NgocHoi.cannon3_grid('1-6', 1), 0.2, 'pauseAtEnd')
+    NgocHoi.cannon3_grid = anim8.newGrid(70, 40, NgocHoi.cannon3_spritesheet:getWidth(), NgocHoi.cannon3_spritesheet:getHeight())
+    NgocHoi.cannon3_animation = anim8.newAnimation(NgocHoi.cannon3_grid('1-6', 1), 0.15, 'pauseAtEnd')
     NgocHoi.TimeCannon3 = 11.5
     NgocHoi.cannon3Fired = false
 
     NgocHoi.cannon4_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
     NgocHoi.cannon4_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon4_grid = anim8.newGrid(60, 40, NgocHoi.cannon4_spritesheet:getWidth(), NgocHoi.cannon4_spritesheet:getHeight())
-    NgocHoi.cannon4_animation = anim8.newAnimation(NgocHoi.cannon4_grid('1-6', 1), 0.2, 'pauseAtEnd')
+    NgocHoi.cannon4_grid = anim8.newGrid(70, 40, NgocHoi.cannon4_spritesheet:getWidth(), NgocHoi.cannon4_spritesheet:getHeight())
+    NgocHoi.cannon4_animation = anim8.newAnimation(NgocHoi.cannon4_grid('1-6', 1), 0.15, 'pauseAtEnd')
     NgocHoi.TimeCannon4 = 12.0
     NgocHoi.cannon4Fired = false
 
