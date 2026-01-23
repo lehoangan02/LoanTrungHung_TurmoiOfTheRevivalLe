@@ -1,14 +1,17 @@
 local SiegeTower = {}
 SiegeTower.__index = SiegeTower
 
-local StatefulObject = require("Game.Components.StatefulObject")
-local anim8 = require("Libraries.anim8.anim8")
+local anim8 = require "Game/Libraries/anim8"
 
-function SiegeTower:new(world, x, y)
+local StatefulObject = require("Game.Components.StatefulObject")
+
+function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     local self = setmetatable({}, SiegeTower)
 
     self.siege_tower_positionX = x
     self.siege_tower_positionY = y
+
+    self.onCannonFire = onCannonFireShakeScreen
 
     self.world = world
     self.sprite1 = love.graphics.newImage("Resources/Images/siege_tower.png")
@@ -16,6 +19,8 @@ function SiegeTower:new(world, x, y)
 
     self.collider = self.world:newCollider("Rectangle", { x + self.sprite1:getWidth() / 2, y + self.sprite1:getHeight() / 2, self.sprite1:getWidth(), self.sprite1:getHeight() })
     self.collider:setType("static")
+
+    self.Timer = 0
 
     self.frontStatefulObject = StatefulObject:new()
     self.frontSprite1 = love.graphics.newImage("Resources/Images/siege_tower_front1.png")
@@ -33,16 +38,16 @@ function SiegeTower:new(world, x, y)
 
     self.guy1StatefulObject = StatefulObject:new()
     self.guy1Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy1_1.png")
-    self.guy1StatefulObject:addSSprite(self.guy1Sprite1)
+    self.guy1StatefulObject:addSprite(self.guy1Sprite1)
     self.guy1Sprite2 = love.graphics.newImage("Resources/Images/siege_tower_guy1_2.png")
-    self.guy1StatefulObject:addSSprite(self.guy1Sprite2)
+    self.guy1StatefulObject:addSprite(self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
 
     self.guy2StatefulObject = StatefulObject:new()
     self.guy2Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy2_1.png")
-    self.guy2StatefulObject:addSSprite(self.guy2Sprite1)
+    self.guy2StatefulObject:addSprite(self.guy2Sprite1)
     self.guy2Sprite2 = love.graphics.newImage("Resources/Images/siege_tower_guy2_2.png")
-    self.guy2StatefulObject:addSSprite(self.guy2Sprite2)
+    self.guy2StatefulObject:addSprite(self.guy2Sprite2)
     self.guy2StatefulObject:setState(1)
 
     self.guy34Sprite = love.graphics.newImage("Resources/Images/siege_tower_guy34.png")
@@ -88,6 +93,42 @@ function SiegeTower:update(dt)
     local rotationSpeed = 120
     self.wheelRotation = self.wheelRotation + rotationSpeed * dt
 
+    self.Timer = self.Timer + dt
+
+    local animationCannon2 = self.cannon2_statefulObject:getCurrentAnimation()
+    if self.Timer >= self.TimeCannon2 and not self.cannon2Fired then
+        animationCannon2:gotoFrame(1)
+        animationCannon2:resume()
+        self.cannon2Fired = true
+    end
+    if animationCannon2.position == 4 then
+        self.onCannonFire(0.1, 1)
+    end
+    
+    local animationCannon3 = self.cannon3_statefulObject:getCurrentAnimation()
+    if self.Timer >= self.TimeCannon3 and not self.cannon3Fired then
+        animationCannon3:gotoFrame(1)
+        animationCannon3:resume()
+        self.cannon3Fired = true
+    end
+    if animationCannon3.position == 4 then
+        self.onCannonFire(0.1, 1)
+    end
+
+    local animationCannon4 = self.cannon4_statefulObject:getCurrentAnimation()
+    if self.Timer >= self.TimeCannon4 and not self.cannon4Fired then
+        animationCannon4:gotoFrame(1)
+        animationCannon4:resume()
+        self.cannon4Fired = true
+    end
+    if animationCannon4.position == 4 then
+        self.onCannonFire(0.1, 1)
+    end
+
+    self.cannon2_statefulObject:update(dt)
+    self.cannon3_statefulObject:update(dt)
+    self.cannon4_statefulObject:update(dt)
+
 end
 
 function SiegeTower:draw()
@@ -107,3 +148,5 @@ function SiegeTower:draw()
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     love.graphics.draw(self.straw, 140, self.siege_tower_positionY - 2)
 end
+
+return SiegeTower

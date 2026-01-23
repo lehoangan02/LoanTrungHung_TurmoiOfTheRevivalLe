@@ -77,3 +77,5 @@ function StatefulObject:getCurrentSprite()
         return nil
     end
 end
+
+return StatefulObject

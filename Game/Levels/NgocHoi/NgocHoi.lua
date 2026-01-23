@@ -2,9 +2,17 @@ local Level = require("Game.Levels.Level")
 local NgocHoi = setmetatable({}, Level)
 NgocHoi.__index = NgocHoi
 
-local FontLoader = require("Game.Fonts.FontLoader")
 local anim8 = require "Game/Libraries/anim8"
+
+local FontLoader = require("Game.Fonts.FontLoader")
 local InputManager = require("Game.Input.InputManager")
+local SiegeTower = require("Game.Levels.NgocHoi.SiegeTower")
+
+function NgocHoi:shake(duration, magnitude)
+    NgocHoi.shakeDuration = duration
+    NgocHoi.shakeTime = duration
+    NgocHoi.shakeMagnitude = magnitude
+end
 
 function NgocHoi:load()
 
@@ -23,25 +31,14 @@ function NgocHoi:load()
     NgocHoi.cam = camera()
     NgocHoi.cam:lookAt(NgocHoi.cameraX, NgocHoi.cameraY)
 
-    NgocHoi.wheel = love.graphics.newImage("Resources/Images/wheel.png")
-    NgocHoi.wheel:setFilter("nearest", "nearest")
-    NgocHoi.wheelRotation = 0
-    NgocHoi.siege_tower = love.graphics.newImage("Resources/Images/siege_tower.png")
-    NgocHoi.siege_tower:setFilter("nearest", "nearest")
-    NgocHoi.siege_tower_bg = love.graphics.newImage("Resources/Images/siege_tower_bg.png")
-    NgocHoi.siege_tower_bg:setFilter("nearest", "nearest")
     NgocHoi.siege_tower_positionX = 100
     NgocHoi.siege_tower_positionY = 70
-    NgocHoi.straw_straight = love.graphics.newImage("Resources/Images/Straw_straight.png")
-    NgocHoi.straw_straight:setFilter("nearest", "nearest")
+    NgocHoi.siege_tower = SiegeTower:new(NgocHoi.world, NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY, function(duration, magnitude) NgocHoi:shake(duration, magnitude) end)
+    
     NgocHoi.strawTimers = {0, 0, 0}
     NgocHoi.strawIntervals = {0.8, 1.3, 1.9}
     NgocHoi.strawOffsets = {0, 0, 0}
-    NgocHoi.siege_tower_collider = NgocHoi.world:newCollider("Rectangle", {NgocHoi.siege_tower_positionX + NgocHoi.siege_tower:getWidth() / 2, NgocHoi.siege_tower_positionY + NgocHoi.siege_tower:getHeight() / 2, NgocHoi.siege_tower:getWidth(), NgocHoi.siege_tower:getHeight()})
-    NgocHoi.siege_tower_collider:setType("static")
 
-    NgocHoi.straw = love.graphics.newImage("Resources/Images/Straw.png")
-    NgocHoi.straw:setFilter("nearest", "nearest")
     NgocHoi.ground = love.graphics.newImage("Resources/Images/Ground.png")
     NgocHoi.ground:setFilter("nearest", "nearest")
     NgocHoi.soldier_spritesheet = love.graphics.newImage("Resources/Images/Soldier-24-sprite-sheet.png")
@@ -81,27 +78,6 @@ function NgocHoi:load()
     NgocHoi.missed_bullet_fired = false
     NgocHoi.Time_missed_bullet = 8.5
 
-    NgocHoi.cannon2_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
-    NgocHoi.cannon2_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon2_grid = anim8.newGrid(70, 40, NgocHoi.cannon2_spritesheet:getWidth(), NgocHoi.cannon2_spritesheet:getHeight())
-    NgocHoi.cannon2_animation = anim8.newAnimation(NgocHoi.cannon2_grid('1-6', 1), 0.15, 'pauseAtEnd')
-    NgocHoi.TimeCannon2 = 10.5
-    NgocHoi.cannon2Fired = false
-
-    NgocHoi.cannon3_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
-    NgocHoi.cannon3_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon3_grid = anim8.newGrid(70, 40, NgocHoi.cannon3_spritesheet:getWidth(), NgocHoi.cannon3_spritesheet:getHeight())
-    NgocHoi.cannon3_animation = anim8.newAnimation(NgocHoi.cannon3_grid('1-6', 1), 0.15, 'pauseAtEnd')
-    NgocHoi.TimeCannon3 = 11.5
-    NgocHoi.cannon3Fired = false
-
-    NgocHoi.cannon4_spritesheet = love.graphics.newImage("Resources/Images/LightCannon2.png")
-    NgocHoi.cannon4_spritesheet:setFilter("nearest", "nearest")
-    NgocHoi.cannon4_grid = anim8.newGrid(70, 40, NgocHoi.cannon4_spritesheet:getWidth(), NgocHoi.cannon4_spritesheet:getHeight())
-    NgocHoi.cannon4_animation = anim8.newAnimation(NgocHoi.cannon4_grid('1-6', 1), 0.15, 'pauseAtEnd')
-    NgocHoi.TimeCannon4 = 12.0
-    NgocHoi.cannon4Fired = false
-
     NgocHoi.groundWidth = NgocHoi.ground:getWidth()
     NgocHoi.groundPositionX = 0
     NgocHoi.groundPositionY = 200
@@ -112,21 +88,12 @@ function NgocHoi:load()
     NgocHoi.shakeX = 0
     NgocHoi.shakeY = 0
 
-    
-
     local Ball = require("Game.Levels.NgocHoi.Ball")
     NgocHoi.cannonBall1 = Ball.new(NgocHoi.world, -230)
     NgocHoi.cannonBall1Fired = false
     NgocHoi.TimeCannon1 = 9.0
 
 end
-
-function NgocHoi:shake(duration, magnitude)
-    NgocHoi.shakeDuration = duration
-    NgocHoi.shakeTime = duration
-    NgocHoi.shakeMagnitude = magnitude
-end
-
 
 function NgocHoi:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
@@ -149,7 +116,6 @@ function NgocHoi:update(dt)
         NgocHoi.cameraX + NgocHoi.shakeX,
         NgocHoi.cameraY + NgocHoi.shakeY
     )
-
 
     NgocHoi.groundPositionX = NgocHoi.groundPositionX - 17 * dt
     if (NgocHoi.groundPositionX <= -NgocHoi.groundWidth) then
@@ -232,50 +198,7 @@ function NgocHoi:update(dt)
         NgocHoi:shake(0.2, 3)
     end
 
-    if NgocHoi.BulletTimer >= NgocHoi.TimeCannon2 then
-        if not NgocHoi.cannon2Fired then
-            NgocHoi.cannon2_animation:gotoFrame(1)
-            NgocHoi.cannon2_animation:resume()
-            NgocHoi.cannon2Fired = true
-        end
-    end
-
-    if NgocHoi.cannon2_animation.position == 4 then
-        NgocHoi:shake(0.1, 1)
-    end
-
-    if NgocHoi.BulletTimer >= NgocHoi.TimeCannon3 then
-        if not NgocHoi.cannon3Fired then
-            NgocHoi.cannon3_animation:gotoFrame(1)
-            NgocHoi.cannon3_animation:resume()
-            NgocHoi.cannon3Fired = true
-        end
-    end
-
-    if NgocHoi.cannon3_animation.position == 4 then
-        NgocHoi:shake(0.1, 1)
-    end
-
-    if NgocHoi.BulletTimer >= NgocHoi.TimeCannon4 then
-        if not NgocHoi.cannon4Fired then
-            NgocHoi.cannon4_animation:gotoFrame(1)
-            NgocHoi.cannon4_animation:resume()
-            NgocHoi.cannon4Fired = true
-        end
-    end
-
-    if NgocHoi.cannon4_animation.position == 4 then
-        NgocHoi:shake(0.1, 1)
-    end
-
-    if InputManager:isEventFKeyPressed() then
-        NgocHoi.cannon2_animation:gotoFrame(1)
-        NgocHoi.cannon2_animation:resume()
-    end
-
-    NgocHoi.cannon2_animation:update(dt)
-    NgocHoi.cannon3_animation:update(dt)
-    NgocHoi.cannon4_animation:update(dt)
+    NgocHoi.siege_tower:update(dt) 
 
     return LevelEnum.Nothing
 end
@@ -293,26 +216,7 @@ function NgocHoi:draw(windowWidth, windowHeight)
     NgocHoi.cam:attach()
         NgocHoi.world:draw()
 
-        
-        local wheelWidth = NgocHoi.wheel:getWidth()
-        local wheelHeight = NgocHoi.wheel:getHeight()
-        love.graphics.draw(NgocHoi.siege_tower_bg, NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY)
-        NgocHoi.cannon2_animation:draw(NgocHoi.cannon2_spritesheet, NgocHoi.siege_tower_positionX + 40, NgocHoi.siege_tower_positionY - 2)
-        NgocHoi.cannon3_animation:draw(NgocHoi.cannon3_spritesheet, NgocHoi.siege_tower_positionX + 44, NgocHoi.siege_tower_positionY + 51)
-        NgocHoi.cannon4_animation:draw(NgocHoi.cannon4_spritesheet, NgocHoi.siege_tower_positionX + 41, NgocHoi.siege_tower_positionY + 77)
-        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX, NgocHoi.groundPositionY)
-        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX + NgocHoi.groundWidth, 200)
-        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX - NgocHoi.groundWidth, 200)
-        love.graphics.draw(NgocHoi.wheel, NgocHoi.siege_tower_positionX + 20 + wheelWidth/2, NgocHoi.siege_tower_positionY + 135 + 3 + wheelHeight/2, math.rad(30 + NgocHoi.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
-        love.graphics.draw(NgocHoi.wheel, NgocHoi.siege_tower_positionX + 60 + wheelWidth/2, NgocHoi.siege_tower_positionY + 135 + 3 + wheelHeight/2, math.rad(45 + NgocHoi.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
-        love.graphics.draw(NgocHoi.siege_tower, NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY)
-        love.graphics.draw(NgocHoi.wheel, NgocHoi.siege_tower_positionX + 10 + wheelWidth/2, NgocHoi.siege_tower_positionY + 135 + 5 + wheelHeight/2, math.rad(60 + NgocHoi.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
-        love.graphics.draw(NgocHoi.wheel, NgocHoi.siege_tower_positionX + 50 + wheelWidth/2, NgocHoi.siege_tower_positionY + 135 + 5 + wheelHeight/2, math.rad(0 + NgocHoi.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
-        
-        
-
-        love.graphics.draw(NgocHoi.straw, 100, NgocHoi.siege_tower_positionY - 2)
-        love.graphics.draw(NgocHoi.straw, 140, NgocHoi.siege_tower_positionY - 2)
+        NgocHoi.siege_tower:draw()
 
         NgocHoi.soldier_animations[1]:draw(NgocHoi.soldier_spritesheet, 70, 183)
         NgocHoi.soldier_animations[2]:draw(NgocHoi.soldier_spritesheet, 35, 185)
