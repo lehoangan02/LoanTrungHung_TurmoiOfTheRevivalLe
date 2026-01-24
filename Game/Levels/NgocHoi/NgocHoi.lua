@@ -199,7 +199,10 @@ function NgocHoi:update(dt)
     end
 
     if NgocHoi.BulletTimer >= NgocHoi.TimeCannon2 then
-        if not NgocHoi.cannonBall2Fired then NgocHoi.cannonBall2:toss(295, 35, -9) end
+        if not NgocHoi.cannonBall2Fired then 
+            NgocHoi.cannonBall2:toss(315, 35, -9)
+            print("Fire cannon ball 2")
+        end
         NgocHoi.cannonBall2Fired = true
     end
 
@@ -219,8 +222,8 @@ end
 
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
-    love.graphics.clear(1, 1, 1, 1)
-    -- love.graphics.clear(0.6, 0.6, 0.6, 1)
+    -- love.graphics.clear(1, 1, 1, 1)
+    love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
@@ -256,6 +259,7 @@ function NgocHoi:draw(windowWidth, windowHeight)
 
         
         NgocHoi.cannonBall1:draw()
+        NgocHoi.cannonBall2:draw()
 
     NgocHoi.cam:detach()
     love.graphics.pop()

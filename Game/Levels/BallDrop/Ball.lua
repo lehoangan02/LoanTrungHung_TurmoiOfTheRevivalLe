@@ -6,6 +6,8 @@ function Ball.new(world, x, y)
     local anim8 = require "Game/Libraries/anim8"
 
     instance.ballImage = love.graphics.newImage("Resources/Images/Cannon_ball.png")
+    instance.width = instance.ballImage:getWidth()
+    instance.height = instance.ballImage:getHeight()
     instance.ballImage:setFilter("nearest", "nearest")
     
     instance.explodeSpriteSheet = love.graphics.newImage("Resources/Images/explode_large.png")
@@ -89,10 +91,10 @@ end
 
 function Ball:draw()
     if not self.exploded then
-        love.graphics.draw(self.ballImage, self.ballX, self.ballY, self.ballRotation, 1, 1, 8, 8)
+        love.graphics.draw(self.ballImage, self.ballX, self.ballY, self.ballRotation, 1, 1, self.width / 2, self.height / 2)
     end
     if self.exploded and self.explodeAnimation.status ~= "paused" then
-        self.explodeAnimation:draw(self.explodeSpriteSheet, self.ballX - 16, self.ballY - 16)
+        self.explodeAnimation:draw(self.explodeSpriteSheet, self.ballX - self.width, self.ballY - self.height)
     end
 end
 

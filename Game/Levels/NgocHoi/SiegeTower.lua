@@ -25,7 +25,7 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     function self.collider:enter(other, collision)
         if other.isBall then
             print("Siege Tower hit by cannon ball")
-            other.parent.to_destroy = true
+            other.parent.to_explode = true
         end
     end
     self.Timer = 0
@@ -175,7 +175,7 @@ function SiegeTower:draw()
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     love.graphics.draw(self.straw, 140, self.siege_tower_positionY - 2)
 
-    -- self.world:draw()
+    self.world:draw()
 end
 
 return SiegeTower
