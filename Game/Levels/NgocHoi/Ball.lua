@@ -3,8 +3,10 @@ Ball.__index = Ball
 
 local anim8 = require "Game/Libraries/anim8"
 
-function Ball.new(world, speed)
+function Ball.new(world, speed, onExplode)
     local self = setmetatable({}, Ball)
+    
+    self.onExplode = onExplode
 
     self.to_destroy = false
 
@@ -67,6 +69,7 @@ function Ball:explode()
         self.collider = nil
     end
     self.exploded = true
+    self.onExplode(0.2, 3)
 end
 
 function Ball:update(dt)

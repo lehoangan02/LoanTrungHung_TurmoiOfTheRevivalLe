@@ -93,11 +93,11 @@ function NgocHoi:load()
     NgocHoi.shakeY = 0
 
     local Ball = require("Game.Levels.NgocHoi.Ball")
-    NgocHoi.cannonBall1 = Ball.new(NgocHoi.world, -230)
+    NgocHoi.cannonBall1 = Ball.new(NgocHoi.world, -230, function(duration, magnitude) NgocHoi:shake(duration, magnitude) end)
     NgocHoi.cannonBall1Fired = false
     NgocHoi.TimeCannon1 = 9.0
 
-    NgocHoi.cannonBall2 = Ball.new(NgocHoi.world, -220)
+    NgocHoi.cannonBall2 = Ball.new(NgocHoi.world, -220, function(duration, magnitude) NgocHoi:shake(duration, magnitude) end)
     NgocHoi.cannonBall2Fired = false
     NgocHoi.TimeCannon2 = 13.0
 
@@ -222,8 +222,8 @@ end
 
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
-    -- love.graphics.clear(1, 1, 1, 1)
-    love.graphics.clear(0.6, 0.6, 0.6, 1)
+    love.graphics.clear(1, 1, 1, 1)
+    -- love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))

@@ -22,10 +22,16 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
 
     self.collider = self.world:newCollider("Rectangle", { x + self.sprite1:getWidth() / 2, y + self.sprite1:getHeight() / 2, self.sprite1:getWidth(), self.sprite1:getHeight() })
     self.collider:setType("static")
+    self.collider.parent = self
     function self.collider:enter(other, collision)
         if other.isBall then
             print("Siege Tower hit by cannon ball")
             other.parent.to_explode = true
+            local siegeTower = self.parent
+            siegeTower.frontStatefulObject:setState(2)
+            siegeTower.backStatefulObject:setState(2)
+            siegeTower.straw_statefulObject:setState(2)
+            siegeTower.cannon2_statefulObject:setState(2)
         end
     end
     self.Timer = 0
@@ -77,8 +83,11 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.cannon2_spritesheet:setFilter("nearest", "nearest")
     self.cannon2_grid = anim8.newGrid(70, 40, self.cannon2_spritesheet:getWidth(), self.cannon2_spritesheet:getHeight())
     self.cannon2_animation = anim8.newAnimation(self.cannon2_grid('1-6', 1), 0.15, 'pauseAtEnd')
+    self.cannon2_disabled_sprite = love.graphics.newImage("Resources/Images/disabled_cannon.png")
+    self.cannon2_disabled_sprite:setFilter("nearest", "nearest")
     self.cannon2_statefulObject = StatefulObject:new()
     self.cannon2_statefulObject:addAnimation(self.cannon2_animation, self.cannon2_spritesheet)
+    self.cannon2_statefulObject:addSprite(self.cannon2_disabled_sprite)
     self.cannon2_statefulObject:setState(1)
     self.TimeCannon2 = 10.5
     self.cannon2Fired = false
@@ -105,6 +114,15 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
 
     self.straw = love.graphics.newImage("Resources/Images/Straw.png")
     self.straw:setFilter("nearest", "nearest")
+    self.straw2 = love.graphics.newImage("Resources/Images/Straw_2.png")
+    self.straw2:setFilter("nearest", "nearest")
+    self.straw_statefulObject = StatefulObject:new()
+    self.straw_statefulObject:addSprite(self.straw)
+    self.straw_statefulObject:addSprite(self.straw2)
+    self.straw_statefulObject:setState(1)
+
+    self.ammo_sprite = love.graphics.newImage("Resources/Images/ammo.png")
+    self.ammo_sprite:setFilter("nearest", "nearest")
 
     return self
 end
@@ -116,13 +134,15 @@ function SiegeTower:update(dt)
     self.Timer = self.Timer + dt
 
     local animationCannon2 = self.cannon2_statefulObject:getCurrentAnimation()
-    if self.Timer >= self.TimeCannon2 and not self.cannon2Fired then
-        animationCannon2:gotoFrame(1)
-        animationCannon2:resume()
-        self.cannon2Fired = true
-    end
-    if animationCannon2.position == 4 then
-        self.onCannonFire(0.1, 1)
+    if animationCannon2 ~= nil then
+        if self.Timer >= self.TimeCannon2 and not self.cannon2Fired then
+            animationCannon2:gotoFrame(1)
+            animationCannon2:resume()
+            self.cannon2Fired = true
+        end
+        if animationCannon2.position == 4 then
+            self.onCannonFire(0.1, 1)
+        end
     end
     
     local animationCannon3 = self.cannon3_statefulObject:getCurrentAnimation()
@@ -159,6 +179,7 @@ function SiegeTower:draw()
     local wheelHeight = self.wheel:getHeight()
 
     self.backStatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
+    love.graphics.draw(self.ammo_sprite, self.siege_tower_positionX, self.siege_tower_positionY)
     self.guy1StatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
     self.guy2StatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
     love.graphics.draw(self.guy34Sprite, self.siege_tower_positionX, self.siege_tower_positionY)
@@ -173,9 +194,9 @@ function SiegeTower:draw()
     love.graphics.draw(self.wheel, self.siege_tower_positionX + 50 + wheelWidth/2, self.siege_tower_positionY + 135 + 5 + wheelHeight/2, math.rad(0 + self.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
 
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
-    love.graphics.draw(self.straw, 140, self.siege_tower_positionY - 2)
+    self.straw_statefulObject:draw(140, self.siege_tower_positionY - 2)
 
-    self.world:draw()
+    -- self.world:draw()
 end
 
 return SiegeTower
