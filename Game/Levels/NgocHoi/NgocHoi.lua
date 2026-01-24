@@ -34,7 +34,11 @@ function NgocHoi:load()
     NgocHoi.siege_tower_positionX = 100
     NgocHoi.siege_tower_positionY = 70
     NgocHoi.siege_tower = SiegeTower:new(NgocHoi.world, NgocHoi.siege_tower_positionX, NgocHoi.siege_tower_positionY, function(duration, magnitude) NgocHoi:shake(duration, magnitude) end)
-    
+
+
+    NgocHoi.straw_straight = love.graphics.newImage("Resources/Images/Straw_straight.png")
+    NgocHoi.straw_straight:setFilter("nearest", "nearest")
+
     NgocHoi.strawTimers = {0, 0, 0}
     NgocHoi.strawIntervals = {0.8, 1.3, 1.9}
     NgocHoi.strawOffsets = {0, 0, 0}
@@ -109,7 +113,6 @@ function NgocHoi:update(dt)
         NgocHoi.cameraY = NgocHoi.cameraY + offsetY * 0.7 * dt
     end
     local rotationSpeed = 120
-    NgocHoi.wheelRotation = NgocHoi.wheelRotation + rotationSpeed * dt
     -- NgocHoi.cam:lookAt(NgocHoi.cameraX, NgocHoi.cameraY)
 
     NgocHoi.cam:lookAt(
@@ -216,7 +219,12 @@ function NgocHoi:draw(windowWidth, windowHeight)
     NgocHoi.cam:attach()
         NgocHoi.world:draw()
 
+        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX, NgocHoi.groundPositionY)
+        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX + NgocHoi.groundWidth, 200)
+        love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX - NgocHoi.groundWidth, 200)
+
         NgocHoi.siege_tower:draw()
+        
 
         NgocHoi.soldier_animations[1]:draw(NgocHoi.soldier_spritesheet, 70, 183)
         NgocHoi.soldier_animations[2]:draw(NgocHoi.soldier_spritesheet, 35, 185)

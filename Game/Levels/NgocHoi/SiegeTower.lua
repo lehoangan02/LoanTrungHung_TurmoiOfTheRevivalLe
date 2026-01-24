@@ -2,6 +2,7 @@ local SiegeTower = {}
 SiegeTower.__index = SiegeTower
 
 local anim8 = require "Game/Libraries/anim8"
+local bf = require("Game/Libraries/breezefield-master")
 
 local StatefulObject = require("Game.Components.StatefulObject")
 
@@ -24,33 +25,42 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
 
     self.frontStatefulObject = StatefulObject:new()
     self.frontSprite1 = love.graphics.newImage("Resources/Images/siege_tower_front1.png")
+    self.frontSprite1:setFilter("nearest", "nearest")
     self.frontStatefulObject:addSprite(self.frontSprite1)
     self.frontSprite2 = love.graphics.newImage("Resources/Images/siege_tower_front2.png")
+    self.frontSprite2:setFilter("nearest", "nearest")
     self.frontStatefulObject:addSprite(self.frontSprite2)
     self.frontStatefulObject:setState(1)
 
     self.backStatefulObject = StatefulObject:new()
     self.backSprite1 = love.graphics.newImage("Resources/Images/siege_tower_back1.png")
+    self.backSprite1:setFilter("nearest", "nearest")
     self.backStatefulObject:addSprite(self.backSprite1)
     self.backSprite2 = love.graphics.newImage("Resources/Images/siege_tower_back2.png")
+    self.backSprite2:setFilter("nearest", "nearest")
     self.backStatefulObject:addSprite(self.backSprite2)
     self.backStatefulObject:setState(1)
 
     self.guy1StatefulObject = StatefulObject:new()
     self.guy1Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy1_1.png")
+    self.guy1Sprite1:setFilter("nearest", "nearest")
     self.guy1StatefulObject:addSprite(self.guy1Sprite1)
     self.guy1Sprite2 = love.graphics.newImage("Resources/Images/siege_tower_guy1_2.png")
+    self.guy1Sprite2:setFilter("nearest", "nearest")
     self.guy1StatefulObject:addSprite(self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
 
     self.guy2StatefulObject = StatefulObject:new()
     self.guy2Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy2_1.png")
+    self.guy2Sprite1:setFilter("nearest", "nearest")
     self.guy2StatefulObject:addSprite(self.guy2Sprite1)
     self.guy2Sprite2 = love.graphics.newImage("Resources/Images/siege_tower_guy2_2.png")
+    self.guy2Sprite2:setFilter("nearest", "nearest")
     self.guy2StatefulObject:addSprite(self.guy2Sprite2)
     self.guy2StatefulObject:setState(1)
 
     self.guy34Sprite = love.graphics.newImage("Resources/Images/siege_tower_guy34.png")
+    self.guy34Sprite:setFilter("nearest", "nearest")
 
     self.wheel = love.graphics.newImage("Resources/Images/wheel.png")
     self.wheel:setFilter("nearest", "nearest")
@@ -85,6 +95,9 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.cannon4_statefulObject:setState(1)
     self.TimeCannon4 = 12.0
     self.cannon4Fired = false
+
+    self.straw = love.graphics.newImage("Resources/Images/Straw.png")
+    self.straw:setFilter("nearest", "nearest")
 
     return self
 end
