@@ -4,6 +4,8 @@ Ball.__index = Ball
 function Ball.new(world, speed)
     local self = setmetatable({}, Ball)
 
+    self.to_destroy = false
+
     self.world = world
     self.sprite = love.graphics.newImage("Resources/Images/Canon_bala.png")
     self.sprite:setFilter("nearest", "nearest")
@@ -26,6 +28,8 @@ function Ball:toss(x, y, angleDeg)
     self.collider:setFriction(0)
     self.collider:setLinearDamping(0)
     self.collider:setBullet(true)
+    self.collider.isBall = true
+    self.collider.parent = self
 
     local angle = math.rad(angleDeg)
     local vx = self.speed * math.cos(angle)
@@ -46,6 +50,12 @@ end
 
 function Ball:update(dt)
     if not self.active then return end
+
+    if self.to_destroy then
+        self:deactivate()
+        print("Ball destroyed")
+        return
+    end
 
     if not self.collider or self.collider:isDestroyed() then
         self:deactivate()

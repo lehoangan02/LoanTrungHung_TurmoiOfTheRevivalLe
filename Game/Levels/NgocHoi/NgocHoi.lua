@@ -97,6 +97,10 @@ function NgocHoi:load()
     NgocHoi.cannonBall1Fired = false
     NgocHoi.TimeCannon1 = 9.0
 
+    NgocHoi.cannonBall2 = Ball.new(NgocHoi.world, -220)
+    NgocHoi.cannonBall2Fired = false
+    NgocHoi.TimeCannon2 = 13.0
+
 end
 
 function NgocHoi:update(dt)
@@ -194,6 +198,11 @@ function NgocHoi:update(dt)
         NgocHoi.cannonBall1Fired = true
     end
 
+    if NgocHoi.BulletTimer >= NgocHoi.TimeCannon2 then
+        if not NgocHoi.cannonBall2Fired then NgocHoi.cannonBall2:toss(295, 35, -9) end
+        NgocHoi.cannonBall2Fired = true
+    end
+
     NgocHoi.cannonBall1:update(dt)
     local _, y = NgocHoi.cannonBall1:getPosition()
     if (y ~= nil and y > 200) then
@@ -201,6 +210,8 @@ function NgocHoi:update(dt)
         NgocHoi:shake(0.2, 3)
     end
 
+    NgocHoi.cannonBall2:update(dt)
+    
     NgocHoi.siege_tower:update(dt) 
 
     return LevelEnum.Nothing
@@ -208,8 +219,8 @@ end
 
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
-    love.graphics.clear(1, 1, 1, 1)
-    -- love.graphics.clear(0.6, 0.6, 0.6, 1)
+    -- love.graphics.clear(1, 1, 1, 1)
+    love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))

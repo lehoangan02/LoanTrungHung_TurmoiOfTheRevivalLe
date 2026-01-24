@@ -9,6 +9,8 @@ local StatefulObject = require("Game.Components.StatefulObject")
 function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     local self = setmetatable({}, SiegeTower)
 
+    self.world = world
+
     self.siege_tower_positionX = x
     self.siege_tower_positionY = y
 
@@ -20,7 +22,12 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
 
     self.collider = self.world:newCollider("Rectangle", { x + self.sprite1:getWidth() / 2, y + self.sprite1:getHeight() / 2, self.sprite1:getWidth(), self.sprite1:getHeight() })
     self.collider:setType("static")
-
+    function self.collider:enter(other, collision)
+        if other.isBall then
+            print("Siege Tower hit by cannon ball")
+            other.parent.to_destroy = true
+        end
+    end
     self.Timer = 0
 
     self.frontStatefulObject = StatefulObject:new()
@@ -145,13 +152,20 @@ function SiegeTower:update(dt)
 end
 
 function SiegeTower:draw()
+
+
+
     local wheelWidth = self.wheel:getWidth()
     local wheelHeight = self.wheel:getHeight()
 
     self.backStatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
+    self.guy1StatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
+    self.guy2StatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
+    love.graphics.draw(self.guy34Sprite, self.siege_tower_positionX, self.siege_tower_positionY)
     self.cannon2_statefulObject:draw(self.siege_tower_positionX + 40, self.siege_tower_positionY + -2)
     self.cannon3_statefulObject:draw(self.siege_tower_positionX + 44, self.siege_tower_positionY + 51)
     self.cannon4_statefulObject:draw(self.siege_tower_positionX + 41, self.siege_tower_positionY + 77)
+    
     love.graphics.draw(self.wheel, self.siege_tower_positionX + 20 + wheelWidth/2, self.siege_tower_positionY + 135 + 3 + wheelHeight/2, math.rad(30 + self.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
     love.graphics.draw(self.wheel, self.siege_tower_positionX + 60 + wheelWidth/2, self.siege_tower_positionY + 135 + 3 + wheelHeight/2, math.rad(45 + self.wheelRotation), 1, 1, wheelWidth / 2, wheelHeight / 2)
     self.frontStatefulObject:draw(self.siege_tower_positionX, self.siege_tower_positionY)
@@ -160,6 +174,8 @@ function SiegeTower:draw()
 
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     love.graphics.draw(self.straw, 140, self.siege_tower_positionY - 2)
+
+    self.world:draw()
 end
 
 return SiegeTower
