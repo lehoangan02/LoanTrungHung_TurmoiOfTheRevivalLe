@@ -219,8 +219,8 @@ end
 
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
-    -- love.graphics.clear(1, 1, 1, 1)
-    love.graphics.clear(0.6, 0.6, 0.6, 1)
+    love.graphics.clear(1, 1, 1, 1)
+    -- love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))

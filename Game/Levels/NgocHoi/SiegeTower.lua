@@ -175,7 +175,7 @@ function SiegeTower:draw()
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     love.graphics.draw(self.straw, 140, self.siege_tower_positionY - 2)
 
-    self.world:draw()
+    -- self.world:draw()
 end
 
 return SiegeTower

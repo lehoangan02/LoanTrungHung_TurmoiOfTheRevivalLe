@@ -355,7 +355,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="5" name="StaticCollidable" locked="1">
+ <objectgroup id="5" name="StaticCollidable">
   <object id="26" x="0" y="0" width="16" height="1600"/>
   <object id="27" x="16" y="96" width="48" height="16"/>
   <object id="28" x="80" y="96" width="32" height="16"/>
