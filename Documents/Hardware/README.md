@@ -14,6 +14,16 @@ Before wiring, enable the necessary communication protocols in the Raspberry Pi 
 4.  **Enable I2C** (for the VL53L0X sensor).
 5.  Select **Finish** and **Reboot** your Pi.
 
+To check if VL53L0X and/or AS5600 are detected on the I2C 
+
+bus, run:
+```bash
+sudo i2cdetect -y 1
+```
+Note: 
+- The default I2C address for VL53L0X is `0x29`.
+- The default I2C address for AS5600 is `0x36`.
+
 ---
 
 ## 2. Wiring Configuration (Pinout)
