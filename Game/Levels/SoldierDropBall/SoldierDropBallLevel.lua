@@ -36,10 +36,14 @@ function SoldierDropBallLevel:load()
     SoldierDropBallLevel.topCannonBallSprite = love.graphics.newImage("Resources/Images/TopCannonBall.png")
     SoldierDropBallLevel.topCannonBallSprite:setFilter("nearest", "nearest")
 
+    SoldierDropBallLevel.soldier = require("Game.Levels.SoldierDropBall.Soldier")
+    SoldierDropBallLevel.soldier:load()
+
 end
 
 function SoldierDropBallLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
+    SoldierDropBallLevel.soldier:update(dt)
     return LevelEnum.Nothing
 end
 
@@ -52,6 +56,7 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
     SoldierDropBallLevel.cam:attach()
         love.graphics.draw(self.roomSprite, 0, 0)
         love.graphics.draw(self.backSupportSprite, 0, 0)
+        SoldierDropBallLevel.soldier:draw(0, 0)
         love.graphics.draw(self.cannonBarrelSprite, 0, 0)
         love.graphics.draw(self.frontSupportSprite, 0, 0)
         love.graphics.draw(self.backCannonBallsSprite, 0, 0)
