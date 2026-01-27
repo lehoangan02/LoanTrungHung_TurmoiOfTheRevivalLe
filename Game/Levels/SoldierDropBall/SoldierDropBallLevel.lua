@@ -2,8 +2,6 @@ local Level = require "Game.Levels.Level"
 local SoldierDropBallLevel = setmetatable({}, {__index = Level})
 SoldierDropBallLevel.__index = SoldierDropBallLevel
 
-local anim8 = require "Game/Libraries/anim8"
-
 function SoldierDropBallLevel:shake(duration, magnitude)
     self.shakeDuration = duration
     self.shakeMagnitude = magnitude

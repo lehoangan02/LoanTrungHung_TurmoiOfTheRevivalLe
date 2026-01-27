@@ -3,6 +3,8 @@ Soldier.__index = Soldier
 
 local anim8 = require "Game/Libraries/anim8"
 
+local InputManager = require("Game.Input.InputManager")
+
 local SoldierStateEnum = {
     Idle = 0,
     Walking = 1,
@@ -28,11 +30,47 @@ function Soldier:load()
 end
 
 function Soldier:update(dt)
-    Soldier.idleAnimation:update(dt)
+    -- print("Soldier State: " .. Soldier.state)
+    -- print("Soldier PositionX: " .. Soldier.positionX)
+    if Soldier.stop then
+        return
+    end
+
+    local moveSpeed = 1200
+    if (Soldier.state == SoldierStateEnum.Idle) then
+        if (InputManager:getCrankValue() < -0.01) then
+            Soldier.state = SoldierStateEnum.Walking
+            Soldier.positionX = Soldier.positionX + InputManager:getCrankValue() * moveSpeed * dt
+        end
+    elseif (Soldier.state == SoldierStateEnum.Walking) then
+        local crankVal = InputManager:getCrankValue()
+        Soldier.positionX = Soldier.positionX + crankVal * moveSpeed * dt
+        if (Soldier.positionX > 0) then
+            Soldier.positionX = 0
+        end
+    end
+
+    if (Soldier.state == SoldierStateEnum.Idle) then
+        Soldier.idleAnimation:update(dt)
+    elseif (Soldier.state == SoldierStateEnum.Walking) then
+        if (Soldier.positionX ~= 0) then
+            Soldier.walkingAnimation:update(dt * - InputManager:getCrankValue() * 60)
+        end
+    end
+    
+    if (Soldier.positionX < -42) then
+        print("Reached the pick point!")
+        print("Current animation frame: ", Soldier.walkingAnimation.position)
+        Soldier.stop = true
+    end
 end
 
 function Soldier:draw()
-    Soldier.idleAnimation:draw(Soldier.idleSpriteSheet, Soldier.positionX, Soldier.positionY)
+    if (Soldier.state == SoldierStateEnum.Idle) then
+        Soldier.idleAnimation:draw(Soldier.idleSpriteSheet, Soldier.positionX, Soldier.positionY)
+    elseif (Soldier.state == SoldierStateEnum.Walking) then
+        Soldier.walkingAnimation:draw(Soldier.walkingSpriteSheet, Soldier.positionX, Soldier.positionY)
+    end
 end
 
 return Soldier
