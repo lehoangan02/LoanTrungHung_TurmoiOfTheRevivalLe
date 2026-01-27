@@ -19,8 +19,8 @@ local KY040 = require("Game.Input.KY040")
 local Controller = require("Game.Input.Controller")
 local controller = Controller:new()
 local handCrankMultiplier = 3
-local joystickMultiplier = 4
-local triggerMultiplier = 0.8
+local joystickMultiplier = 10
+local triggerMultiplier = 1.3
 
 local currentCrankValue = 0
 

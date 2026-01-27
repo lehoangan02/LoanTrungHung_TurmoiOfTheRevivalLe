@@ -44,7 +44,7 @@ function BallDropLevel:load()
     local MusicEnum = require("Game.Music.MusicEnum")
     
     BallDropLevel.ballMoveSpeed = 100
-    BallDropLevel.worldRotateSpeed = 2
+    BallDropLevel.worldRotateSpeed = 1.5
     BallDropLevel.cameraX = 120
     BallDropLevel.cameraY = 50
     BallDropLevel.currentZoom = 1.0
