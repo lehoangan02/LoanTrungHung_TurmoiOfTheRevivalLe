@@ -22,12 +22,14 @@ local handCrankMultiplier = 3
 local joystickMultiplier = 4
 local triggerMultiplier = 0.8
 
+local currentCrankValue = 0
+
 
 function InputManager:load()
     
 end
 
-function InputManager:update()
+function InputManager:HandleEvents()
     local isCurrentlyPressed = love.keyboard.isDown("p")
     pauseSignaled = isCurrentlyPressed and not wasPauseKeyPressed
     wasPauseKeyPressed = isCurrentlyPressed
@@ -46,9 +48,20 @@ function InputManager:update()
     local isRightCurrentlyPressed = love.keyboard.isDown("right") or love.keyboard.isDown("d")
     rightSignaled = isRightCurrentlyPressed and not wasRightKeyPressed
     wasRightKeyPressed = isRightCurrentlyPressed
+end
 
-    KY040:update()
-    controller:update()
+function InputManager:HandlePeripherals()
+    KY040:HandleEvents()
+    controller:HandleEvents()
+end
+
+function InputManager:CaluclateCrankValue()
+    
+end
+
+function InputManager:update()
+    InputManager:HandleEvents()
+    InputManager:HandlePeripherals()
 end
 
 function InputManager:isEventFKeyPressed()
