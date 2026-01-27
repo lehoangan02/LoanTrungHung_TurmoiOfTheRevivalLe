@@ -13,7 +13,7 @@ end
 
 function GameManager:start()
     inputManager:load()
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.BallDrop)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SoldierDropBall)
 end
 function GameManager:update(dt)
     inputManager:update(dt)

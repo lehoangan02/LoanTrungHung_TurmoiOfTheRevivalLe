@@ -16,6 +16,10 @@ function LevelLoader:loadLevel(level)
         local NgocHoi = require("Game.Levels.NgocHoi.NgocHoi")
         NgocHoi:load()
         currentLevel = NgocHoi
+    elseif (level == LevelEnum.SoldierDropBall) then
+        local SoldierDropBallLevel = require("Game.Levels.SoldierDropBall.SoldierDropBallLevel")
+        SoldierDropBallLevel:load()
+        currentLevel = SoldierDropBallLevel
     else
         error("Unknown level: " .. tostring(level))
     end

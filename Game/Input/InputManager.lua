@@ -124,6 +124,7 @@ function InputManager:getTriggerMultiplier()
 end
 
 function InputManager:getCrankValue()
+    print("Current Crank Value: ", currentCrankValue)
     return currentCrankValue
 end
 
