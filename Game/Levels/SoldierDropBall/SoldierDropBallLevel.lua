@@ -29,6 +29,12 @@ function SoldierDropBallLevel:load()
     SoldierDropBallLevel.frontSupportSprite:setFilter("nearest", "nearest")
     SoldierDropBallLevel.backSupportSprite = love.graphics.newImage("Resources/Images/BackSupport.png")
     SoldierDropBallLevel.backSupportSprite:setFilter("nearest", "nearest")
+    SoldierDropBallLevel.frontCannonBallsSprite = love.graphics.newImage("Resources/Images/FrontCannonBalls.png")
+    SoldierDropBallLevel.frontCannonBallsSprite:setFilter("nearest", "nearest")
+    SoldierDropBallLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
+    SoldierDropBallLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
+    SoldierDropBallLevel.topCannonBallSprite = love.graphics.newImage("Resources/Images/TopCannonBall.png")
+    SoldierDropBallLevel.topCannonBallSprite:setFilter("nearest", "nearest")
 
 end
 
@@ -48,6 +54,9 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
         love.graphics.draw(self.backSupportSprite, 0, 0)
         love.graphics.draw(self.cannonBarrelSprite, 0, 0)
         love.graphics.draw(self.frontSupportSprite, 0, 0)
+        love.graphics.draw(self.backCannonBallsSprite, 0, 0)
+        love.graphics.draw(self.frontCannonBallsSprite, 0, 0)
+        love.graphics.draw(self.topCannonBallSprite, 0, 0)
     SoldierDropBallLevel.cam:detach()
 end
 
