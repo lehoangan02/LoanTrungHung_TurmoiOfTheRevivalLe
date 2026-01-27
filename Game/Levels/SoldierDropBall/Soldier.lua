@@ -8,6 +8,9 @@ local InputManager = require("Game.Input.InputManager")
 local SoldierStateEnum = {
     Idle = 0,
     Walking = 1,
+    PickingBall = 2,
+    CarryingBall = 3,
+    DroppingBall = 4,
 }
 
 function Soldier:load()
