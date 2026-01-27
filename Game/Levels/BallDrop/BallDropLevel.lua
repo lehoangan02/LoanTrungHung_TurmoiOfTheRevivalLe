@@ -184,17 +184,8 @@ function BallDropLevel:controlEnvironment(dt)
         BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
     end
     
-    if InputManager:isEventKY040RightTurned() then
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
-    elseif InputManager:isEventKY040LeftTurned() then
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed * InputManager:getHandCrankMultiplier()
-    end
-
-    local stickRot = InputManager:getLeftStickRotation() + InputManager:getRightStickRotation()
-    BallDropLevel.worldRotation = BallDropLevel.worldRotation + stickRot * dt * BallDropLevel.worldRotateSpeed * InputManager:getJoystickMultiplier()
-
-    local triggerVal = InputManager:getLeftTriggerValue() - InputManager:getRightTriggerValue()
-    BallDropLevel.worldRotation = BallDropLevel.worldRotation + triggerVal * dt * BallDropLevel.worldRotateSpeed * InputManager:getTriggerMultiplier()
+    local crankVal = InputManager:getCrankValue()
+    BallDropLevel.worldRotation = BallDropLevel.worldRotation + crankVal * BallDropLevel.worldRotateSpeed
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)

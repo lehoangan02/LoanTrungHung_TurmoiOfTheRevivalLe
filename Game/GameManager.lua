@@ -16,7 +16,7 @@ function GameManager:start()
     GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.BallDrop)
 end
 function GameManager:update(dt)
-    inputManager:update()
+    inputManager:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     local nextLevel = GameManager.currentLevel:update(dt)
     if (nextLevel ~= LevelEnum.Nothing) then

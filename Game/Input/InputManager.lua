@@ -29,39 +29,10 @@ function InputManager:load()
     
 end
 
-function InputManager:HandleEvents()
-    local isCurrentlyPressed = love.keyboard.isDown("p")
-    pauseSignaled = isCurrentlyPressed and not wasPauseKeyPressed
-    wasPauseKeyPressed = isCurrentlyPressed
-    local isFCurrentlyPressed = love.keyboard.isDown("f")
-    fSignaled = isFCurrentlyPressed and not wasFKeyPressed
-    wasFKeyPressed = isFCurrentlyPressed
-    local isUpCurrentlyPressed = love.keyboard.isDown("up") or love.keyboard.isDown("w")
-    upSignaled = isUpCurrentlyPressed and not wasUpKeyPressed
-    wasUpKeyPressed = isUpCurrentlyPressed
-    local isDownCurrentlyPressed = love.keyboard.isDown("down") or love.keyboard.isDown("s")
-    downSignaled = isDownCurrentlyPressed and not wasDownKeyPressed
-    wasDownKeyPressed = isDownCurrentlyPressed
-    local isLeftCurrentlyPressed = love.keyboard.isDown("left") or love.keyboard.isDown("a")
-    leftSignaled = isLeftCurrentlyPressed and not wasLeftKeyPressed
-    wasLeftKeyPressed = isLeftCurrentlyPressed
-    local isRightCurrentlyPressed = love.keyboard.isDown("right") or love.keyboard.isDown("d")
-    rightSignaled = isRightCurrentlyPressed and not wasRightKeyPressed
-    wasRightKeyPressed = isRightCurrentlyPressed
-end
-
-function InputManager:HandlePeripherals()
-    KY040:HandleEvents()
-    controller:HandleEvents()
-end
-
-function InputManager:CaluclateCrankValue()
-    
-end
-
-function InputManager:update()
+function InputManager:update(dt)
     InputManager:HandleEvents()
     InputManager:HandlePeripherals()
+    InputManager:CaluclateCrankValue(dt)
 end
 
 function InputManager:isEventFKeyPressed()
@@ -150,6 +121,57 @@ end
 
 function InputManager:getTriggerMultiplier()
     return triggerMultiplier
+end
+
+function InputManager:getCrankValue()
+    return currentCrankValue
+end
+
+function InputManager:HandleEvents()
+    local isCurrentlyPressed = love.keyboard.isDown("p")
+    pauseSignaled = isCurrentlyPressed and not wasPauseKeyPressed
+    wasPauseKeyPressed = isCurrentlyPressed
+    local isFCurrentlyPressed = love.keyboard.isDown("f")
+    fSignaled = isFCurrentlyPressed and not wasFKeyPressed
+    wasFKeyPressed = isFCurrentlyPressed
+    local isUpCurrentlyPressed = love.keyboard.isDown("up") or love.keyboard.isDown("w")
+    upSignaled = isUpCurrentlyPressed and not wasUpKeyPressed
+    wasUpKeyPressed = isUpCurrentlyPressed
+    local isDownCurrentlyPressed = love.keyboard.isDown("down") or love.keyboard.isDown("s")
+    downSignaled = isDownCurrentlyPressed and not wasDownKeyPressed
+    wasDownKeyPressed = isDownCurrentlyPressed
+    local isLeftCurrentlyPressed = love.keyboard.isDown("left") or love.keyboard.isDown("a")
+    leftSignaled = isLeftCurrentlyPressed and not wasLeftKeyPressed
+    wasLeftKeyPressed = isLeftCurrentlyPressed
+    local isRightCurrentlyPressed = love.keyboard.isDown("right") or love.keyboard.isDown("d")
+    rightSignaled = isRightCurrentlyPressed and not wasRightKeyPressed
+    wasRightKeyPressed = isRightCurrentlyPressed
+end
+
+function InputManager:HandlePeripherals()
+    KY040:update()
+    controller:update()
+end
+
+function InputManager:CaluclateCrankValue(dt)
+    currentCrankValue = 0
+    if InputManager:isRightRudderPressed() then
+        currentCrankValue = currentCrankValue + dt
+    elseif InputManager:isLeftRudderPressed() then
+        currentCrankValue = currentCrankValue - dt
+    end
+
+    if InputManager:isEventKY040RightTurned() then
+        currentCrankValue = currentCrankValue + dt * InputManager:getHandCrankMultiplier()
+    elseif InputManager:isEventKY040LeftTurned() then
+        currentCrankValue = currentCrankValue - dt * InputManager:getHandCrankMultiplier()
+    end
+
+    local stickRot = InputManager:getLeftStickRotation() + InputManager:getRightStickRotation()
+    currentCrankValue = currentCrankValue + stickRot * dt * InputManager:getJoystickMultiplier()
+
+    local triggerVal = InputManager:getLeftTriggerValue() - InputManager:getRightTriggerValue()
+    currentCrankValue = currentCrankValue + triggerVal * dt * InputManager:getTriggerMultiplier()
 end
 
 return InputManager
