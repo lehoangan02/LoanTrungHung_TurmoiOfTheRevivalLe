@@ -100,6 +100,7 @@ function Soldier:update(dt)
         print("Crank Value: ", Soldier.crankValue)
     elseif (Soldier.state == SoldierStateEnum.DroppedBall) then
         Soldier.ballPositionY = Soldier.ballPositionY + Soldier.gravity * dt
+        print("Ball Position Y: ", Soldier.ballPositionY)
     end
 
     if (Soldier.crankValue > 0 and Soldier.state == SoldierStateEnum.Walking) then
@@ -161,6 +162,14 @@ function Soldier:update(dt)
         Soldier.state = SoldierStateEnum.DroppedBall
         print("Crank Value: ", Soldier.crankValue)
     end
+
+    local LevelEnum = require("Game.Levels.LevelEnum")
+
+    if (Soldier.ballPositionY > 50) then
+        return LevelEnum.BallDrop
+    end
+
+    return LevelEnum.Nothing
 end
 
 function Soldier:draw()
@@ -182,7 +191,9 @@ function Soldier:draw()
     if (Soldier.state == SoldierStateEnum.Idle or Soldier.state == SoldierStateEnum.Walking) then
         love.graphics.draw(Soldier.topCannonBallSprite, 0, 0)
     elseif (Soldier.state == SoldierStateEnum.DroppedBall) then
-        love.graphics.draw(Soldier.topCannonBallSprite, -33, Soldier.ballPositionY)
+        if (Soldier.ballPositionY < 10) then
+            love.graphics.draw(Soldier.topCannonBallSprite, -33, Soldier.ballPositionY)
+        end
     end
 
     love.graphics.draw(Soldier.overlappingFloorLayerSprite, 0, 0)
