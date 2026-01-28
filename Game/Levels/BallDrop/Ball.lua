@@ -22,6 +22,7 @@ function Ball.new(world, x, y)
     
     instance.ballCollider = world:newCollider("Circle", {instance.ballX, instance.ballY, instance.ballRadius})
     instance.ballCollider:setRestitution(0.6)
+    instance.ballCollider:setLinearVelocity(0, 100)
     
     instance.ballCollider.ball = instance
     

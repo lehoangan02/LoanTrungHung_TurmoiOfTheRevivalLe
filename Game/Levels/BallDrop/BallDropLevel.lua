@@ -102,7 +102,7 @@ function BallDropLevel:load()
     end
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 50)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
 end
 
 function BallDropLevel:update(dt)
