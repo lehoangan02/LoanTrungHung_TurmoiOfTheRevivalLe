@@ -39,8 +39,7 @@ end
 
 function SoldierDropBallLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
-    SoldierDropBallLevel.soldier:update(dt)
-    return LevelEnum.Nothing
+    return SoldierDropBallLevel.soldier:update(dt)
 end
 
 function SoldierDropBallLevel:draw(windowWidth, windowHeight)
@@ -58,6 +57,9 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
         love.graphics.draw(self.backCannonBallsSprite, 0, 0)
         love.graphics.draw(self.frontCannonBallsSprite, 0, 0)
     SoldierDropBallLevel.cam:detach()
+end
+
+function SoldierDropBallLevel:unload()
 end
 
 return SoldierDropBallLevel

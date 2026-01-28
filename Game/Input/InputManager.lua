@@ -18,6 +18,7 @@ local rightSignaled = false
 local KY040 = require("Game.Input.KY040")
 local Controller = require("Game.Input.Controller")
 local controller = Controller:new()
+local rudderButtonMultiplier = 0.8
 local handCrankMultiplier = 3
 local joystickMultiplier = 10
 local triggerMultiplier = 1.3
@@ -111,6 +112,10 @@ function InputManager:getRightTriggerValue()
     return controller:rightTriggerValue()
 end
 
+function InputManager:getRudderMultiplier()
+    return rudderButtonMultiplier
+end
+
 function InputManager:getHandCrankMultiplier()
     return handCrankMultiplier
 end
@@ -157,9 +162,9 @@ end
 function InputManager:CaluclateCrankValue(dt)
     currentCrankValue = 0
     if InputManager:isRightRudderPressed() then
-        currentCrankValue = currentCrankValue + dt
+        currentCrankValue = currentCrankValue + dt * InputManager:getRudderMultiplier()
     elseif InputManager:isLeftRudderPressed() then
-        currentCrankValue = currentCrankValue - dt
+        currentCrankValue = currentCrankValue - dt * InputManager:getRudderMultiplier()
     end
 
     if InputManager:isEventKY040RightTurned() then
