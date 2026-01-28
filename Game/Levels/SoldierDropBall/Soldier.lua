@@ -12,6 +12,7 @@ local SoldierStateEnum = {
     CarryingBall = 3,
     PrepareDrop = 4,
     DroppingBall = 5,
+    DroppedBall = 6
 }
 
 function Soldier:load()
@@ -51,15 +52,19 @@ function Soldier:load()
     local prepareDropBallGrid = anim8.newGrid(240, 240, Soldier.prepareDropBallSpriteSheet:getWidth(), Soldier.prepareDropBallSpriteSheet:getHeight())
     Soldier.prepareDropBallAnimation = anim8.newAnimation(prepareDropBallGrid('1-3',1), 0.12, 'pauseAtEnd')
 
+    Soldier.droppedBallSprite = love.graphics.newImage("Resources/Images/SoldierDropped.png")
+    Soldier.droppedBallSprite:setFilter("nearest", "nearest")
+    Soldier.overlappingFloorLayerSprite = love.graphics.newImage("Resources/Images/OverlappingFloorLayer.png")
+    Soldier.overlappingFloorLayerSprite:setFilter("nearest", "nearest")
+    
+    Soldier.gravity = 70
+    Soldier.ballPositionY = -3
+
 end
 
 function Soldier:update(dt)
     -- print("Soldier State: " .. Soldier.state)
     -- print("Soldier PositionX: " .. Soldier.positionX)
-    if Soldier.stop then
-        return
-    end
-    
     Soldier.crankValue = Soldier.crankValue + InputManager:getCrankValue()
 
     local moveSpeed = 1000
@@ -93,6 +98,8 @@ function Soldier:update(dt)
     elseif (Soldier.state == SoldierStateEnum.PrepareDrop) then
         Soldier.prepareDropBallAnimation:update(dt * - InputManager:getCrankValue() * 60)
         print("Crank Value: ", Soldier.crankValue)
+    elseif (Soldier.state == SoldierStateEnum.DroppedBall) then
+        Soldier.ballPositionY = Soldier.ballPositionY + Soldier.gravity * dt
     end
 
     if (Soldier.crankValue > 0 and Soldier.state == SoldierStateEnum.Walking) then
@@ -151,8 +158,8 @@ function Soldier:update(dt)
     end
 
     if (Soldier.state == SoldierStateEnum.PrepareDrop and Soldier.crankValue < -8) then
+        Soldier.state = SoldierStateEnum.DroppedBall
         print("Crank Value: ", Soldier.crankValue)
-        Soldier.stop = true
     end
 end
 
@@ -167,11 +174,18 @@ function Soldier:draw()
         Soldier.carryingBallAnimation:draw(Soldier.carryingBallSpriteSheet, Soldier.positionX, Soldier.positionY)
     elseif (Soldier.state == SoldierStateEnum.PrepareDrop) then
         Soldier.prepareDropBallAnimation:draw(Soldier.prepareDropBallSpriteSheet, Soldier.positionX, Soldier.positionY)
+    elseif (Soldier.state == SoldierStateEnum.DroppedBall) then
+        love.graphics.draw(Soldier.droppedBallSprite, Soldier.positionX, Soldier.positionY)
+
     end
 
     if (Soldier.state == SoldierStateEnum.Idle or Soldier.state == SoldierStateEnum.Walking) then
         love.graphics.draw(Soldier.topCannonBallSprite, 0, 0)
+    elseif (Soldier.state == SoldierStateEnum.DroppedBall) then
+        love.graphics.draw(Soldier.topCannonBallSprite, -33, Soldier.ballPositionY)
     end
+
+    love.graphics.draw(Soldier.overlappingFloorLayerSprite, 0, 0)
 end
 
 return Soldier
