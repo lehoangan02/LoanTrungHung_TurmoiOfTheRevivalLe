@@ -31,8 +31,6 @@ function SoldierDropBallLevel:load()
     SoldierDropBallLevel.frontCannonBallsSprite:setFilter("nearest", "nearest")
     SoldierDropBallLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
     SoldierDropBallLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
-    SoldierDropBallLevel.topCannonBallSprite = love.graphics.newImage("Resources/Images/TopCannonBall.png")
-    SoldierDropBallLevel.topCannonBallSprite:setFilter("nearest", "nearest")
 
     SoldierDropBallLevel.soldier = require("Game.Levels.SoldierDropBall.Soldier")
     SoldierDropBallLevel.soldier:load()
@@ -59,7 +57,6 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
         love.graphics.draw(self.frontSupportSprite, 0, 0)
         love.graphics.draw(self.backCannonBallsSprite, 0, 0)
         love.graphics.draw(self.frontCannonBallsSprite, 0, 0)
-        love.graphics.draw(self.topCannonBallSprite, 0, 0)
     SoldierDropBallLevel.cam:detach()
 end
 
