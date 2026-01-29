@@ -25,7 +25,8 @@ function DialogCloud.new(text, x, y, width, height)
     instance.animationTime = 1.0
     instance.started = false
 
-    instance.font = FontLoader:loadFont("Geo", 16)
+    instance.font = FontLoader:loadFont("Geo", 5)
+    instance:processText()
 
     instance.sproutSpritesheet = love.graphics.newImage("Resources/Images/DialogCloudSprout.png")
     instance.sproutSpritesheet:setFilter("nearest", "nearest")
@@ -129,7 +130,7 @@ function DialogCloud:update(dt)
 
 end
 
-function DialogCloud:draw()
+function DialogCloud:draw(windowWidth, windowHeight)
     --draw sprout
     self.sproutAnimation:draw(self.sproutSpritesheet, self.sproutX, self.sproutY)
     --draw left bar
@@ -166,12 +167,22 @@ function DialogCloud:draw()
     
     love.graphics.setColor(1, 1, 1, 1)
 
-    --set blue
+    --set content background fill content b
     love.graphics.setColor(0, 0, 1.0, 0.5)
     love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.mainSquareCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
     love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY - 1, self.mainSquareCurrentX - self.bottomBarLeftX - 1, 1)
     love.graphics.rectangle("fill", self.x + 1 + (self.mainSquareCurrentX - self.bottomBarLeftX), self.leftBarCurrentY + 1, 1, self.leftBarBottomY - self.leftBarCurrentY - 1)
     love.graphics.setColor(1, 1, 1, 1)
+
+    --draw text
+    local previousFont = love.graphics.getFont()
+    love.graphics.setFont(self.font)
+    local lineHeight = self.font:getHeight()
+    for i, line in ipairs(self.lines) do
+        love.graphics.print(line, self.textBounds.startX, self.textBounds.startY + (i - 1) * lineHeight)
+    end
+    love.graphics.setFont(previousFont)
+    
 
 end
 
@@ -179,6 +190,51 @@ function DialogCloud:startDialogue()
     self.started = true
     self.sproutAnimation:gotoFrame(1)
     self.sproutAnimation:resume()
+end
+
+function DialogCloud:splitTextByWidth(text, maxWidth)
+    local lines = {}
+    local currentLine = ""
+
+    for word in text:gmatch("%S+") do
+        local testLine
+        if currentLine == "" then
+            testLine = word
+        else
+            testLine = currentLine .. " " .. word
+        end
+
+        if self.font:getWidth(testLine) <= maxWidth then
+            currentLine = testLine
+        else
+            if currentLine ~= "" then
+                table.insert(lines, currentLine)
+            end
+            currentLine = word
+        end
+    end
+
+    if currentLine ~= "" then
+        table.insert(lines, currentLine)
+    end
+
+    return lines
+end
+
+function DialogCloud:fixLeadingPunctuation(lines)
+    for i = 2, #lines do
+        local firstChar = lines[i]:sub(1, 1)
+        if firstChar == "," or firstChar == "." then
+            lines[i - 1] = lines[i - 1] .. firstChar
+            lines[i] = lines[i]:sub(2):match("^%s*(.*)")
+        end
+    end
+end
+
+function DialogCloud:processText()
+    local maxWidth = self.textBounds.endX - self.textBounds.startX
+    self.lines = self:splitTextByWidth(self.text, maxWidth)
+    self:fixLeadingPunctuation(self.lines)
 end
 
 return DialogCloud

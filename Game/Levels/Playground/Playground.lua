@@ -26,7 +26,7 @@ function PlayGround:draw(windowWidth, windowHeight)
     love.graphics.clear(0.2, 0.2, 0.2)
     local scale = math.min(windowWidth / BASE_W, windowHeight / BASE_H)
     love.graphics.scale(scale, scale)
-    self.dialog:draw()
+    self.dialog:draw(windowWidth, windowHeight)
 end
 
 function PlayGround:unload()
