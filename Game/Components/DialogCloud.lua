@@ -25,7 +25,8 @@ function DialogCloud.new(text, x, y, width, height)
     instance.animationTime = 1.0
     instance.started = false
 
-    instance.font = FontLoader:loadFont("Geo", 5)
+    instance.fontSize = 5
+    instance.font = FontLoader:loadFont("Geo", instance.fontSize)
     instance:processText()
 
     instance.sproutSpritesheet = love.graphics.newImage("Resources/Images/DialogCloudSprout.png")
@@ -130,7 +131,8 @@ function DialogCloud:update(dt)
 
 end
 
-function DialogCloud:draw(windowWidth, windowHeight)
+function DialogCloud:draw(scale, offsetX, offsetY)
+    love.graphics.scale(scale, scale)
     --draw sprout
     self.sproutAnimation:draw(self.sproutSpritesheet, self.sproutX, self.sproutY)
     --draw left bar
@@ -175,6 +177,7 @@ function DialogCloud:draw(windowWidth, windowHeight)
     love.graphics.setColor(1, 1, 1, 1)
 
     --draw text
+
     local previousFont = love.graphics.getFont()
     love.graphics.setFont(self.font)
     local lineHeight = self.font:getHeight()

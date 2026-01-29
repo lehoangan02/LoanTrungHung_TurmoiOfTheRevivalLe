@@ -60,7 +60,7 @@ end
 
 function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.push()
-     love.graphics.translate(offsetX, offsetY)
+    love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
    
     local pad = 3
