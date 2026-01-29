@@ -40,7 +40,7 @@ function DialogCloud.new(text, x, y, width, height)
     instance.bottomBarCurrentX = instance.bottomBarLeftX
     instance.bottomBarY = y + height - 1
 
-    instance.mainSquareRightX = x + width
+    instance.mainSquareRightX = x + width + 1
     instance.mainSquareXAnimationSpeed = math.abs(instance.mainSquareRightX - instance.leftBarX) / instance.animationTime
     instance.mainSquareCurrentX = instance.bottomBarLeftX
 
@@ -96,6 +96,12 @@ function DialogCloud:update(dt)
             self.bottomRightCornerAnimation:resume()
         end
     end
+    if self.mainSquareCurrentX < self.mainSquareRightX and self.sproutAnimation.status == "paused" then
+        self.mainSquareCurrentX = self.mainSquareCurrentX + self.mainSquareXAnimationSpeed * dt
+        if self.mainSquareCurrentX > self.mainSquareRightX then
+            self.mainSquareCurrentX = self.mainSquareRightX
+        end
+    end
 
     if self.topLeftCornerAnimation.status == "paused"
     and self.topLeftCornerAnimation.position == #self.topLeftCornerAnimation.frames
@@ -142,13 +148,19 @@ function DialogCloud:draw()
     end
     if self.drawTopRight then
         love.graphics.draw(self.topRightCorner, self.x + self.width - 3, self.y)
+        love.graphics.setColor(0, 0, 1.0, 0.5)
+        -- love.graphics.rectangle("fill", self.x + 2, self.y + 1, self.width - 4, 1)
+        -- love.graphics.rectangle("fill", self.x + self.width - 2, self.y + 2, 1, self.height - 4)
+        love.graphics.points(self.x + self.width - 1, self.y + 1)
     end
     
     love.graphics.setColor(1, 1, 1, 1)
 
     --set blue
     love.graphics.setColor(0, 0, 1.0, 0.5)
-    love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.bottomBarCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
+    love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.mainSquareCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
+    love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY - 1, self.mainSquareCurrentX - self.bottomBarLeftX - 1, 1)
+    love.graphics.rectangle("fill", self.x + 1 + (self.mainSquareCurrentX - self.bottomBarLeftX), self.leftBarCurrentY + 1, 1, self.leftBarBottomY - self.leftBarCurrentY - 1)
     love.graphics.setColor(1, 1, 1, 1)
 
 end
