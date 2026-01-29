@@ -20,6 +20,10 @@ function LevelLoader:loadLevel(level)
         local SoldierDropBallLevel = require("Game.Levels.SoldierDropBall.SoldierDropBallLevel")
         SoldierDropBallLevel:load()
         currentLevel = SoldierDropBallLevel
+    elseif (level == LevelEnum.PlayGround) then
+        local PlayGround = require("Game.Levels.Playground.Playground")
+        PlayGround:load()
+        currentLevel = PlayGround
     else
         error("Unknown level: " .. tostring(level))
     end

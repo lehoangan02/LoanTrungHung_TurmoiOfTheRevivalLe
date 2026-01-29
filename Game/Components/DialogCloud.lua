@@ -12,7 +12,17 @@ function DialogCloud.new(text, x, y, width, height)
     instance.width = width
     instance.height = height
 
-    instance.font = FontLoader:getFont("Geo")
+    instance.font = FontLoader:loadFont("Geo", 16)
+
+    instance.sproutSpritesheet = love.graphics.newImage("Resources/Images/.png")
 
     return instance
 end
+
+function DialogCloud:update(dt)
+end
+
+function DialogCloud:draw()
+end
+
+return DialogCloud
