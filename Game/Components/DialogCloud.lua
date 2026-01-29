@@ -149,9 +149,11 @@ function DialogCloud:draw()
     if self.drawTopRight then
         love.graphics.draw(self.topRightCorner, self.x + self.width - 3, self.y)
         love.graphics.setColor(0, 0, 1.0, 0.5)
-        -- love.graphics.rectangle("fill", self.x + 2, self.y + 1, self.width - 4, 1)
-        -- love.graphics.rectangle("fill", self.x + self.width - 2, self.y + 2, 1, self.height - 4)
-        love.graphics.points(self.x + self.width - 1, self.y + 1)
+        love.graphics.rectangle("fill", self.x + 2, self.y + 1, self.width - 4, 1)
+        love.graphics.rectangle("fill", self.x + self.width - 2, self.y + 2, 1, self.height - 4)
+        love.graphics.rectangle("fill", self.x + self.width - 3, self.y + 2, 1, 1)
+        love.graphics.rectangle("fill", self.x + self.width - 3, self.y + 3, 1, 1)
+        love.graphics.rectangle("fill", self.x + self.width - 4, self.y + 2, 1, 1)
     end
     
     love.graphics.setColor(1, 1, 1, 1)
