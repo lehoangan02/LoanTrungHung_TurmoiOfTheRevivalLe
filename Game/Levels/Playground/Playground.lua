@@ -8,17 +8,24 @@ function PlayGround:load()
         "Welcome to the Playground Level!",
         50,
         50,
-        300,
-        100
+        40,
+        20
     )
 end
 
 function PlayGround:update(dt)
+    local InputManager = require("Game.Input.InputManager")
+    if (InputManager:isEventFKeyPressed()) then
+        self.dialog:startDialogue()
+    end
     self.dialog:update(dt)
     return LevelEnum.Nothing
 end
 
 function PlayGround:draw(windowWidth, windowHeight)
+    love.graphics.clear(0.2, 0.2, 0.2)
+    local scale = math.min(windowWidth / BASE_W, windowHeight / BASE_H)
+    love.graphics.scale(scale, scale)
     self.dialog:draw()
 end
 
