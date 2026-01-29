@@ -14,6 +14,14 @@ function DialogCloud.new(text, x, y, width, height)
     instance.width = width
     instance.height = height
 
+    instance.padding = 2
+    instance.textBounds = {
+        startX = x + instance.padding,
+        startY = y + instance.padding,
+        endX = x + width - instance.padding,
+        endY = y + height - instance.padding
+    }
+
     instance.animationTime = 1.0
     instance.started = false
 
