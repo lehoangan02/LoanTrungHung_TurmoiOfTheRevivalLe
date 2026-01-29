@@ -217,6 +217,7 @@ function NgocHoi:update(dt)
     
     NgocHoi.siege_tower:update(dt) 
 
+    print("Bullet Timer: " .. NgocHoi.BulletTimer)
     return LevelEnum.Nothing
 end
 

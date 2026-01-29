@@ -5,5 +5,6 @@ local LevelEnum = {
     NgocHoi = 2,
     BallDrop = 3,
     SoldierDropBall = 4,
+    PlayGround = 5,
 }
 return LevelEnum
