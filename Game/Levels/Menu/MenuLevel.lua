@@ -5,6 +5,7 @@ MenuLevel.__index = MenuLevel
 local Color = require("Game.UI.Color")
 local HoldTextButton = require("Game.UI.HoldTextButton")
 local UIGridLayout = require("Game.UI.UIGridLayout")
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function MenuLevel:load()
     MenuLevel.nextLevel = nil
@@ -36,14 +37,7 @@ end
 function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.push()
     love.graphics.clear(1, 1, 1, 1)
-    local scale = math.max(1, math.floor(
-    math.min(windowHeight / BASE_H, windowWidth / BASE_W)))
-    local centerX = windowWidth / 2
-    local centerY = windowHeight / 2
-    local gameWidth = BASE_W * scale
-    local gameHeight = BASE_H * scale
-    local offsetX = centerX - gameWidth / 2
-    local offsetY = centerY - gameHeight / 2
+    local scale, offsetX, offsetY = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
 

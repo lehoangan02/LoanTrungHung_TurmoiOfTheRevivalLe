@@ -4,8 +4,8 @@ local BallDropLevel = setmetatable({}, {__index = Level})
 BallDropLevel.__index = BallDropLevel
 
 local LoadScreen = require "Game.Levels.LoadScreen.LoadScreen"
-
 local TiledUtils = require "Game.Custom.TiledUtility"
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function BallDropLevel:load()
 
@@ -196,10 +196,9 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     end
 
     love.graphics.clear(176/255, 174/255, 167/255, 1)
-    
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    local scale, offsetX, offsetY = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
-    love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
     
     BallDropLevel.cam:attach()
         local layers = BallDropLevel.gameMap.layers
