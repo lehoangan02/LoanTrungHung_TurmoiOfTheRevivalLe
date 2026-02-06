@@ -27,6 +27,7 @@ function Hinge.new(world, gameMap, layerName)
 
     print("Hinge machines found:", #self.machines)
     local sizeMachine1 = self:getMachineBounds(1)
+
     if self.machines[1] then
         for i, part in ipairs(self.machines[1].parts) do
             print(
@@ -41,12 +42,18 @@ function Hinge.new(world, gameMap, layerName)
             )
         end
     end
+
     print(
         "Machine 1 bounds:",
         sizeMachine1 and
         ("x:" .. sizeMachine1.x .. ", y:" .. sizeMachine1.y .. ", w:" .. sizeMachine1.width .. ", h:" .. sizeMachine1.height)
         or "nil"
     )
+
+    if sizeMachine1 then
+        local pinCollider = world:newCollider("Rectangle", {sizeMachine1.x + sizeMachine1.width / 2, sizeMachine1.y + sizeMachine1.height / 2, sizeMachine1.width, sizeMachine1.height})
+        pinCollider:setType("static")
+    end
     return self
 end
 
@@ -68,7 +75,6 @@ function Hinge:getMachineBounds(machineId)
         local cosA = math.cos(angle)
         local sinA = math.sin(angle)
 
-        -- Tile objects use bottom-left as the anchor, so local y goes up.
         local corners = {
             {0, 0},
             {w, 0},
@@ -104,7 +110,6 @@ function Hinge:draw()
     for id, machine in pairs(self.machines) do
         for _, part in ipairs(machine.parts) do
             TiledUtils.drawTileObject(self.gameMap, part, love.timer.getTime())
-            -- print("Drawing hinge part:", part.id)
         end
     end
 end
