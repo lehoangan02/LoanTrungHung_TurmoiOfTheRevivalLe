@@ -107,7 +107,6 @@ function TiledUtils.drawTileObject(gameMap, obj, elapsed)
     local tileW = obj.width  or tileset.tilewidth
     local tileH = obj.height or tileset.tileheight
 
-    -- Tiled tile objects: (x,y) is bottom-left
     local x = obj.x
     local y = obj.y
     local r = math.rad(obj.rotation or 0)
@@ -115,10 +114,8 @@ function TiledUtils.drawTileObject(gameMap, obj, elapsed)
     local sx = flipH and -1 or 1
     local sy = flipV and -1 or 1
 
-    -- origin at bottom-left
     local ox, oy = 0, tileH
 
-    -- NOTE: diagonal flip is not handled here (rare); add if needed.
     love.graphics.draw(img, quad, x, y, r, sx, sy, ox, oy)
 end
 
