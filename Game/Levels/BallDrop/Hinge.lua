@@ -26,7 +26,7 @@ function Hinge.new(world, gameMap, layerName)
     end
 
     print("Hinge machines found:", #self.machines)
-    local sizeMachine1 = self:getMachineBounds(1)
+    local sizePin = self:getMachineBounds(1)
 
     if self.machines[1] then
         for i, part in ipairs(self.machines[1].parts) do
@@ -44,15 +44,28 @@ function Hinge.new(world, gameMap, layerName)
     end
 
     print(
-        "Machine 1 bounds:",
-        sizeMachine1 and
-        ("x:" .. sizeMachine1.x .. ", y:" .. sizeMachine1.y .. ", w:" .. sizeMachine1.width .. ", h:" .. sizeMachine1.height)
+        "Pin bounds:",
+        sizePin and
+        ("x:" .. sizePin.x .. ", y:" .. sizePin.y .. ", w:" .. sizePin.width .. ", h:" .. sizePin.height)
         or "nil"
     )
 
-    if sizeMachine1 then
-        local pinCollider = world:newCollider("Rectangle", {sizeMachine1.x + sizeMachine1.width / 2, sizeMachine1.y + sizeMachine1.height / 2, sizeMachine1.width, sizeMachine1.height})
+    if sizePin then
+        local pinCollider = world:newCollider("Rectangle", {sizePin.x + sizePin.width / 2, sizePin.y + sizePin.height / 2, sizePin.width, sizePin.height})
         pinCollider:setType("static")
+    end
+
+    local sizeLeaf = self:getMachineBounds(2)
+    print(
+        "Leaf bounds:",
+        sizeLeaf and
+        ("x:" .. sizeLeaf.x .. ", y:" .. sizeLeaf.y .. ", w:" .. sizeLeaf.width .. ", h:" .. sizeLeaf.height)
+        or "nil"
+    )
+
+    if sizeLeaf then
+        local leafCollider = world:newCollider("Rectangle", {sizeLeaf.x + sizeLeaf.width / 2, sizeLeaf.y + sizeLeaf.height / 2, sizeLeaf.width, sizeLeaf.height})
+        leafCollider:setType("dynamic")
     end
     return self
 end
