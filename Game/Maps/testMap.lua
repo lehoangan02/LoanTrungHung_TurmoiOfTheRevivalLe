@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 12,
-  nextobjectid = 90,
+  nextobjectid = 95,
   properties = {},
   tilesets = {
     {
@@ -977,7 +977,7 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 127,
+          x = 132,
           y = 488,
           width = 16,
           height = 16,
@@ -993,7 +993,23 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 111,
+          x = 100,
+          y = 488,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 2
+          }
+        },
+        {
+          id = 92,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 88,
           y = 488,
           width = 16,
           height = 16,
@@ -1009,7 +1025,7 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 95,
+          x = 76,
           y = 488,
           width = 16,
           height = 16,
@@ -1025,7 +1041,7 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 79,
+          x = 64,
           y = 488,
           width = 16,
           height = 16,
@@ -1041,7 +1057,7 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 79,
+          x = 68,
           y = 504,
           width = 16,
           height = 16,
@@ -1053,27 +1069,11 @@ return {
           }
         },
         {
-          id = 87,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 48,
-          y = 488,
-          width = 16,
-          height = 16,
-          rotation = 90,
-          gid = 1472,
-          visible = true,
-          properties = {
-            ["machine_id"] = 1
-          }
-        },
-        {
           id = 88,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 48,
+          x = 44,
           y = 504,
           width = 16,
           height = 16,
@@ -1098,6 +1098,54 @@ return {
           visible = true,
           properties = {
             ["machine_id"] = 1
+          }
+        },
+        {
+          id = 90,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 40,
+          y = 488,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1472,
+          visible = true,
+          properties = {
+            ["machine_id"] = 1
+          }
+        },
+        {
+          id = 93,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 124,
+          y = 488,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 2
+          }
+        },
+        {
+          id = 94,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 488,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 2
           }
         }
       }
