@@ -5,9 +5,11 @@ Hinge.__index = Hinge
 
 
 
-function Hinge.new(world, gameMap, layerName)
+function Hinge.new(world, gameMap, layerName, pinID, leafID)
     local self = setmetatable({}, Hinge)
     self.gameMap = gameMap
+    self.pinID = pinID
+    self.leafID = leafID
     self.machines = {}
     if (gameMap.layers[layerName]) then
         for _, obj in ipairs(gameMap.layers[layerName].objects) do
@@ -26,12 +28,12 @@ function Hinge.new(world, gameMap, layerName)
     end
 
     print("Hinge machines found:", #self.machines)
-    local sizePin = self:getMachineBounds(1)
+    local sizePin = self:getMachineBounds(pinID)
 
-    if self.machines[1] then
-        for i, part in ipairs(self.machines[1].parts) do
+    if self.machines[pinID] then
+        for i, part in ipairs(self.machines[pinID].parts) do
             print(
-                "Machine 1 part",
+                "Machine " .. pinID .. " part",
                 i,
                 "id:", part.id,
                 "x:", part.x,
@@ -56,7 +58,7 @@ function Hinge.new(world, gameMap, layerName)
         pinCollider:setType("static")
     end
 
-    local sizeLeaf = self:getMachineBounds(2)
+    local sizeLeaf = self:getMachineBounds(leafID)
     print(
         "Leaf bounds:",
         sizeLeaf and
@@ -70,7 +72,7 @@ function Hinge.new(world, gameMap, layerName)
         self.leafCollider:setRestitution(0.9)
     end
     
-    if sizePin then
+    if sizePin and sizeLeaf then
         self.hinge = love.physics.newRevoluteJoint(
             pinCollider:getBody(),
             self.leafCollider:getBody(),
@@ -78,6 +80,10 @@ function Hinge.new(world, gameMap, layerName)
             sizePin.y + sizePin.height / 2,
             false
         )
+        self.hinge:setMotorEnabled(true)
+        self.hinge:setMaxMotorTorque(10000)
+    else
+        print("Error: Cannot create hinge joint, missing pin or leaf collider.")
     end
 
     self.hinge:setMotorEnabled(true)
@@ -143,25 +149,22 @@ end
 
 function Hinge:draw()
     for id, machine in pairs(self.machines) do
-        if id == 2 then goto continue end
+        if id == self.leafID then goto continue end
         for _, part in ipairs(machine.parts) do
             TiledUtils.drawTileObject(self.gameMap, part, love.timer.getTime())
         end
     end
     ::continue::
 
-    print("leafCollider exists:", self.leafCollider ~= nil)
-    print("machines[2] exists:", self.machines[2] ~= nil)
-
-    if self.leafCollider and self.machines[2] then
+    if self.leafCollider and self.machines[self.leafID] then
         local x, y = self.leafCollider:getPosition()
         local angle = self.leafCollider:getAngle()
-        local sizeLeaf = self:getMachineBounds(2)
+        local sizeLeaf = self:getMachineBounds(self.leafID)
         
         local centerX = sizeLeaf.x + sizeLeaf.width / 2
         local centerY = sizeLeaf.y + sizeLeaf.height / 2
         
-        for _, part in ipairs(self.machines[2].parts) do
+        for _, part in ipairs(self.machines[self.leafID].parts) do
             local offsetX = part.x - centerX
             local offsetY = part.y - centerY
             

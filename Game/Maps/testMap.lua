@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 12,
-  nextobjectid = 95,
+  nextobjectid = 150,
   properties = {},
   tilesets = {
     {
@@ -427,25 +427,25 @@ return {
         2147484798, 0, 0, 0, 1079, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 1079, 1079, 1079, 1079, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1079, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 1079, 1237, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 2684355796, 2684355797, 0, 0, 1610613973, 2684355796, 2684355796, 2684355798, 2684355796, 2684355796, 2684355796, 2684355796, 2684355796, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2147484798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -923,7 +923,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 16,
-          y = 528,
+          y = 800,
           width = 32,
           height = 16,
           rotation = 0,
@@ -936,7 +936,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 80,
-          y = 528,
+          y = 800,
           width = 144,
           height = 16,
           rotation = 0,
@@ -949,7 +949,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 128,
-          y = 512,
+          y = 784,
           width = 16,
           height = 16,
           rotation = 0,
@@ -978,7 +978,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 132,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -994,7 +994,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 100,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1010,7 +1010,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 88,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1026,7 +1026,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 76,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1042,7 +1042,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 64,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1058,7 +1058,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 68,
-          y = 504,
+          y = 776,
           width = 16,
           height = 16,
           rotation = -90,
@@ -1074,7 +1074,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 44,
-          y = 504,
+          y = 776,
           width = 16,
           height = 16,
           rotation = -90,
@@ -1090,7 +1090,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 32,
-          y = 504,
+          y = 776,
           width = 16,
           height = 16,
           rotation = -90,
@@ -1106,7 +1106,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 40,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1122,7 +1122,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 124,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1138,7 +1138,7 @@ return {
           type = "",
           shape = "rectangle",
           x = 112,
-          y = 488,
+          y = 760,
           width = 16,
           height = 16,
           rotation = 90,
@@ -1146,6 +1146,534 @@ return {
           visible = true,
           properties = {
             ["machine_id"] = 2
+          }
+        },
+        {
+          id = 95,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 132,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1529,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 96,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 100,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 97,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 88,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 98,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 76,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 99,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 64,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 100,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 68,
+          y = 512,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1487,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 101,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 44,
+          y = 512,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1379,
+          visible = true,
+          properties = {
+            ["machine_id"] = 3
+          }
+        },
+        {
+          id = 102,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 32,
+          y = 512,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1487,
+          visible = true,
+          properties = {
+            ["machine_id"] = 3
+          }
+        },
+        {
+          id = 103,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 40,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1472,
+          visible = true,
+          properties = {
+            ["machine_id"] = 3
+          }
+        },
+        {
+          id = 104,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 124,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 105,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 496,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 4
+          }
+        },
+        {
+          id = 106,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 108,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485177,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 107,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 140,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 108,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 152,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 109,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 164,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 110,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 176,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 111,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 172,
+          y = 544,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 2147485135,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 112,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 196,
+          y = 544,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 2147485027,
+          visible = true,
+          properties = {
+            ["machine_id"] = 6
+          }
+        },
+        {
+          id = 113,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 208,
+          y = 544,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 2147485135,
+          visible = true,
+          properties = {
+            ["machine_id"] = 6
+          }
+        },
+        {
+          id = 114,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 200,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485120,
+          visible = true,
+          properties = {
+            ["machine_id"] = 6
+          }
+        },
+        {
+          id = 115,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 116,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 116,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 128,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 2147485184,
+          visible = true,
+          properties = {
+            ["machine_id"] = 5
+          }
+        },
+        {
+          id = 117,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 132,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1529,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 118,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 100,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 119,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 88,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 120,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 76,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 121,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 64,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 122,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 68,
+          y = 640,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1487,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 123,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 44,
+          y = 640,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1379,
+          visible = true,
+          properties = {
+            ["machine_id"] = 7
+          }
+        },
+        {
+          id = 124,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 32,
+          y = 640,
+          width = 16,
+          height = 16,
+          rotation = -90,
+          gid = 1487,
+          visible = true,
+          properties = {
+            ["machine_id"] = 7
+          }
+        },
+        {
+          id = 125,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 40,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1472,
+          visible = true,
+          properties = {
+            ["machine_id"] = 7
+          }
+        },
+        {
+          id = 126,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 124,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
+          }
+        },
+        {
+          id = 127,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 624,
+          width = 16,
+          height = 16,
+          rotation = 90,
+          gid = 1536,
+          visible = true,
+          properties = {
+            ["machine_id"] = 8
           }
         }
       }
