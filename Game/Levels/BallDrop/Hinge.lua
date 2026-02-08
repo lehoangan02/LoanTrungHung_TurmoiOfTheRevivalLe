@@ -64,17 +64,16 @@ function Hinge.new(world, gameMap, layerName)
         or "nil"
     )
 
-    local leafCollider
     if sizeLeaf then
-        leafCollider = world:newCollider("Rectangle", {sizeLeaf.x + sizeLeaf.width / 2, sizeLeaf.y + sizeLeaf.height / 2, sizeLeaf.width, sizeLeaf.height})
-        leafCollider:setType("dynamic")
-        leafCollider:setRestitution(0.9)
+        self.leafCollider = world:newCollider("Rectangle", {sizeLeaf.x + sizeLeaf.width / 2, sizeLeaf.y + sizeLeaf.height / 2, sizeLeaf.width, sizeLeaf.height})
+        self.leafCollider:setType("dynamic")
+        self.leafCollider:setRestitution(0.9)
     end
     
     if sizePin then
         self.hinge = love.physics.newRevoluteJoint(
             pinCollider:getBody(),
-            leafCollider:getBody(),
+            self.leafCollider:getBody(),
             sizePin.x + sizePin.width,
             sizePin.y + sizePin.height / 2,
             false
@@ -144,8 +143,41 @@ end
 
 function Hinge:draw()
     for id, machine in pairs(self.machines) do
+        if id == 2 then goto continue end
         for _, part in ipairs(machine.parts) do
             TiledUtils.drawTileObject(self.gameMap, part, love.timer.getTime())
+        end
+    end
+    ::continue::
+
+    print("leafCollider exists:", self.leafCollider ~= nil)
+    print("machines[2] exists:", self.machines[2] ~= nil)
+
+    if self.leafCollider and self.machines[2] then
+        local x, y = self.leafCollider:getPosition()
+        local angle = self.leafCollider:getAngle()
+        local sizeLeaf = self:getMachineBounds(2)
+        
+        local centerX = sizeLeaf.x + sizeLeaf.width / 2
+        local centerY = sizeLeaf.y + sizeLeaf.height / 2
+        
+        for _, part in ipairs(self.machines[2].parts) do
+            local offsetX = part.x - centerX
+            local offsetY = part.y - centerY
+            
+            local cosA = math.cos(angle)
+            local sinA = math.sin(angle)
+            local rotatedX = offsetX * cosA - offsetY * sinA
+            local rotatedY = offsetX * sinA + offsetY * cosA
+            
+            local origX, origY, origRot = part.x, part.y, part.rotation
+            part.x = x + rotatedX
+            part.y = y + rotatedY
+            part.rotation = origRot + math.deg(angle)
+            
+            TiledUtils.drawTileObject(self.gameMap, part, love.timer.getTime())
+            
+            part.x, part.y, part.rotation = origX, origY, origRot
         end
     end
 end
