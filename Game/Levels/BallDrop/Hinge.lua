@@ -50,8 +50,9 @@ function Hinge.new(world, gameMap, layerName)
         or "nil"
     )
 
+    local pinCollider
     if sizePin then
-        local pinCollider = world:newCollider("Rectangle", {sizePin.x + sizePin.width / 2, sizePin.y + sizePin.height / 2, sizePin.width, sizePin.height})
+        pinCollider = world:newCollider("Rectangle", {sizePin.x + sizePin.width / 2, sizePin.y + sizePin.height / 2, sizePin.width, sizePin.height})
         pinCollider:setType("static")
     end
 
@@ -63,10 +64,28 @@ function Hinge.new(world, gameMap, layerName)
         or "nil"
     )
 
+    local leafCollider
     if sizeLeaf then
-        local leafCollider = world:newCollider("Rectangle", {sizeLeaf.x + sizeLeaf.width / 2, sizeLeaf.y + sizeLeaf.height / 2, sizeLeaf.width, sizeLeaf.height})
+        leafCollider = world:newCollider("Rectangle", {sizeLeaf.x + sizeLeaf.width / 2, sizeLeaf.y + sizeLeaf.height / 2, sizeLeaf.width, sizeLeaf.height})
         leafCollider:setType("dynamic")
+        leafCollider:setRestitution(0.9)
     end
+    
+    if sizePin then
+        self.hinge = love.physics.newRevoluteJoint(
+            pinCollider:getBody(),
+            leafCollider:getBody(),
+            sizePin.x + sizePin.width,
+            sizePin.y + sizePin.height / 2,
+            false
+        )
+    end
+
+    self.hinge:setMotorEnabled(true)
+    self.hinge:setMaxMotorTorque(10000)
+    self.springK = 140
+    self.damping = 0.8
+
     return self
 end
 
@@ -117,6 +136,10 @@ function Hinge:getMachineBounds(machineId)
 end
 
 function Hinge:update(dt)
+    local angle = self.hinge:getJointAngle()
+    local angVel = self.hinge:getJointSpeed()
+
+    self.hinge:setMotorSpeed(-self.springK * angle - self.damping * angVel)
 end
 
 function Hinge:draw()

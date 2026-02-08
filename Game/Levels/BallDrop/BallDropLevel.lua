@@ -102,7 +102,8 @@ function BallDropLevel:load()
     end
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
+    -- BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 450)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge")
@@ -120,6 +121,7 @@ function BallDropLevel:update(dt)
     BallDropLevel:adjustGravity()
     
     BallDropLevel.ball:update(dt, BallDropLevel.world)
+    BallDropLevel.hinge:update(dt)
 
     InputManager = require("Game.Input.InputManager")
     if InputManager:isEventFKeyPressed() and not BallDropLevel.ball.exploded then
