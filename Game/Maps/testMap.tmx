@@ -493,61 +493,6 @@
     <property name="machine_id" type="int" value="4"/>
    </properties>
   </object>
-  <object id="106" gid="2147485177" x="108" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="107" gid="2147485184" x="140" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="108" gid="2147485184" x="152" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="109" gid="2147485184" x="164" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="110" gid="2147485184" x="176" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="111" gid="2147485135" x="172" y="544" width="16" height="16" rotation="90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="112" gid="2147485027" x="196" y="544" width="16" height="16" rotation="90">
-   <properties>
-    <property name="machine_id" type="int" value="6"/>
-   </properties>
-  </object>
-  <object id="113" gid="2147485135" x="208" y="544" width="16" height="16" rotation="90">
-   <properties>
-    <property name="machine_id" type="int" value="6"/>
-   </properties>
-  </object>
-  <object id="114" gid="2147485120" x="200" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="6"/>
-   </properties>
-  </object>
-  <object id="115" gid="2147485184" x="116" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
-  <object id="116" gid="2147485184" x="128" y="560" width="16" height="16" rotation="-90">
-   <properties>
-    <property name="machine_id" type="int" value="5"/>
-   </properties>
-  </object>
   <object id="117" gid="1529" x="132" y="624" width="16" height="16" rotation="90">
    <properties>
     <property name="machine_id" type="int" value="8"/>

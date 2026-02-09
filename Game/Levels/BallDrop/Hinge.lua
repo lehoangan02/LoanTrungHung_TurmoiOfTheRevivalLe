@@ -15,15 +15,19 @@ function Hinge.new(world, gameMap, layerName, pinID, leafID)
         for _, obj in ipairs(gameMap.layers[layerName].objects) do
             if obj.properties.machine_id then
                 local id = obj.properties.machine_id
-                self.machines[id] = self.machines[id] or { parts = {} }
-                table.insert(self.machines[id].parts, obj)
+                if id == pinID or id == leafID then
+                    self.machines[id] = self.machines[id] or { parts = {} }
+                    table.insert(self.machines[id].parts, obj)
+                end
             end
-            print(
-                "Found hinge part:",
-                obj.id,
-                "for machine:",
-                obj.properties.machine_id
-            )
+            if obj.properties.machine_id == pinID or obj.properties.machine_id == leafID then
+                print(
+                    "Found hinge part:",
+                    obj.id,
+                    "for machine:",
+                    obj.properties.machine_id
+                )
+            end
         end
     end
 
@@ -153,8 +157,8 @@ function Hinge:draw()
         for _, part in ipairs(machine.parts) do
             TiledUtils.drawTileObject(self.gameMap, part, love.timer.getTime())
         end
+        ::continue::
     end
-    ::continue::
 
     if self.leafCollider and self.machines[self.leafID] then
         local x, y = self.leafCollider:getPosition()
