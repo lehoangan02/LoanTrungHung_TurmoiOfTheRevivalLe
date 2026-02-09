@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="150">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="161">
  <editorsettings>
   <export target="testMap.lua" format="lua"/>
  </editorsettings>
@@ -546,6 +546,61 @@
   <object id="127" gid="1536" x="112" y="624" width="16" height="16" rotation="90">
    <properties>
     <property name="machine_id" type="int" value="8"/>
+   </properties>
+  </object>
+  <object id="150" gid="2147485177" x="108" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="151" gid="2147485184" x="140" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="152" gid="2147485184" x="152" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="153" gid="2147485184" x="164" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="154" gid="2147485184" x="176" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="155" gid="2147485135" x="172" y="560" width="16" height="16" rotation="90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="156" gid="2147485027" x="196" y="560" width="16" height="16" rotation="90">
+   <properties>
+    <property name="machine_id" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="157" gid="2147485135" x="208" y="560" width="16" height="16" rotation="90">
+   <properties>
+    <property name="machine_id" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="158" gid="2147485120" x="200" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="159" gid="2147485184" x="116" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="160" gid="2147485184" x="128" y="576" width="16" height="16" rotation="-90">
+   <properties>
+    <property name="machine_id" type="int" value="6"/>
    </properties>
   </object>
  </objectgroup>
