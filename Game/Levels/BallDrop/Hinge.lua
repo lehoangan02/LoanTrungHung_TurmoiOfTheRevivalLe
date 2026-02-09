@@ -5,7 +5,7 @@ Hinge.__index = Hinge
 
 
 
-function Hinge.new(world, gameMap, layerName, pinID, leafID)
+function Hinge.new(world, gameMap, layerName, pinID, leafID, maxMotorTorque, springK, damping)
     local self = setmetatable({}, Hinge)
     self.gameMap = gameMap
     self.pinID = pinID
@@ -85,15 +85,15 @@ function Hinge.new(world, gameMap, layerName, pinID, leafID)
             false
         )
         self.hinge:setMotorEnabled(true)
-        self.hinge:setMaxMotorTorque(10000)
+        self.hinge:setMaxMotorTorque(maxMotorTorque)
     else
         print("Error: Cannot create hinge joint, missing pin or leaf collider.")
     end
 
     self.hinge:setMotorEnabled(true)
-    self.hinge:setMaxMotorTorque(10000)
-    self.springK = 140
-    self.damping = 0.8
+    self.hinge:setMaxMotorTorque(maxMotorTorque)
+    self.springK = springK
+    self.damping = damping
 
     return self
 end
