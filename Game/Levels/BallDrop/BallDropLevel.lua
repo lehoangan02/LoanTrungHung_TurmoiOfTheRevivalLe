@@ -107,9 +107,9 @@ function BallDropLevel:load()
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge1 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 1, 2, 10000, 140, 0.8)
-    BallDropLevel.hinge2 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 3, 4, 15000, 140, 0.8)
+    BallDropLevel.hinge2 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 3, 4, 15000, 200, 0.7)
     -- BallDropLevel.hinge3 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 5, 6)
-    BallDropLevel.hinge4 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 7, 8, 15000, 140, 0.8)
+    BallDropLevel.hinge4 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 7, 8, 15000, 200, 0.7)
 
 
 end
