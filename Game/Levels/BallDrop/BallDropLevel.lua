@@ -103,7 +103,7 @@ function BallDropLevel:load()
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
     -- BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 450)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 800)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge1 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 1, 2, 10000, 140, 0.8)
@@ -219,6 +219,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         if layers["Wall"] then BallDropLevel.gameMap:drawLayer(layers["Wall"]) end
         if layers["NonCollidable"] then BallDropLevel.gameMap:drawLayer(layers["NonCollidable"]) end
         if layers["Enemies"] then BallDropLevel.gameMap:drawLayer(layers["Enemies"]) end
+        if layers["Magnetic"] then BallDropLevel.gameMap:drawLayer(layers["Magnetic"]) end
         
         TiledUtils.drawTileObjectLayer(BallDropLevel.gameMap, "Stars", love.timer.getTime())
         BallDropLevel.hinge1:draw()
