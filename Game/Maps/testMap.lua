@@ -9,8 +9,8 @@ return {
   height = 100,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 15,
-  nextobjectid = 176,
+  nextlayerid = 16,
+  nextobjectid = 177,
   properties = {},
   tilesets = {
     {
@@ -1375,6 +1375,35 @@ return {
           shape = "rectangle",
           x = 128,
           y = 864,
+          width = 32,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 15,
+      name = "BlockerCollidable",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 176,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 112,
+          y = 944,
           width = 32,
           height = 16,
           rotation = 0,

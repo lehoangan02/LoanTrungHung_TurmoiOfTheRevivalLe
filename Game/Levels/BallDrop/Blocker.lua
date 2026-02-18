@@ -1,13 +1,31 @@
 local Blocker = {}
 
 Blocker.__index = Blocker
-function Blocker.new(world, gameMap, layerName, machineID)
+
+function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machineID)
     local self = setmetatable({}, Blocker)
     self.gameMap = gameMap
-    local layer = gameMap.layers[layerName]
-    if not layer then return self end
-    if not layer.objects then return self end
-    local obj = layer.objects[1]
+    
+    self.visualLayerName = visualLayerName
+    self.visualLayer = gameMap.layers[visualLayerName]
+    
+    if not self.visualLayer then
+        print("Error: Visual layer '" .. visualLayerName .. "' not found.")
+    end
+
+    local colliderLayer = gameMap.layers[colliderLayerName]
+    
+    if not colliderLayer then 
+        print("Error: Collider layer '" .. colliderLayerName .. "' not found.")
+        return self 
+    end
+    
+    if not colliderLayer.objects then 
+        print("Error: Layer '" .. colliderLayerName .. "' has no objects (Is it a Tile Layer?).") 
+        return self 
+    end
+
+    local obj = colliderLayer.objects[1]
 
     if obj then
         local startX = obj.x + obj.width / 2
@@ -21,7 +39,7 @@ function Blocker.new(world, gameMap, layerName, machineID)
         self.blocker:setFixedRotation(true)
         self.blocker:setRestitution(0)
 
-        local anchor = love.physics.newBody(world.world, startX, startY, "static")
+        local anchor = love.physics.newBody(world._world, startX, startY, "static")
 
         local joint = love.physics.newPrismaticJoint(
             anchor,
@@ -29,26 +47,32 @@ function Blocker.new(world, gameMap, layerName, machineID)
             startX, startY,
             1, 0
         )
+        self.joint = joint
         
         self.blockerStartPosition = {x = startX, y = startY}
+    else
+        print("Error: No object found inside '" .. colliderLayerName .. "'")
     end
+
     return self
 end
 
 function Blocker:update(dt)
-    if self.blocker then
+    if self.blocker and self.visualLayer then
         local currentX, currentY = self.blocker:getPosition()
 
         local diffX = currentX - self.blockerStartPosition.x
         local diffY = currentY - self.blockerStartPosition.y
 
-        self.gameMap.layers["Blocker"].x = diffX
-        self.gameMap.layers["Blocker"].y = diffY
+        self.visualLayer.x = diffX
+        self.visualLayer.y = diffY
     end
 end
 
 function Blocker:draw()
-    if self.gameMap.layers["Blocker"] then self.gameMap:drawLayer(self.gameMap.layers["Blocker"]) end
+    if self.visualLayer then 
+        self.gameMap:drawLayer(self.visualLayer) 
+    end
 end
 
 return Blocker

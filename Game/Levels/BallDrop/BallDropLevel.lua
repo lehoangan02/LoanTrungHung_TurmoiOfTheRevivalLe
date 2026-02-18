@@ -89,7 +89,7 @@ function BallDropLevel:load()
         end
     end
 
-    BallDropLevel.blocker = Blocker.new(BallDropLevel.world, BallDropLevel.gameMap, "Blocker", 1)
+    BallDropLevel.blocker = Blocker.new(BallDropLevel.world, BallDropLevel.gameMap, "Blocker", "BlockerCollidable", 1)
 
     BallDropLevel.stars = {}
     if BallDropLevel.gameMap.layers["Stars"] then
