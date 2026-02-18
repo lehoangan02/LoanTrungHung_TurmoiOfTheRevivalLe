@@ -37,7 +37,7 @@ end
 function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.push()
     love.graphics.clear(1, 1, 1, 1)
-    local scale, offsetX, offsetY = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
 

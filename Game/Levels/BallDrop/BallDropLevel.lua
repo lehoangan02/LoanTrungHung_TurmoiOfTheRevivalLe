@@ -209,9 +209,10 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     end
 
     love.graphics.clear(176/255, 174/255, 167/255, 1)
-    local scale, offsetX, offsetY = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
-    love.graphics.translate(offsetX, offsetY)
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
+    
     
     BallDropLevel.cam:attach()
         local layers = BallDropLevel.gameMap.layers
