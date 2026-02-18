@@ -6,6 +6,7 @@ BallDropLevel.__index = BallDropLevel
 local LoadScreen = require "Game.Levels.LoadScreen.LoadScreen"
 local TiledUtils = require "Game.Custom.TiledUtility"
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local Blocker = require "Game.Levels.BallDrop.Blocker"
 
 function BallDropLevel:load()
 
@@ -88,6 +89,8 @@ function BallDropLevel:load()
         end
     end
 
+    BallDropLevel.blocker = Blocker.new(BallDropLevel.world, BallDropLevel.gameMap, "Blocker", 1)
+
     BallDropLevel.stars = {}
     if BallDropLevel.gameMap.layers["Stars"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
@@ -110,6 +113,7 @@ function BallDropLevel:load()
     BallDropLevel.hinge2 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 3, 4, 15000, 200, 0.7)
     BallDropLevel.hinge3 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 5, 6, 15000, 200, 0.7)
     BallDropLevel.hinge4 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 7, 8, 15000, 200, 0.7)
+
 
 
 end
@@ -146,6 +150,8 @@ function BallDropLevel:update(dt)
     BallDropLevel.cameraRotation = BallDropLevel.cameraRotation + angleCamStep
 
     BallDropLevel:trackBall(dt)
+
+    BallDropLevel.blocker:update(dt)
     return -1
 end
 
@@ -231,6 +237,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         
         BallDropLevel.world:draw() 
         BallDropLevel.ball:draw()
+        BallDropLevel.blocker:draw()
     BallDropLevel.cam:detach()
 
     love.graphics.push()
