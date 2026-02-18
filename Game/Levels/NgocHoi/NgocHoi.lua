@@ -7,6 +7,7 @@ local anim8 = require "Game/Libraries/anim8"
 local FontLoader = require("Game.Fonts.FontLoader")
 local InputManager = require("Game.Input.InputManager")
 local SiegeTower = require("Game.Levels.NgocHoi.SiegeTower")
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function NgocHoi:shake(duration, magnitude)
     NgocHoi.shakeDuration = duration
@@ -227,9 +228,12 @@ function NgocHoi:draw(windowWidth, windowHeight)
     -- love.graphics.clear(0.6, 0.6, 0.6, 1)
     
 
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    -- local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    -- love.graphics.scale(scale, scale)
+    -- love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
-    love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
 
     NgocHoi.cam:attach()
         NgocHoi.world:draw()
