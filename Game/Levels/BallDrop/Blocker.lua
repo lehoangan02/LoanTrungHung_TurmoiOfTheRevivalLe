@@ -69,7 +69,7 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
     self.anchorX = anchorX
     self.anchorY = anchorY
 
-    local wireAnchorX = obj.x - (5 * 16) 
+    local wireAnchorX = obj.x - (6 * 16) 
     local wireAnchorY = startY
 
     self.wireAnchorX = wireAnchorX
