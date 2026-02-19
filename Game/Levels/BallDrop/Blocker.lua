@@ -32,12 +32,14 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
         local startY = obj.y + obj.height / 2
 
         self.blocker = world:newCollider("Rectangle", {
-                startX, startY, obj.width, obj.height
+                startX, startY, obj.width, obj.height - 1
             })
 
         self.blocker:setType("dynamic")
         self.blocker:setFixedRotation(true)
         self.blocker:setRestitution(0)
+        self.blocker.fixture:setFriction(0)
+        self.blocker.body:setSleepingAllowed(false)
 
         local anchor = love.physics.newBody(world._world, startX, startY, "static")
 
@@ -48,6 +50,10 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
             1, 0
         )
         self.joint = joint
+
+        self.joint:setLowerLimit(-5000)
+        self.joint:setUpperLimit(5000)
+        self.joint:setLimitsEnabled(true)
         
         self.blockerStartPosition = {x = startX, y = startY}
     else
