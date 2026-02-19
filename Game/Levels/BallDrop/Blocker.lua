@@ -68,10 +68,15 @@ function Blocker:update(dt)
         local currentX, currentY = self.blocker:getPosition()
 
         local diffX = currentX - self.blockerStartPosition.x
-        local diffY = currentY - self.blockerStartPosition.y
+
+        local stiffness = 10 
+
+        local forceX = -stiffness * diffX
+
+        self.blocker:applyForce(forceX, 0)
 
         self.visualLayer.x = diffX
-        self.visualLayer.y = diffY
+        self.visualLayer.y = currentY - self.blockerStartPosition.y
     end
 end
 
