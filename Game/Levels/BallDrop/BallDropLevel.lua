@@ -115,7 +115,13 @@ function BallDropLevel:load()
     BallDropLevel.hinge3 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 5, 6, 15000, 200, 0.7)
     BallDropLevel.hinge4 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 7, 8, 15000, 200, 0.7)
 
-    BallDropLevel.lever1 = Lever.new(BallDropLevel.world, 100, 1200)
+    BallDropLevel.lever1 = Lever.new(
+        BallDropLevel.world,
+        100,
+        1200,
+        30,
+        6
+    )
 
 end
 

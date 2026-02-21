@@ -1,8 +1,11 @@
 local SwingLever = {}
 SwingLever.__index = SwingLever
 
-function SwingLever.new(world, axleX, axleY)
+function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping)
     local self = setmetatable({}, SwingLever)
+
+    self.maxMotorTorque = maxMotorTorque or 30
+    self.damping = damping or 6
 
     local axleRadius = 5
     self.axle = world:newCollider("Circle", {axleX, axleY, axleRadius})
@@ -26,11 +29,18 @@ function SwingLever.new(world, axleX, axleY)
         false
     )
 
+    self.joint:setMotorEnabled(true)
+    self.joint:setMaxMotorTorque(self.maxMotorTorque)
+    
+
     return self
 end
 
 function SwingLever:update(dt)
-    
+    if self.joint then
+        local angVel = self.joint:getJointSpeed()
+        self.joint:setMotorSpeed(-self.damping * angVel)
+    end
 end
 
 function SwingLever:draw()
