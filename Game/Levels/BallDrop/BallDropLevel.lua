@@ -7,6 +7,7 @@ local LoadScreen = require "Game.Levels.LoadScreen.LoadScreen"
 local TiledUtils = require "Game.Custom.TiledUtility"
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 local Blocker = require "Game.Levels.BallDrop.Blocker"
+local Lever = require "Game.Levels.BallDrop.Lever"
 
 function BallDropLevel:load()
 
@@ -106,7 +107,7 @@ function BallDropLevel:load()
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
     -- BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 900)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 1100)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge1 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 1, 2, 10000, 140, 0.8)
@@ -114,7 +115,7 @@ function BallDropLevel:load()
     BallDropLevel.hinge3 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 5, 6, 15000, 200, 0.7)
     BallDropLevel.hinge4 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 7, 8, 15000, 200, 0.7)
 
-
+    BallDropLevel.lever1 = Lever.new(BallDropLevel.world, 100, 1200)
 
 end
 
@@ -152,6 +153,8 @@ function BallDropLevel:update(dt)
     BallDropLevel:trackBall(dt)
 
     BallDropLevel.blocker:update(dt)
+
+    BallDropLevel.lever1:update(dt)
     return -1
 end
 
@@ -238,6 +241,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         BallDropLevel.world:draw() 
         BallDropLevel.ball:draw()
         BallDropLevel.blocker:draw()
+        BallDropLevel.lever1:draw()
     BallDropLevel.cam:detach()
 
     love.graphics.push()
