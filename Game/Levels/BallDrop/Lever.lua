@@ -4,12 +4,12 @@ SwingLever.__index = SwingLever
 function SwingLever.new(world, axleX, axleY)
     local self = setmetatable({}, SwingLever)
 
-    local axleRadius = 10
+    local axleRadius = 5
     self.axle = world:newCollider("Circle", {axleX, axleY, axleRadius})
     self.axle:setType("static")
 
-    local leverWidth = 80
-    local leverHeight = 10
+    local leverWidth = 50
+    local leverHeight = 5
     
 
     local leverX = axleX
