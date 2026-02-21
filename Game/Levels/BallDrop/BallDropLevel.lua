@@ -117,11 +117,14 @@ function BallDropLevel:load()
 
     BallDropLevel.lever1 = Lever.new(
         BallDropLevel.world,
-        50,
-        980,
+        53,
+        978,
         30,
         6,
-        math.rad(-30)
+        math.rad(-20),
+        math.rad(-20),
+        math.rad(45),
+        "left"
     )
 
 end
