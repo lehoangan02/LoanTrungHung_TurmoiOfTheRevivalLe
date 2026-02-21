@@ -17,6 +17,7 @@ function SwingLever.new(world, axleX, axleY)
     self.lever = world:newCollider("Rectangle", {leverX, leverY, leverWidth, leverHeight})
     self.lever:setType("dynamic")
     self.lever.body:setMass(5)
+    self.lever.body:setGravityScale(0)
 
     self.joint = love.physics.newRevoluteJoint(
         self.axle.body, 
