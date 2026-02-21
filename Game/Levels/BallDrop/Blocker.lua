@@ -5,6 +5,9 @@ Blocker.__index = Blocker
 function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machineID)
     local self = setmetatable({}, Blocker)
     self.gameMap = gameMap
+
+    self.world = world 
+    self.gameMap = gameMap
     
     self.visualLayerName = visualLayerName
     self.visualLayer = gameMap.layers[visualLayerName]
@@ -94,16 +97,32 @@ end
 function Blocker:update(dt)
     if self.blocker and self.visualLayer then
         local currentX, currentY = self.blocker:getPosition()
-
         local diffX = currentX - self.blockerStartPosition.x
 
         local stiffness = 10 
         local forceX = -stiffness * diffX
-
         self.blocker:applyForce(forceX, 0)
 
         self.visualLayer.x = diffX
         self.visualLayer.y = currentY - self.blockerStartPosition.y
+
+        local rightEdgeX = currentX + (self.obj.width / 2)
+        local springWidth = self.anchorX - rightEdgeX
+
+        if self.springCollider then
+            self.springCollider:destroy()
+            self.springCollider = nil
+        end
+
+        if springWidth > 2 then 
+            local centerX = rightEdgeX + (springWidth / 2)
+            local springHeight = self.springImage:getHeight()
+
+            self.springCollider = self.world:newCollider("Rectangle", {
+                centerX, self.anchorY, springWidth, springHeight
+            })
+            self.springCollider:setType("static")
+        end
     end
 end
 
