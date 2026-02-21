@@ -62,8 +62,8 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
     end
 
     self.springImage = love.graphics.newImage("Resources/Images/Coil_Spring.png")
-    self.numSpringCoils = 2
-    local anchorX = obj.x + (7 * 16)
+    self.numSpringCoils = 1
+    local anchorX = obj.x + (5 * 16)
     local anchorY = startY
 
     self.anchorX = anchorX
