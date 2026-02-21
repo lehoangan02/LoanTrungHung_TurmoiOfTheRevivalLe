@@ -107,7 +107,7 @@ function BallDropLevel:load()
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
     -- BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 1100)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 180, 1100)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge1 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 1, 2, 10000, 140, 0.8)
@@ -120,7 +120,8 @@ function BallDropLevel:load()
         100,
         1200,
         30,
-        6
+        6,
+        math.rad(-30)
     )
 
 end

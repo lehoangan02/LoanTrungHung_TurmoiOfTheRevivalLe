@@ -1,7 +1,7 @@
 local SwingLever = {}
 SwingLever.__index = SwingLever
 
-function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping)
+function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping, initAngle)
     local self = setmetatable({}, SwingLever)
 
     self.maxMotorTorque = maxMotorTorque or 30
@@ -13,14 +13,17 @@ function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping)
 
     local leverWidth = 50
     local leverHeight = 5
+    local initialAngle = initAngle or 0
     
 
-    local leverX = axleX
-    local leverY = axleY - axleRadius
+    local leverX = axleX + math.sin(initialAngle) * axleRadius
+    local leverY = axleY - math.cos(initialAngle) * axleRadius
     self.lever = world:newCollider("Rectangle", {leverX, leverY, leverWidth, leverHeight})
     self.lever:setType("dynamic")
     self.lever.body:setMass(5)
     self.lever.body:setGravityScale(0)
+    self.lever.body:setAngle(initialAngle)
+    self.lever.body:setAngularVelocity(0)
 
     self.joint = love.physics.newRevoluteJoint(
         self.axle.body, 
