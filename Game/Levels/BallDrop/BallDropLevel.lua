@@ -129,7 +129,8 @@ function BallDropLevel:load()
     BallDropLevel.spikeBlockImage:setFilter("nearest", "nearest")
     local spikeBlockWidth = BallDropLevel.spikeBlockImage:getWidth()
     local spikeBlockHeight = BallDropLevel.spikeBlockImage:getHeight()
-    BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {112, 970, spikeBlockWidth, spikeBlockHeight})
+    BallDropLevel.spikeBlockInitPosition = {x = 125, y = 975}
+    BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, spikeBlockWidth, spikeBlockHeight})
     BallDropLevel.spikeBlockCollider:setType("dynamic")
     BallDropLevel.spikeBlockCollider.isEnemy = true
 
@@ -337,6 +338,10 @@ function BallDropLevel:draw(windowWidth, windowHeight)
             1, 1,
             BallDropLevel.spikeBlockImage:getWidth() / 2, BallDropLevel.spikeBlockImage:getHeight() / 2
         )
+        love.graphics.setColor(1, 0, 0, 1)
+            -- Debug: draw a red circle at the spike block's initial position
+            love.graphics.circle("fill", BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, 5)
+        love.graphics.setColor(1, 1, 1, 1)
     BallDropLevel.cam:detach()
 
     love.graphics.push()
