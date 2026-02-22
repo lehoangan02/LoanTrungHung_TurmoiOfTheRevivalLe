@@ -129,9 +129,26 @@ function BallDropLevel:load()
     BallDropLevel.spikeBlockImage:setFilter("nearest", "nearest")
     local spikeBlockWidth = BallDropLevel.spikeBlockImage:getWidth()
     local spikeBlockHeight = BallDropLevel.spikeBlockImage:getHeight()
-    BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {150, 1000, spikeBlockWidth, spikeBlockHeight})
+    BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {112, 970, spikeBlockWidth, spikeBlockHeight})
     BallDropLevel.spikeBlockCollider:setType("dynamic")
     BallDropLevel.spikeBlockCollider.isEnemy = true
+
+    BallDropLevel.magnets = {} 
+    if BallDropLevel.gameMap.layers["StaticCollidable"] then
+        for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
+            -- Create the collider ONCE
+            local wall = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
+            wall:setType("static")
+            wall.fixture:setCategory(BallDropLevel.CATEGORY_WALLS)
+            
+            -- Just add the existing reference to the magnet table if true
+            if obj.properties["isMagnetBlock"] then
+                table.insert(BallDropLevel.magnets, wall)
+            end
+            
+            table.insert(BallDropLevel.walls, wall)
+        end
+    end
 
 end
 
@@ -146,6 +163,31 @@ local function getDistanceToSegment(px, py, x1, y1, x2, y2)
     return math.sqrt((px - projX)^2 + (py - projY)^2), projX, projY
 end
 
+function BallDropLevel:applyMagneticForces(dt)
+    -- Strength needs to be high because Box2D units are small
+    local strength = 000 
+    local minDistance = 20 
+    local sx, sy = BallDropLevel.spikeBlockCollider:getPosition()
+
+    for _, magnet in ipairs(BallDropLevel.magnets) do
+        local mx, my = magnet:getPosition()
+        local dx, dy = mx - sx, my - sy
+        local distSq = dx*dx + dy*dy
+        
+        -- Prevent division by zero and extreme "snapping" forces
+        if distSq > (minDistance * minDistance) then
+            local dist = math.sqrt(distSq)
+            local forceMag = strength / distSq
+            
+            -- Directional force
+            local fx = (dx / dist) * forceMag
+            local fy = (dy / dist) * forceMag
+            
+            BallDropLevel.spikeBlockCollider:applyForce(fx, fy)
+        end
+    end
+end
+
 function BallDropLevel:update(dt)
 
     if not BallDropLevel.loadScreen:isDone() then
@@ -153,9 +195,12 @@ function BallDropLevel:update(dt)
         return -1
     end
 
+    BallDropLevel:adjustGravity()
+    -- BallDropLevel:applyMagneticForces(dt)
+
     BallDropLevel.gameMap:update(dt)
     BallDropLevel.world:update(dt)
-    BallDropLevel:adjustGravity()
+    
     
     BallDropLevel.ball:update(dt, BallDropLevel.world)
     BallDropLevel.hinge1:update(dt)

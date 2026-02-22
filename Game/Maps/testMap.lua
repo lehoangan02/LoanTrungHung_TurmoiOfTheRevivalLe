@@ -1461,7 +1461,7 @@ return {
           x = 112,
           y = 944,
           width = 32,
-          height = 16,
+          height = 12,
           rotation = 0,
           visible = true,
           properties = {}
