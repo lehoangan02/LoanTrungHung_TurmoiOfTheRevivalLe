@@ -125,6 +125,14 @@ function BallDropLevel:load()
         "left"
     )
 
+    BallDropLevel.spikeBlockImage = love.graphics.newImage("Resources/Images/SpikeBlock.png")
+    BallDropLevel.spikeBlockImage:setFilter("nearest", "nearest")
+    local spikeBlockWidth = BallDropLevel.spikeBlockImage:getWidth()
+    local spikeBlockHeight = BallDropLevel.spikeBlockImage:getHeight()
+    BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {150, 1000, spikeBlockWidth, spikeBlockHeight})
+    BallDropLevel.spikeBlockCollider:setType("dynamic")
+    BallDropLevel.spikeBlockCollider.isEnemy = true
+
 end
 
 local function getDistanceToSegment(px, py, x1, y1, x2, y2)
@@ -276,6 +284,14 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         BallDropLevel.ball:draw()
         BallDropLevel.blocker:draw()
         BallDropLevel.lever1:draw()
+        local spikeBlockX, spikeBlockY = BallDropLevel.spikeBlockCollider:getPosition()
+        love.graphics.draw(
+            BallDropLevel.spikeBlockImage,
+            spikeBlockX, spikeBlockY,
+            BallDropLevel.spikeBlockCollider.body:getAngle(),
+            1, 1,
+            BallDropLevel.spikeBlockImage:getWidth() / 2, BallDropLevel.spikeBlockImage:getHeight() / 2
+        )
     BallDropLevel.cam:detach()
 
     love.graphics.push()

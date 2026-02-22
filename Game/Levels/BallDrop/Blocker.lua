@@ -135,8 +135,8 @@ function Blocker:update(dt)
         local diffX = currentX - self.blockerStartPosition.x
         local velX, _ = self.blocker:getLinearVelocity()
 
-        local stiffness = 5 
-        local damping = 0
+        local stiffness = 4
+        local damping = 1
         local forceX = -stiffness * diffX - damping * velX
         self.blocker:applyForce(forceX, 0)
 
@@ -282,6 +282,7 @@ function Blocker:draw()
         end
 
         love.graphics.setColor(1, 1, 1, 1)
+        
     end
 end
 
