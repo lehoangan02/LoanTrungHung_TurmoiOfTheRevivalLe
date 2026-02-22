@@ -59,7 +59,6 @@ function BallDropLevel:load()
     BallDropLevel.worldGravity = 200
     BallDropLevel.world = bf.newWorld(0, BallDropLevel.worldGravity, false)
     
-    -- Collision categories for breezefield (using love.physics categories/masks)
     BallDropLevel.CATEGORY_BALL = 1
     BallDropLevel.CATEGORY_ENEMIES = 2
     BallDropLevel.CATEGORY_STARS = 3
@@ -106,7 +105,6 @@ function BallDropLevel:load()
     end
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
-    -- BallDropLevel.ball = BallClass.new(BallDropLevel.world, 100, 10)
     BallDropLevel.ball = BallClass.new(BallDropLevel.world, 180, 900)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
@@ -127,6 +125,17 @@ function BallDropLevel:load()
         "left"
     )
 
+end
+
+local function getDistanceToSegment(px, py, x1, y1, x2, y2)
+    local l2 = (x1 - x2)^2 + (y1 - y2)^2
+    if l2 == 0 then 
+        return math.sqrt((px - x1)^2 + (py - y1)^2), x1, y1 
+    end
+    local t = math.max(0, math.min(1, ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2))
+    local projX = x1 + t * (x2 - x1)
+    local projY = y1 + t * (y2 - y1)
+    return math.sqrt((px - projX)^2 + (py - projY)^2), projX, projY
 end
 
 function BallDropLevel:update(dt)
@@ -163,8 +172,23 @@ function BallDropLevel:update(dt)
     BallDropLevel:trackBall(dt)
 
     BallDropLevel.blocker:update(dt)
-
     BallDropLevel.lever1:update(dt)
+
+    if not BallDropLevel.blocker.isWireCut and BallDropLevel.lever1.spike then
+        local sx, sy = BallDropLevel.lever1.spike:getPosition()
+        local wx1, wy1 = BallDropLevel.blocker.wireAnchorX, BallDropLevel.blocker.wireAnchorY
+        
+        local bx, by = BallDropLevel.blocker.blocker:getPosition()
+        local wx2 = bx - (BallDropLevel.blocker.obj.width / 2)
+        local wy2 = by
+
+        local dist, projX, projY = getDistanceToSegment(sx, sy, wx1, wy1, wx2, wy2)
+        
+        if dist < 15 then
+            BallDropLevel.blocker:cutWire(projX, projY)
+        end
+    end
+
     return -1
 end
 

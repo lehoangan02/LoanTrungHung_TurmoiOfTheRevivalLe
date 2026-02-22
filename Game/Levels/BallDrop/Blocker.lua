@@ -5,9 +5,8 @@ Blocker.__index = Blocker
 function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machineID)
     local self = setmetatable({}, Blocker)
     self.gameMap = gameMap
-
     self.world = world 
-    self.gameMap = gameMap
+    self.machineID = machineID or 1
     
     self.visualLayerName = visualLayerName
     self.visualLayer = gameMap.layers[visualLayerName]
@@ -44,6 +43,7 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
         self.blocker:setRestitution(0)
         self.blocker.fixture:setFriction(0)
         self.blocker.body:setSleepingAllowed(false)
+        self.blocker.fixture:setGroupIndex(-self.machineID)
 
         local anchor = love.physics.newBody(world._world, startX, startY, "static")
 
@@ -86,21 +86,58 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
     self.wireJoint = love.physics.newRopeJoint(
         wireAnchorBody, 
         self.blocker.body, 
-        wireAnchorX, wireAnchorY,            -- Point A: Left wall
-        blockerLeftEdgeX, startY,            -- Point B: Left edge of the blocker
-        self.wireMaxLength                   -- Max length it is allowed to stretch
+        wireAnchorX, wireAnchorY,
+        blockerLeftEdgeX, startY,
+        self.wireMaxLength
     )
 
+    self.springBody = love.physics.newBody(world._world, 0, 0, "static")
+
+    self.isWireCut = false
+
     return self
+end
+
+function Blocker:cutWire(x, y)
+    if self.isWireCut then return end
+    self.isWireCut = true
+    
+    if self.wireJoint then
+        self.wireJoint:destroy()
+        self.wireJoint = nil
+    end
+    
+    local currentX, currentY = self.blocker:getPosition()
+    local leftEdgeX = currentX - (self.obj.width / 2)
+    
+    local function buildRope(x1, y1, x2, y2)
+        local rope = {nodes = {}}
+        local dist = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+        local numSegments = math.max(3, math.floor(dist / 5))
+        rope.segLen = dist / numSegments
+        
+        for i = 0, numSegments do
+            local t = i / numSegments
+            local nx = x1 + (x2 - x1) * t
+            local ny = y1 + (y2 - y1) * t
+            table.insert(rope.nodes, {x = nx, y = ny, oldx = nx, oldy = ny})
+        end
+        return rope
+    end
+    
+    self.rope1 = buildRope(self.wireAnchorX, self.wireAnchorY, x, y)
+    self.rope2 = buildRope(leftEdgeX, currentY, x, y)
 end
 
 function Blocker:update(dt)
     if self.blocker and self.visualLayer then
         local currentX, currentY = self.blocker:getPosition()
         local diffX = currentX - self.blockerStartPosition.x
+        local velX, _ = self.blocker:getLinearVelocity()
 
-        local stiffness = 10 
-        local forceX = -stiffness * diffX
+        local stiffness = 5 
+        local damping = 0
+        local forceX = -stiffness * diffX - damping * velX
         self.blocker:applyForce(forceX, 0)
 
         self.visualLayer.x = diffX
@@ -109,19 +146,65 @@ function Blocker:update(dt)
         local rightEdgeX = currentX + (self.obj.width / 2)
         local springWidth = self.anchorX - rightEdgeX
 
-        if self.springCollider then
-            self.springCollider:destroy()
-            self.springCollider = nil
+        if self.springFixture then
+            self.springFixture:destroy()
+            self.springFixture = nil
         end
 
         if springWidth > 2 then 
             local centerX = rightEdgeX + (springWidth / 2)
             local springHeight = self.springImage:getHeight()
 
-            self.springCollider = self.world:newCollider("Rectangle", {
-                centerX, self.anchorY, springWidth, springHeight
-            })
-            self.springCollider:setType("static")
+            local shape = love.physics.newRectangleShape(centerX, self.anchorY, springWidth, springHeight)
+            self.springFixture = love.physics.newFixture(self.springBody, shape)
+            self.springFixture:setGroupIndex(-self.machineID)
+        end
+
+        if self.isWireCut then
+            local gravity = 1500
+            local dtSq = dt * dt
+            
+            local function updateRope(rope, anchorX, anchorY)
+                for i = 1, #rope.nodes do
+                    local p = rope.nodes[i]
+                    local vx = (p.x - p.oldx) * 0.99
+                    local vy = (p.y - p.oldy) * 0.99
+                    p.oldx = p.x
+                    p.oldy = p.y
+                    p.x = p.x + vx
+                    p.y = p.y + vy + gravity * dtSq
+                end
+                
+                for iter = 1, 15 do
+                    rope.nodes[1].x = anchorX
+                    rope.nodes[1].y = anchorY
+                    
+                    for i = 1, #rope.nodes - 1 do
+                        local p1 = rope.nodes[i]
+                        local p2 = rope.nodes[i+1]
+                        local dx = p2.x - p1.x
+                        local dy = p2.y - p1.y
+                        local dist = math.sqrt(dx * dx + dy * dy)
+                        
+                        if dist > 0 then
+                            local diff = (dist - rope.segLen) / dist
+                            local offsetX = dx * diff * 0.5
+                            local offsetY = dy * diff * 0.5
+                            
+                            if i > 1 then
+                                p1.x = p1.x + offsetX
+                                p1.y = p1.y + offsetY
+                            end
+                            p2.x = p2.x - offsetX
+                            p2.y = p2.y - offsetY
+                        end
+                    end
+                end
+            end
+
+            updateRope(self.rope1, self.wireAnchorX, self.wireAnchorY)
+            local leftEdgeX = currentX - (self.obj.width / 2)
+            updateRope(self.rope2, leftEdgeX, currentY)
         end
     end
 end
@@ -133,24 +216,34 @@ function Blocker:draw()
     
     if self.blocker and self.springImage then
         local currentX, currentY = self.blocker:getPosition()
-
         local leftEdgeX = currentX - (self.obj.width / 2)
-        local wireDistance = math.abs(leftEdgeX - self.wireAnchorX)
-        
-        local slack = math.max(0, self.wireMaxLength - wireDistance)
-        
-        local midX = (self.wireAnchorX + leftEdgeX) / 2
-        local midY = self.wireAnchorY + (slack * 1.2)
-
-        local curve = love.math.newBezierCurve(
-            self.wireAnchorX, self.wireAnchorY, 
-            midX, midY, 
-            leftEdgeX, currentY
-        )
 
         love.graphics.setColor(0.2, 0.2, 0.2, 1)
         love.graphics.setLineWidth(3)
-        love.graphics.line(curve:render())
+
+        if not self.isWireCut then
+            local wireDistance = math.abs(leftEdgeX - self.wireAnchorX)
+            local slack = math.max(0, self.wireMaxLength - wireDistance)
+            
+            local midX = (self.wireAnchorX + leftEdgeX) / 2
+            local midY = self.wireAnchorY + (slack * 1.2)
+
+            local curve = love.math.newBezierCurve(
+                self.wireAnchorX, self.wireAnchorY, 
+                midX, midY, 
+                leftEdgeX, currentY
+            )
+
+            love.graphics.line(curve:render())
+        else
+            local function drawRope(rope)
+                for i = 1, #rope.nodes - 1 do
+                    love.graphics.line(rope.nodes[i].x, rope.nodes[i].y, rope.nodes[i+1].x, rope.nodes[i+1].y)
+                end
+            end
+            drawRope(self.rope1)
+            drawRope(self.rope2)
+        end
         
         love.graphics.setLineWidth(1)
         local rightEdgeX = currentX + (self.obj.width / 2)
