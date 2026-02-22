@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="190">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="191">
  <editorsettings>
   <export target="testMap.lua" format="lua"/>
  </editorsettings>
@@ -598,7 +598,6 @@
   <object id="166" x="16" y="720" width="128" height="16"/>
   <object id="167" x="96" y="992" width="128" height="16"/>
   <object id="169" x="148" y="960" width="60" height="16"/>
-  <object id="170" x="108" y="976" width="28" height="16" rotation="180"/>
   <object id="171" x="16" y="864" width="80" height="16"/>
   <object id="172" x="160" y="864" width="16" height="48"/>
   <object id="173" x="96" y="864" width="32" height="16">
@@ -616,6 +615,7 @@
   <object id="186" x="192" y="944" width="16" height="16"/>
   <object id="187" x="176" y="816" width="16" height="16"/>
   <object id="188" x="208" y="816" width="16" height="16"/>
+  <object id="190" x="80" y="960" width="28" height="16"/>
  </objectgroup>
  <objectgroup id="15" name="BlockerCollidable">
   <object id="176" x="112" y="944" width="32" height="16"/>

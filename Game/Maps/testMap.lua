@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 16,
-  nextobjectid = 190,
+  nextobjectid = 191,
   properties = {},
   tilesets = {
     {
@@ -1304,19 +1304,6 @@ return {
           properties = {}
         },
         {
-          id = 170,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 108,
-          y = 976,
-          width = 28,
-          height = 16,
-          rotation = 180,
-          visible = true,
-          properties = {}
-        },
-        {
           id = 171,
           name = "",
           type = "",
@@ -1353,7 +1340,9 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["isMagnetBlock"] = true
+          }
         },
         {
           id = 174,
@@ -1366,7 +1355,9 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["isMagnetBlock"] = true
+          }
         },
         {
           id = 183,
@@ -1428,6 +1419,19 @@ return {
           x = 208,
           y = 816,
           width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 190,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 960,
+          width = 28,
           height = 16,
           rotation = 0,
           visible = true,
