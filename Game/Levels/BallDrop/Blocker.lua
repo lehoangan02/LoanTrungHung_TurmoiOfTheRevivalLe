@@ -161,7 +161,15 @@ function Blocker:update(dt)
         end
 
         if self.isWireCut then
-            local gravity = 1500
+            -- Fetch the dynamic rotating gravity directly from the Box2D world
+            local gx, gy = self.world._world:getGravity()
+            
+            -- We scale it up purely for the visual ropes because standard Box2D
+            -- physics gravity often makes non-physical Verlet ropes look like they are floating underwater.
+            local visualGravityScale = 4
+            gx = gx * visualGravityScale
+            gy = gy * visualGravityScale
+
             local dtSq = dt * dt
             
             local function updateRope(rope, anchorX, anchorY)
@@ -171,8 +179,9 @@ function Blocker:update(dt)
                     local vy = (p.y - p.oldy) * 0.99
                     p.oldx = p.x
                     p.oldy = p.y
-                    p.x = p.x + vx
-                    p.y = p.y + vy + gravity * dtSq
+                    -- Apply gravity scaled by both the X and Y axes
+                    p.x = p.x + vx + gx * dtSq
+                    p.y = p.y + vy + gy * dtSq
                 end
                 
                 for iter = 1, 15 do
