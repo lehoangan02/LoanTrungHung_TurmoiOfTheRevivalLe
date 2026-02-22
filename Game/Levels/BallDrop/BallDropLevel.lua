@@ -47,8 +47,8 @@ function BallDropLevel:load()
     
     BallDropLevel.ballMoveSpeed = 100
     BallDropLevel.worldRotateSpeed = 1.5
-    BallDropLevel.cameraX = 120
-    BallDropLevel.cameraY = 50
+    BallDropLevel.cameraX = 60
+    BallDropLevel.cameraY = 300
     BallDropLevel.currentZoom = 1.0
     BallDropLevel.zoomSpeed = 0.15
     
@@ -69,14 +69,7 @@ function BallDropLevel:load()
     BallDropLevel.rotationSharpness = 12
     
     BallDropLevel.walls = {}
-    if BallDropLevel.gameMap.layers["StaticCollidable"] then
-        for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
-            local wall = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
-            wall:setType("static")
-            wall.fixture:setCategory(BallDropLevel.CATEGORY_WALLS)
-            table.insert(BallDropLevel.walls, wall)
-        end
-    end
+    BallDropLevel.magnets = {}
     
     BallDropLevel.enemies = {}
     if BallDropLevel.gameMap.layers["EnemiesCollidable"] then
@@ -105,7 +98,7 @@ function BallDropLevel:load()
     end
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
 
-    BallDropLevel.ball = BallClass.new(BallDropLevel.world, 180, 900)
+    BallDropLevel.ball = BallClass.new(BallDropLevel.world, BallDropLevel.cameraX, BallDropLevel.cameraY)
 
     local Hinge = require "Game.Levels.BallDrop.Hinge"
     BallDropLevel.hinge1 = Hinge.new(BallDropLevel.world, BallDropLevel.gameMap, "Hinge", 1, 2, 10000, 140, 0.8)
@@ -116,7 +109,7 @@ function BallDropLevel:load()
     BallDropLevel.lever1 = Lever.new(
         BallDropLevel.world,
         53,
-        976,
+        1296,
         30,
         6,
         math.rad(-20),
@@ -129,27 +122,32 @@ function BallDropLevel:load()
     BallDropLevel.spikeBlockImage:setFilter("nearest", "nearest")
     local spikeBlockWidth = BallDropLevel.spikeBlockImage:getWidth()
     local spikeBlockHeight = BallDropLevel.spikeBlockImage:getHeight()
-    BallDropLevel.spikeBlockInitPosition = {x = 125, y = 975}
+    BallDropLevel.spikeBlockInitPosition = {x = 125, y = 1295}
     BallDropLevel.spikeBlockCollider = BallDropLevel.world:newCollider("Rectangle", {BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, spikeBlockWidth, spikeBlockHeight})
     BallDropLevel.spikeBlockCollider:setType("dynamic")
+    BallDropLevel.spikeBlockCollider.fixture:setFriction(0)
     BallDropLevel.spikeBlockCollider.isEnemy = true
 
-    BallDropLevel.magnets = {} 
     if BallDropLevel.gameMap.layers["StaticCollidable"] then
         for i, obj in pairs(BallDropLevel.gameMap.layers["StaticCollidable"].objects) do
-            -- Create the collider ONCE
             local wall = BallDropLevel.world:newCollider("Rectangle", {obj.x + obj.width/2, obj.y + obj.height/2, obj.width, obj.height})
             wall:setType("static")
             wall.fixture:setCategory(BallDropLevel.CATEGORY_WALLS)
             
-            -- Just add the existing reference to the magnet table if true
-            if obj.properties["isMagnetBlock"] then
+            if obj.properties and obj.properties["isMagnetBlock"] then
+                print("Found magnet block at " .. obj.x .. ", " .. obj.y)
                 table.insert(BallDropLevel.magnets, wall)
             end
             
             table.insert(BallDropLevel.walls, wall)
         end
     end
+
+    BallDropLevel.successY = 1720
+    BallDropLevel.success = false
+    
+    print("Total magnets found: " .. #BallDropLevel.magnets)
+    print("Spike block starts at: " .. BallDropLevel.spikeBlockInitPosition.x .. ", " .. BallDropLevel.spikeBlockInitPosition.y)
 
 end
 
@@ -165,26 +163,27 @@ local function getDistanceToSegment(px, py, x1, y1, x2, y2)
 end
 
 function BallDropLevel:applyMagneticForces(dt)
-    -- Strength needs to be high because Box2D units are small
-    local strength = 000 
-    local minDistance = 20 
+    local strength = 20000000
+    local minDistance = 10 
     local sx, sy = BallDropLevel.spikeBlockCollider:getPosition()
 
-    for _, magnet in ipairs(BallDropLevel.magnets) do
+    for i, magnet in ipairs(BallDropLevel.magnets) do
         local mx, my = magnet:getPosition()
         local dx, dy = mx - sx, my - sy
         local distSq = dx*dx + dy*dy
+        local dist = math.sqrt(distSq)
         
-        -- Prevent division by zero and extreme "snapping" forces
         if distSq > (minDistance * minDistance) then
-            local dist = math.sqrt(distSq)
-            local forceMag = strength / distSq
-            
-            -- Directional force
+            local forceMag = strength / (distSq * dist)
             local fx = (dx / dist) * forceMag
             local fy = (dy / dist) * forceMag
             
             BallDropLevel.spikeBlockCollider:applyForce(fx, fy)
+            
+            -- Debug output (only occasionally to avoid spam)
+            if love.timer.getTime() % 1.0 < dt then
+                print(string.format("Magnet %d: dist=%.1f, force=(%.1f, %.1f)", i, dist, fx, fy))
+            end
         end
     end
 end
@@ -197,7 +196,7 @@ function BallDropLevel:update(dt)
     end
 
     BallDropLevel:adjustGravity()
-    -- BallDropLevel:applyMagneticForces(dt)
+    BallDropLevel:applyMagneticForces(dt)
 
     BallDropLevel.gameMap:update(dt)
     BallDropLevel.world:update(dt)
@@ -243,6 +242,10 @@ function BallDropLevel:update(dt)
         end
     end
 
+    if BallDropLevel.ball.ballY > BallDropLevel.successY then
+        BallDropLevel.success = true
+    end
+
     return -1
 end
 
@@ -253,49 +256,63 @@ function BallDropLevel:adjustGravity()
 end
 
 function BallDropLevel:trackBall(dt)
-    local lookAhead = 30
-    local upperThres = 40
-    local lowerThres = -40
-    local targetY
-    local deltaY = BallDropLevel.ball.ballY - BallDropLevel.cameraY
-    local lookAheadStrength = 0.8
-    local localLookStrengthY = 0.5
+    if not BallDropLevel.success then
+        local lookAhead = 30
+        local upperThres = 40
+        local lowerThres = -40
+        local targetY
+        local deltaY = BallDropLevel.ball.ballY - BallDropLevel.cameraY
+        local lookAheadStrength = 0.8
+        local localLookStrengthY = 0.5
 
-    if (deltaY > upperThres) then
-        targetY = BallDropLevel.ball.ballY + lookAhead
-        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
-    elseif (deltaY < lowerThres) then
-        targetY = BallDropLevel.ball.ballY - lookAhead / 2
-        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
+        if (deltaY > upperThres) then
+            targetY = BallDropLevel.ball.ballY + lookAhead
+            BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
+        elseif (deltaY < lowerThres) then
+            targetY = BallDropLevel.ball.ballY - lookAhead / 2
+            BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * lookAheadStrength
+        else 
+            targetY = BallDropLevel.ball.ballY
+            BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * localLookStrengthY
+        end
+
+        local localLookStrengthX = 0.1
+        local targetX = BallDropLevel.ball.ballX * 0.4 + 120 * 0.6
+        BallDropLevel.cameraX = BallDropLevel.cameraX + (targetX - BallDropLevel.cameraX) * dt * localLookStrengthX
+        
+        local desiredZoom = 1.0
+        if BallDropLevel.ball.ballX < 60 or BallDropLevel.ball.ballX > 180 then
+            desiredZoom = 1.1
+        end
+
+        BallDropLevel.currentZoom = BallDropLevel.currentZoom + (desiredZoom - BallDropLevel.currentZoom) * dt * BallDropLevel.zoomSpeed
+        BallDropLevel.cam:zoomTo(BallDropLevel.currentZoom)
+        BallDropLevel.cam:lookAt(BallDropLevel.cameraX, BallDropLevel.cameraY)
     else 
-        targetY = BallDropLevel.ball.ballY
-        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * localLookStrengthY
+        local targetX = 120
+        local targetY = BallDropLevel.successY
+        BallDropLevel.cameraX = BallDropLevel.cameraX + (targetX - BallDropLevel.cameraX) * dt * 0.5
+        BallDropLevel.cameraY = BallDropLevel.cameraY + (targetY - BallDropLevel.cameraY) * dt * 0.5
+        BallDropLevel.cam:lookAt(BallDropLevel.cameraX, BallDropLevel.cameraY)
     end
-
-    local localLookStrengthX = 0.1
-    local targetX = BallDropLevel.ball.ballX * 0.4 + 120 * 0.6
-    BallDropLevel.cameraX = BallDropLevel.cameraX + (targetX - BallDropLevel.cameraX) * dt * localLookStrengthX
-    
-    local desiredZoom = 1.0
-    if BallDropLevel.ball.ballX < 60 or BallDropLevel.ball.ballX > 180 then
-        desiredZoom = 1.1
-    end
-
-    BallDropLevel.currentZoom = BallDropLevel.currentZoom + (desiredZoom - BallDropLevel.currentZoom) * dt * BallDropLevel.zoomSpeed
-    BallDropLevel.cam:zoomTo(BallDropLevel.currentZoom)
-    BallDropLevel.cam:lookAt(BallDropLevel.cameraX, BallDropLevel.cameraY)
 end
 
 function BallDropLevel:controlEnvironment(dt)
-    InputManager = require("Game.Input.InputManager")
-    if InputManager:isRightRudderPressed() then
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
-    elseif InputManager:isLeftRudderPressed() then
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
-    end
-    
-    local crankVal = InputManager:getCrankValue()
-    BallDropLevel.worldRotation = BallDropLevel.worldRotation + crankVal * BallDropLevel.worldRotateSpeed
+    if not BallDropLevel.success then
+        InputManager = require("Game.Input.InputManager")
+        if InputManager:isRightRudderPressed() then
+            BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
+        elseif InputManager:isLeftRudderPressed() then
+            BallDropLevel.worldRotation = BallDropLevel.worldRotation - dt * BallDropLevel.worldRotateSpeed
+        end
+        
+        local crankVal = InputManager:getCrankValue()
+        BallDropLevel.worldRotation = BallDropLevel.worldRotation + crankVal * BallDropLevel.worldRotateSpeed
+    else 
+        local targetRotation = 0
+        BallDropLevel.worldRotation = BallDropLevel.worldRotation % (math.pi)
+        BallDropLevel.worldRotation = BallDropLevel.worldRotation + (targetRotation - BallDropLevel.worldRotation) * dt * BallDropLevel.worldRotateSpeed
+    end     
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
@@ -327,7 +344,9 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         BallDropLevel.starActivateAnimation:draw()
         
         BallDropLevel.world:draw() 
-        BallDropLevel.ball:draw()
+        if BallDropLevel.ball.ballY < BallDropLevel.successY + 100 then
+            BallDropLevel.ball:draw()
+        end
         BallDropLevel.blocker:draw()
         BallDropLevel.lever1:draw()
         local spikeBlockX, spikeBlockY = BallDropLevel.spikeBlockCollider:getPosition()
