@@ -63,6 +63,7 @@ function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping, initAngle,
         local spikeWorldX, spikeWorldY = self.lever.body:getWorldPoint(localOffsetX, localOffsetY)
 
         self.spike = world:newCollider("Rectangle", {spikeWorldX, spikeWorldY, spikeSize, spikeSize})
+        self.spike.isEnemy = true
         self.spike:setType("dynamic")
         self.spike.body:setMass(0.5) 
         
