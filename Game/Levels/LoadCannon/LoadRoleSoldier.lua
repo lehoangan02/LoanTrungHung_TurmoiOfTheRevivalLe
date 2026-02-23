@@ -20,7 +20,9 @@ function LoadRoleSoldier:load()
 
     LoadRoleSoldier.crankValue = 0
 
-    LoadRoleSoldier.positionX = 0
+    LoadRoleSoldier.initPositionX = 0
+
+    LoadRoleSoldier.positionX = LoadRoleSoldier.initPositionX
     LoadRoleSoldier.positionY = 0
 
     LoadRoleSoldier.topCannonBallSprite = love.graphics.newImage("Resources/Images/TopCannonBall.png")
@@ -46,6 +48,11 @@ function LoadRoleSoldier:load()
     local carryingBallGrid = anim8.newGrid(240, 240, LoadRoleSoldier.carryingBallSpriteSheet:getWidth(), LoadRoleSoldier.carryingBallSpriteSheet:getHeight())
     LoadRoleSoldier.carryingBallAnimation = anim8.newAnimation(carryingBallGrid("1-10", 1), 0.12)
 
+    LoadRoleSoldier.carryingChargeSpriteSheet = love.graphics.newImage("Resources/Images/SoldierCarryCharge.png")
+    LoadRoleSoldier.carryingChargeSpriteSheet:setFilter("nearest", "nearest")
+    local carryingChargeGrid = anim8.newGrid(240, 240, LoadRoleSoldier.carryingChargeSpriteSheet:getWidth(), LoadRoleSoldier.carryingChargeSpriteSheet:getHeight())
+    LoadRoleSoldier.carryingChargeAnimation = anim8.newAnimation(carryingChargeGrid("1-10", 1), 0.12)
+
 
 end
 
@@ -56,19 +63,25 @@ function LoadRoleSoldier:update(dt)
     local carrySpeed = 800
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
-        if (InputManager:getCrankValue() < -0.01) then
+        if (InputManager:getCrankValue() < LoadRoleSoldier.initPositionX -0.01) then
             LoadRoleSoldier.state = SoldierStateEnum.CarryCharge
             LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + InputManager:getCrankValue() * moveSpeed * dt
         end
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.CarryCharge) then
+        local crankVal = InputManager:getCrankValue()
+        LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * moveSpeed * dt
+
     end
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
         LoadRoleSoldier.idleAnimation:update(dt)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.CarryCharge) then
+        LoadRoleSoldier.carryingChargeAnimation:update(dt * - InputManager:getCrankValue() * 60)
     end
 
-    if (LoadRoleSoldier.crankValue > 0) then
-        LoadRoleSoldier.crankValue = 0
-        LoadRoleSoldier.positionX = 0
+    if (LoadRoleSoldier.crankValue > LoadRoleSoldier.initPositionX) then
+        LoadRoleSoldier.crankValue = LoadRoleSoldier.initPositionX
+        LoadRoleSoldier.positionX = LoadRoleSoldier.initPositionX
         LoadRoleSoldier.state = SoldierStateEnum.Idle
         LoadRoleSoldier.idleAnimation:gotoFrame(1)
     end
@@ -77,6 +90,9 @@ end
 function LoadRoleSoldier:draw()
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
         LoadRoleSoldier.idleAnimation:draw(LoadRoleSoldier.idleSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.CarryCharge) then
+        print("Drawing in state CarryCharge with crankValue: " .. LoadRoleSoldier.crankValue)
+        LoadRoleSoldier.carryingChargeAnimation:draw(LoadRoleSoldier.carryingChargeSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, -1, 1, BASE_W - 9, 0)
     end
 end
 return LoadRoleSoldier
