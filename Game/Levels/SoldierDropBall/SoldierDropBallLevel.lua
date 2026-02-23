@@ -32,7 +32,7 @@ function SoldierDropBallLevel:load()
     SoldierDropBallLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
     SoldierDropBallLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
 
-    SoldierDropBallLevel.soldier = require("Game.Levels.SoldierDropBall.Soldier")
+    SoldierDropBallLevel.soldier = require("Game.Levels.SoldierDropBall.DropRoleSoldier")
     SoldierDropBallLevel.soldier:load()
 
 end

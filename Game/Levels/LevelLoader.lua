@@ -24,6 +24,10 @@ function LevelLoader:loadLevel(level)
         local PlayGround = require("Game.Levels.Playground.Playground")
         PlayGround:load()
         currentLevel = PlayGround
+    elseif (level == LevelEnum.SolderLoadCannon) then
+        local LoadCannonLevel = require("Game.Levels.LoadCannon.LoadCannonLevel")
+        LoadCannonLevel:load()
+        currentLevel = LoadCannonLevel
     else
         error("Unknown level: " .. tostring(level))
     end
