@@ -17,10 +17,14 @@ function LoadCannonLevel:load()
 
     LoadCannonLevel.cannonSprite = love.graphics.newImage("Resources/Images/LowerCannon.png")
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
+
+    LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
+    LoadCannonLevel.soldier:load()
 end
 
 function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
+    LoadCannonLevel.soldier:update(dt)
     return LevelEnum.Nothing
 end
 
@@ -32,7 +36,9 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
 
     LoadCannonLevel.cam:attach()
         love.graphics.draw(self.roomSprite, 0, 0)
+        LoadCannonLevel.soldier:draw()
         love.graphics.draw(self.cannonSprite, 0, 0)
+        
     LoadCannonLevel.cam:detach()
 end
 

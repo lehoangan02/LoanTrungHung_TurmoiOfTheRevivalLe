@@ -3,15 +3,16 @@ LoadRoleSoldier.__index = LoadRoleSoldier
 
 local anim8 = require "Game/Libraries/anim8"
 
-local InputManager = require "Game/Managers/InputManager"
+local InputManager = require "Game.Input.InputManager"
 
 local SoldierStateEnum = {
     Idle = 0,
-    LoadCharge = 1,
-    WalkLeft = 2,
-    PickingBall = 3,
-    WalkRight = 4,
-    LiftingBall = 5
+    CarryCharge = 1,
+    LoadCharge = 2,
+    WalkLeft = 3,
+    PickingBall = 4,
+    WalkRight = 5,
+    LiftingBall = 6
 }
 
 function LoadRoleSoldier:load()
@@ -43,9 +44,39 @@ function LoadRoleSoldier:load()
     LoadRoleSoldier.carryingBallSpriteSheet = love.graphics.newImage("Resources/Images/SoldierCarryBall.png")
     LoadRoleSoldier.carryingBallSpriteSheet:setFilter("nearest", "nearest")
     local carryingBallGrid = anim8.newGrid(240, 240, LoadRoleSoldier.carryingBallSpriteSheet:getWidth(), LoadRoleSoldier.carryingBallSpriteSheet:getHeight())
-    LoadRoleSoldier.carryingBallAnimation = anim8.newAnimation(carryingBallGrid("1-10", 1), 0.1)
+    LoadRoleSoldier.carryingBallAnimation = anim8.newAnimation(carryingBallGrid("1-10", 1), 0.12)
 
-    
+
 end
 
+function LoadRoleSoldier:update(dt)
+    LoadRoleSoldier.crankValue = LoadRoleSoldier.crankValue + InputManager:getCrankValue()
+
+    local moveSpeed = 1000
+    local carrySpeed = 800
+
+    if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
+        if (InputManager:getCrankValue() < -0.01) then
+            LoadRoleSoldier.state = SoldierStateEnum.CarryCharge
+            LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + InputManager:getCrankValue() * moveSpeed * dt
+        end
+    end
+
+    if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
+        LoadRoleSoldier.idleAnimation:update(dt)
+    end
+
+    if (LoadRoleSoldier.crankValue > 0) then
+        LoadRoleSoldier.crankValue = 0
+        LoadRoleSoldier.positionX = 0
+        LoadRoleSoldier.state = SoldierStateEnum.Idle
+        LoadRoleSoldier.idleAnimation:gotoFrame(1)
+    end
+end
+
+function LoadRoleSoldier:draw()
+    if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
+        LoadRoleSoldier.idleAnimation:draw(LoadRoleSoldier.idleSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY)
+    end
+end
 return LoadRoleSoldier
