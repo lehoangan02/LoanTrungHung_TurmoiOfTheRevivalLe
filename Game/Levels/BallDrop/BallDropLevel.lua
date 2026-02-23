@@ -310,8 +310,12 @@ function BallDropLevel:controlEnvironment(dt)
         BallDropLevel.worldRotation = BallDropLevel.worldRotation + crankVal * BallDropLevel.worldRotateSpeed
     else 
         local targetRotation = 0
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation % (math.pi)
-        BallDropLevel.worldRotation = BallDropLevel.worldRotation + (targetRotation - BallDropLevel.worldRotation) * dt * BallDropLevel.worldRotateSpeed
+        local angleDiff = targetRotation - BallDropLevel.worldRotation
+        
+        while angleDiff > math.pi do angleDiff = angleDiff - 2 * math.pi end
+        while angleDiff < -math.pi do angleDiff = angleDiff + 2 * math.pi end
+        
+        BallDropLevel.worldRotation = BallDropLevel.worldRotation + angleDiff * dt * BallDropLevel.worldRotateSpeed
     end     
 end
 
