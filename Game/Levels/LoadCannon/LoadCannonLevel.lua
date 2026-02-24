@@ -25,6 +25,9 @@ function LoadCannonLevel:load()
     LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall)
 
     LoadCannonLevel.isBallSpawned = false
+
+    LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 150, 30, 10})
+    LoadCannonLevel.strawDampingCollider:setType("static")
 end
 
 function LoadCannonLevel:spawnCannonBall()
@@ -34,7 +37,7 @@ function LoadCannonLevel:spawnCannonBall()
     print("Spawning cannon ball")
     LoadCannonLevel.isBallSpawned = true
     local radius = 4
-    LoadCannonLevel.cannonBallCollider = LoadCannonLevel.world:newCollider("Circle", {77, 120, radius})
+    LoadCannonLevel.cannonBallCollider = LoadCannonLevel.world:newCollider("Circle", {95, 0, radius})
     LoadCannonLevel.cannonBallCollider:setType("dynamic")
     LoadCannonLevel.cannonBallCollider:setRestitution(0.3)
 end
