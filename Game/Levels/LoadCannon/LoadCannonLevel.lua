@@ -2,8 +2,11 @@ local Level = require("Game.Levels.Level")
 local LoadCannonLevel = setmetatable({}, {__index = Level})
 LoadCannonLevel.__index = LoadCannonLevel
 
+local bf = require("Game/Libraries/breezefield-master")
+
 function LoadCannonLevel:load()
     LoadCannonLevel.worldGravity = 250
+    LoadCannonLevel.world = bf.newWorld(0, LoadCannonLevel.worldGravity, true)
 
     LoadCannonLevel.cameraX = 120
     LoadCannonLevel.cameraY = 120
@@ -19,12 +22,27 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
-    LoadCannonLevel.soldier:load()
+    LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall)
+
+    LoadCannonLevel.isBallSpawned = false
+end
+
+function LoadCannonLevel:spawnCannonBall()
+    if LoadCannonLevel.isBallSpawned then
+        return
+    end
+    print("Spawning cannon ball")
+    LoadCannonLevel.isBallSpawned = true
+    local radius = 4
+    LoadCannonLevel.cannonBallCollider = LoadCannonLevel.world:newCollider("Circle", {77, 120, radius})
+    LoadCannonLevel.cannonBallCollider:setType("dynamic")
+    LoadCannonLevel.cannonBallCollider:setRestitution(0.3)
 end
 
 function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     LoadCannonLevel.soldier:update(dt)
+    LoadCannonLevel.world:update(dt)
     return LevelEnum.Nothing
 end
 
@@ -35,9 +53,11 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
     love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
 
     LoadCannonLevel.cam:attach()
+        
         love.graphics.draw(self.roomSprite, 0, 0)
         LoadCannonLevel.soldier:draw()
         love.graphics.draw(self.cannonSprite, 0, 0)
+        LoadCannonLevel.world:draw()
         
     LoadCannonLevel.cam:detach()
 end

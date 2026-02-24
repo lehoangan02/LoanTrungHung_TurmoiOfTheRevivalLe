@@ -15,7 +15,10 @@ local SoldierStateEnum = {
     LiftingBall = 6
 }
 
-function LoadRoleSoldier:load()
+function LoadRoleSoldier:load(spawnBallFunction)
+
+    LoadRoleSoldier.spawnBallFunction = spawnBallFunction
+
     LoadRoleSoldier.state = SoldierStateEnum.Idle
 
     LoadRoleSoldier.crankValue = 0
@@ -76,7 +79,13 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * moveSpeed * dt
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
         local crankVal = InputManager:getCrankValue()
-        LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * carrySpeed * dt
+        if (LoadRoleSoldier.crankValue < -15.75) then 
+            LoadRoleSoldier.positionX = -43
+            LoadRoleSoldier.crankValue = -15.75
+            LoadRoleSoldier.spawnBallFunction()
+        else
+            LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * carrySpeed * dt
+        end
     end
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
@@ -86,7 +95,11 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge) then
         LoadRoleSoldier.loadingChargeAnimation:update(dt * - InputManager:getCrankValue() * 60)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
-        LoadRoleSoldier.walkingAnimation:update(dt * - InputManager:getCrankValue() * 60)
+        if (LoadRoleSoldier.crankValue < -15.75) then
+   
+        else
+            LoadRoleSoldier.walkingAnimation:update(dt * - InputManager:getCrankValue() * 60)
+        end
     end
 
     if (LoadRoleSoldier.crankValue > 0) then
