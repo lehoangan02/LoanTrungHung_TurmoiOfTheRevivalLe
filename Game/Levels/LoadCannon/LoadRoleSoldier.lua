@@ -96,6 +96,14 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.crankValue = -4
         LoadRoleSoldier.state = SoldierStateEnum.CarryCharge
         LoadRoleSoldier.carryingChargeAnimation:gotoFrame(1)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge and LoadRoleSoldier.crankValue < -7.75) then
+        LoadRoleSoldier.crankValue = -7.75
+        LoadRoleSoldier.state = SoldierStateEnum.WalkLeft
+        LoadRoleSoldier.walkingAnimation:gotoFrame(1)
+    end
+
+    if (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge and LoadRoleSoldier.loadingChargeAnimation.position == 38) then
+        print("Charge Loaded!") -- 7.75
     end
 
     print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
