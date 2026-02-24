@@ -119,7 +119,7 @@ function LoadRoleSoldier:draw()
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge) then
         LoadRoleSoldier.loadingChargeAnimation:draw(LoadRoleSoldier.loadingChargeSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, -128, -119)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
-        LoadRoleSoldier.walkingAnimation:draw(LoadRoleSoldier.walkingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY)
+        LoadRoleSoldier.walkingAnimation:draw(LoadRoleSoldier.walkingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, - 2, 0)
     end
 end
 return LoadRoleSoldier
