@@ -26,7 +26,7 @@ function LoadCannonLevel:load()
 
     LoadCannonLevel.isBallSpawned = false
 
-    LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 150, 30, 10})
+    LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
 end
 
@@ -48,7 +48,7 @@ function LoadCannonLevel:isCannonBallInStraw()
     end
     local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
     local _, ballSpeedY = LoadCannonLevel.cannonBallCollider:getLinearVelocity()
-    local result =  ballY > 140 and ballY < 141 and ballSpeedY >= 0 and ballSpeedY < 1
+    local result =  ballY > 144 and ballY < 145 and ballSpeedY >= 0 and ballSpeedY < 1
     print("Ball is in straw: " .. tostring(result) .. ", Ball Y: " .. ballY .. ", Ball Speed Y: " .. ballSpeedY)
     return result
 end
