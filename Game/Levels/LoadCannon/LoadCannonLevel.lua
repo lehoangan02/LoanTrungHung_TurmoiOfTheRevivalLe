@@ -48,7 +48,9 @@ function LoadCannonLevel:isCannonBallInStraw()
     end
     local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
     local _, ballSpeedY = LoadCannonLevel.cannonBallCollider:getLinearVelocity()
-    return ballY > 140 and ballY < 141 and ballSpeedY > 0 and ballSpeedY < 1
+    local result =  ballY > 140 and ballY < 141 and ballSpeedY >= 0 and ballSpeedY < 1
+    print("Ball is in straw: " .. tostring(result) .. ", Ball Y: " .. ballY .. ", Ball Speed Y: " .. ballSpeedY)
+    return result
 end
 
 function LoadCannonLevel:update(dt)
