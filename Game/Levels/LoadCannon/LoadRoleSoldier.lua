@@ -78,6 +78,8 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.carryingChargeAnimation:update(dt * - InputManager:getCrankValue() * 60)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge) then
         LoadRoleSoldier.loadingChargeAnimation:update(dt * - InputManager:getCrankValue() * 60)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
+        LoadRoleSoldier.walkingAnimation:update(dt * - InputManager:getCrankValue() * 60)
     end
 
     if (LoadRoleSoldier.crankValue > 0) then
@@ -100,10 +102,10 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.crankValue = -7.75
         LoadRoleSoldier.state = SoldierStateEnum.WalkLeft
         LoadRoleSoldier.walkingAnimation:gotoFrame(1)
-    end
-
-    if (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge and LoadRoleSoldier.loadingChargeAnimation.position == 38) then
-        print("Charge Loaded!") -- 7.75
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft and LoadRoleSoldier.crankValue > -7.75) then
+        LoadRoleSoldier.crankValue = -7.75
+        LoadRoleSoldier.state = SoldierStateEnum.LoadCharge
+        LoadRoleSoldier.loadingChargeAnimation:gotoFrame(38)
     end
 
     print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
@@ -116,6 +118,8 @@ function LoadRoleSoldier:draw()
         LoadRoleSoldier.carryingChargeAnimation:draw(LoadRoleSoldier.carryingChargeSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, -1, 1, BASE_W - 9, 0)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge) then
         LoadRoleSoldier.loadingChargeAnimation:draw(LoadRoleSoldier.loadingChargeSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, -128, -119)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
+        LoadRoleSoldier.walkingAnimation:draw(LoadRoleSoldier.walkingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY)
     end
 end
 return LoadRoleSoldier
