@@ -57,6 +57,10 @@ function LoadRoleSoldier:load()
     LoadRoleSoldier.loadingChargeSpriteSheet:setFilter("nearest", "nearest")
     local loadingChargeGrid = anim8.newGrid(LoadRoleSoldier.loadingChargeSpriteSheet:getWidth() / 38, 36, LoadRoleSoldier.loadingChargeSpriteSheet:getWidth(), LoadRoleSoldier.loadingChargeSpriteSheet:getHeight())
     LoadRoleSoldier.loadingChargeAnimation = anim8.newAnimation(loadingChargeGrid("1-38", 1), 0.1)
+
+    LoadRoleSoldier.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
+    LoadRoleSoldier.strawDampingImage:setFilter("nearest", "nearest")
+
 end
 
 function LoadRoleSoldier:update(dt)
@@ -70,6 +74,9 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.CarryCharge) then
         local crankVal = InputManager:getCrankValue()
         LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * moveSpeed * dt
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
+        local crankVal = InputManager:getCrankValue()
+        LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * carrySpeed * dt
     end
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
@@ -121,5 +128,7 @@ function LoadRoleSoldier:draw()
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
         LoadRoleSoldier.walkingAnimation:draw(LoadRoleSoldier.walkingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, - 2, 0)
     end
+
+    love.graphics.draw(LoadRoleSoldier.strawDampingImage, 0, 0)
 end
 return LoadRoleSoldier
