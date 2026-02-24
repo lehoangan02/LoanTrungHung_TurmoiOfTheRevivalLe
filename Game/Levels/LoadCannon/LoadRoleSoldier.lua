@@ -15,9 +15,10 @@ local SoldierStateEnum = {
     LiftingBall = 6
 }
 
-function LoadRoleSoldier:load(spawnBallFunction)
+function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction)
 
     LoadRoleSoldier.spawnBallFunction = spawnBallFunction
+    LoadRoleSoldier.isCannonBallInStrawFunction = isCannonBallInStrawFunction
 
     LoadRoleSoldier.state = SoldierStateEnum.Idle
 
@@ -79,10 +80,7 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * moveSpeed * dt
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
         local crankVal = InputManager:getCrankValue()
-        if (LoadRoleSoldier.crankValue < -15.75) then 
-            LoadRoleSoldier.positionX = -43
-            LoadRoleSoldier.crankValue = -15.75
-            LoadRoleSoldier.spawnBallFunction()
+        if (LoadRoleSoldier.crankValue <= -15.75) then 
         else
             LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * carrySpeed * dt
         end
@@ -95,8 +93,8 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LoadCharge) then
         LoadRoleSoldier.loadingChargeAnimation:update(dt * - InputManager:getCrankValue() * 60)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
-        if (LoadRoleSoldier.crankValue < -15.75) then
-   
+        if (LoadRoleSoldier.crankValue <= -15.75) then
+            
         else
             LoadRoleSoldier.walkingAnimation:update(dt * - InputManager:getCrankValue() * 60)
         end
@@ -126,6 +124,14 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.crankValue = -7.75
         LoadRoleSoldier.state = SoldierStateEnum.LoadCharge
         LoadRoleSoldier.loadingChargeAnimation:gotoFrame(38)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft and LoadRoleSoldier.crankValue <= -15.75) then
+        LoadRoleSoldier.crankValue = -15.75
+        LoadRoleSoldier.positionX = -43
+        LoadRoleSoldier.spawnBallFunction()
+        if (LoadRoleSoldier.isCannonBallInStrawFunction()) then
+            LoadRoleSoldier.state = SoldierStateEnum.PickingBall
+            LoadRoleSoldier.pickingBallAnimation:gotoFrame(1)
+        end
     end
 
     print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
@@ -140,6 +146,8 @@ function LoadRoleSoldier:draw()
         LoadRoleSoldier.loadingChargeAnimation:draw(LoadRoleSoldier.loadingChargeSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, -128, -119)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft) then
         LoadRoleSoldier.walkingAnimation:draw(LoadRoleSoldier.walkingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, - 2, 0)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.PickingBall) then
+        LoadRoleSoldier.pickingBallAnimation:draw(LoadRoleSoldier.pickingBallSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, 0, 0)
     end
 
     love.graphics.draw(LoadRoleSoldier.strawDampingImage, 0, 0)

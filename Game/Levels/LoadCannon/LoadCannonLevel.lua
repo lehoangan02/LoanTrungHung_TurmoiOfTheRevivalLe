@@ -22,7 +22,7 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
-    LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall)
+    LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall, LoadCannonLevel.isCannonBallInStraw)
 
     LoadCannonLevel.isBallSpawned = false
 
@@ -42,10 +42,23 @@ function LoadCannonLevel:spawnCannonBall()
     LoadCannonLevel.cannonBallCollider:setRestitution(0.3)
 end
 
+function LoadCannonLevel:isCannonBallInStraw()
+    if not LoadCannonLevel.isBallSpawned then
+        return false
+    end
+    local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
+    local _, ballSpeedY = LoadCannonLevel.cannonBallCollider:getLinearVelocity()
+    return ballY > 140 and ballY < 141 and ballSpeedY > 0 and ballSpeedY < 1
+end
+
 function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     LoadCannonLevel.soldier:update(dt)
     LoadCannonLevel.world:update(dt)
+    if LoadCannonLevel.isBallSpawned then
+        local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
+        print("Ball Y position: " .. ballY)
+    end
     return LevelEnum.Nothing
 end
 
