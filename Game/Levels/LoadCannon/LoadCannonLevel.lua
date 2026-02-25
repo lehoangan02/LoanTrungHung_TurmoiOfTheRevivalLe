@@ -24,6 +24,12 @@ function LoadCannonLevel:load()
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
     LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall, LoadCannonLevel.isCannonBallInStraw)
 
+    LoadCannonLevel.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
+    LoadCannonLevel.strawDampingImage:setFilter("nearest", "nearest")
+
+    LoadCannonLevel.cannonBallImage = love.graphics.newImage("Resources/Images/CannonBall.png")
+    LoadCannonLevel.cannonBallImage:setFilter("nearest", "nearest")
+
     LoadCannonLevel.isBallSpawned = false
 
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
@@ -74,7 +80,14 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
         
         love.graphics.draw(self.roomSprite, 0, 0)
         LoadCannonLevel.soldier:draw()
+        if (self.isBallSpawned) then
+            local ballX, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
+            love.graphics.draw(LoadCannonLevel.cannonBallImage, ballX, ballY, 0, 1, 1, LoadCannonLevel.cannonBallImage:getWidth() / 2, LoadCannonLevel.cannonBallImage:getHeight() / 2)
+        end
         love.graphics.draw(self.cannonSprite, 0, 0)
+        love.graphics.draw(LoadCannonLevel.strawDampingImage, 2, -1)
+        love.graphics.draw(LoadCannonLevel.strawDampingImage, 0, 0)
+        
         LoadCannonLevel.world:draw()
         
     LoadCannonLevel.cam:detach()
