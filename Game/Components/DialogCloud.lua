@@ -5,7 +5,7 @@ local FontLoader = require("Game.Fonts.FontLoader")
 
 local anim8 = require("Game.Libraries.anim8")
 
-function DialogCloud.new(text, x, y, width, height)
+function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor)
     local instance = setmetatable({}, DialogCloud)
 
     instance.text = text
@@ -14,7 +14,10 @@ function DialogCloud.new(text, x, y, width, height)
     instance.width = width
     instance.height = height
 
-    instance.padding = 2
+    instance.borderColor = borderColor or { 0, 0, 0 }
+    instance.backgroundColor = backgroundColor or { 1, 1, 1 }
+
+    instance.padding = 3
     instance.textBounds = {
         startX = x + instance.padding,
         startY = y + instance.padding,
@@ -24,6 +27,7 @@ function DialogCloud.new(text, x, y, width, height)
 
     instance.animationTime = 1.0
     instance.started = false
+    instance.ended = false
 
     instance.fontSize = 5
     instance.font = FontLoader:loadFont("Geo", instance.fontSize)
@@ -81,6 +85,10 @@ function DialogCloud.new(text, x, y, width, height)
     return instance
 end
 
+function DialogCloud:isCloudFullyShown()
+    return self.drawTopBar and self.drawRightBar
+end
+
 function DialogCloud:update(dt)
     if not self.started then
         return
@@ -132,11 +140,16 @@ function DialogCloud:update(dt)
 end
 
 function DialogCloud:draw(scale, offsetX, offsetY)
+    if self.ended then return end
+    love.graphics.push()
     love.graphics.scale(scale, scale)
     --draw sprout
-    self.sproutAnimation:draw(self.sproutSpritesheet, self.sproutX, self.sproutY)
+    if (self.started) then
+        self.sproutAnimation:draw(self.sproutSpritesheet, self.sproutX, self.sproutY)
+    end
     --draw left bar
-    love.graphics.setColor(1, 0, 0, 1)
+    -- love.graphics.setColor(1, 0, 0, 1) for debug
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
     love.graphics.setLineStyle("rough")
     love.graphics.line(self.leftBarX + 0.5, self.leftBarBottomY, self.leftBarX + 0.5, math.floor(self.leftBarCurrentY))
     --draw bottom bar
@@ -150,16 +163,19 @@ function DialogCloud:draw(scale, offsetX, offsetY)
         self.bottomRightCornerAnimation:draw(self.bottomRightCornerSpriteSheet, self.x + self.width - 3, self.y + self.height - 3)
     end
     if self.drawTopBar then
-        love.graphics.setColor(1, 0, 0, 1)
+        -- love.graphics.setColor(1, 0, 0, 1) for debug
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
         love.graphics.line(self.x + 3, self.y + 0.5, self.x + self.width - 3, self.y + 0.5)
     end
     if self.drawRightBar then
-        love.graphics.setColor(1, 0, 0, 1)
+        -- love.graphics.setColor(1, 0, 0, 1) for debug
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
         love.graphics.line(self.x + self.width - 0.5, self.y + 3, self.x + self.width - 0.5, self.y + self.height - 3)
     end
     if self.drawTopRight then
         love.graphics.draw(self.topRightCorner, self.x + self.width - 3, self.y)
-        love.graphics.setColor(0, 0, 1.0, 0.5)
+        -- love.graphics.setColor(0, 0, 1.0, 0.5) for debug
+        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], 1)
         love.graphics.rectangle("fill", self.x + 2, self.y + 1, self.width - 4, 1)
         love.graphics.rectangle("fill", self.x + self.width - 2, self.y + 2, 1, self.height - 4)
         love.graphics.rectangle("fill", self.x + self.width - 3, self.y + 2, 1, 1)
@@ -169,22 +185,33 @@ function DialogCloud:draw(scale, offsetX, offsetY)
     
     love.graphics.setColor(1, 1, 1, 1)
 
-    --set content background fill content b
-    love.graphics.setColor(0, 0, 1.0, 0.5)
-    love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.mainSquareCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
-    love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY - 1, self.mainSquareCurrentX - self.bottomBarLeftX - 1, 1)
-    love.graphics.rectangle("fill", self.x + 1 + (self.mainSquareCurrentX - self.bottomBarLeftX), self.leftBarCurrentY + 1, 1, self.leftBarBottomY - self.leftBarCurrentY - 1)
+    --set content background fill content
+    -- love.graphics.setColor(0, 0, 1.0, 0.5) for debug
+    if (self.started and self.sproutAnimation.position == #self.sproutAnimation.frames) then
+        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], 1)
+        love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.mainSquareCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
+        love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY - 1, self.mainSquareCurrentX - self.bottomBarLeftX - 1, 1)
+        love.graphics.rectangle("fill", self.x + 1 + (self.mainSquareCurrentX - self.bottomBarLeftX), self.leftBarCurrentY + 1, 1, self.leftBarBottomY - self.leftBarCurrentY - 1)
+    end
     love.graphics.setColor(1, 1, 1, 1)
+    
+    love.graphics.pop()
 
     --draw text
-
+    if (not self:isCloudFullyShown()) then
+        return
+    end
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
     local previousFont = love.graphics.getFont()
+    local textScale = math.floor(scale)
+    self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
     love.graphics.setFont(self.font)
     local lineHeight = self.font:getHeight()
     for i, line in ipairs(self.lines) do
-        love.graphics.print(line, self.textBounds.startX, self.textBounds.startY + (i - 1) * lineHeight)
+        love.graphics.print(line, self.textBounds.startX * textScale, self.textBounds.startY * textScale + (i - 1) * lineHeight)
     end
     love.graphics.setFont(previousFont)
+    love.graphics.setColor(1, 1, 1, 1)
     
 
 end
@@ -193,6 +220,10 @@ function DialogCloud:startDialogue()
     self.started = true
     self.sproutAnimation:gotoFrame(1)
     self.sproutAnimation:resume()
+end
+
+function DialogCloud:endDialogue()
+    self.ended = true
 end
 
 function DialogCloud:splitTextByWidth(text, maxWidth)

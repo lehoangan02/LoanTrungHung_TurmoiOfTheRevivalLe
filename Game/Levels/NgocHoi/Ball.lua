@@ -77,7 +77,7 @@ function Ball:update(dt)
 
     if self.to_explode then
         self:explode()
-        print("Ball destroyed")
+        -- print("Ball destroyed")
     end
 
     self.explodeAnimation:update(dt)

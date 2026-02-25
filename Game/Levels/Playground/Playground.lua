@@ -16,6 +16,7 @@ end
 function PlayGround:update(dt)
     local InputManager = require("Game.Input.InputManager")
     if (InputManager:isEventFKeyPressed()) then
+        print("F key pressed, starting dialogue")
         self.dialog:startDialogue()
     end
     self.dialog:update(dt)
@@ -25,8 +26,10 @@ end
 function PlayGround:draw(windowWidth, windowHeight)
     love.graphics.clear(0.2, 0.2, 0.2)
     local scale = math.min(windowWidth / BASE_W, windowHeight / BASE_H)
+    love.graphics.push()
     love.graphics.scale(scale, scale)
-    self.dialog:draw(windowWidth, windowHeight)
+    love.graphics.pop()
+    self.dialog:draw(scale, windowWidth, windowHeight)
 end
 
 function PlayGround:unload()

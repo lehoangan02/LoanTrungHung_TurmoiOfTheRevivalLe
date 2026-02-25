@@ -5,6 +5,7 @@ local anim8 = require "Game/Libraries/anim8"
 local bf = require("Game/Libraries/breezefield-master")
 
 local StatefulObject = require("Game.Components.StatefulObject")
+local DialogCloud = require("Game.Components.DialogCloud")
 
 function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     local self = setmetatable({}, SiegeTower)
@@ -65,6 +66,13 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.guy1StatefulObject:setState(1)
     self.timeUntilGuy1Speak = 2
     self.startCountingDownGuy1PrepareToSpeak = false
+    self.guy1DialogCloud = DialogCloud.new(
+        "Welcome to the Playground Level!",
+        50,
+        50,
+        40,
+        20
+    )
 
     self.guy2StatefulObject = StatefulObject:new()
     self.guy2Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy2_1.png")
@@ -172,6 +180,8 @@ function SiegeTower:update(dt)
     self.cannon3_statefulObject:update(dt)
     self.cannon4_statefulObject:update(dt)
 
+    self:handleGuy1Speak(dt)
+
 end
 
 function SiegeTower:handleGuy1Speak(dt)
@@ -181,6 +191,8 @@ function SiegeTower:handleGuy1Speak(dt)
         if self.timeUntilGuy1Speak <= 0 then
             self.guy1StatefulObject:setState(2)
             self.timeUntilGuy1Speak = 0
+            print("Guy 1 starts speaking")
+            self.guy1DialogCloud:startDialogue()
         end
     end
 end
@@ -208,6 +220,8 @@ function SiegeTower:draw()
 
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     self.straw_statefulObject:draw(140, self.siege_tower_positionY - 2)
+
+    self.guy1DialogCloud:draw()
 
     -- self.world:draw()
 end
