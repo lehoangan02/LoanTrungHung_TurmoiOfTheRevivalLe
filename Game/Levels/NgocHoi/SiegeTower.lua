@@ -64,13 +64,13 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.guy1Sprite2:setFilter("nearest", "nearest")
     self.guy1StatefulObject:addSprite(self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
-    self.timeUntilGuy1Speak = 2
-    self.timeForGuy1ToSpeak = 4
+    self.timeUntilGuy1Speak = 1
+    self.timeForGuy1ToSpeak = 2
     self.startCountingDownGuy1PrepareToSpeak = false
     self.guy1DialogCloud = DialogCloud.new(
         "Welcome to the Playground Level!",
         150,
-        58,
+        57,
         40,
         20,
         {0, 0, 0},

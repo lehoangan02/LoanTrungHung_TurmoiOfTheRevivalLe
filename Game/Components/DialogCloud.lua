@@ -29,6 +29,11 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.started = false
     instance.ended = false
 
+    instance.fadeOutDuration = 0.8
+    instance.fadeOutTime = 0
+    instance.opacity = 1
+    instance.isFadingOut = false
+
     instance.fontSize = 5
     instance.font = FontLoader:loadFont("Geo", instance.fontSize)
     instance:processText()
@@ -90,7 +95,7 @@ function DialogCloud:isCloudFullyShown()
 end
 
 function DialogCloud:update(dt)
-    if not self.started then
+    if not self.started and not self.isFadingOut then
         return
     end
     self.sproutAnimation:update(dt)
@@ -137,21 +142,36 @@ function DialogCloud:update(dt)
         self.drawTopRight = true
     end
 
+    if self.isFadingOut then
+        self.fadeOutTime = self.fadeOutTime + dt
+        local t = self.fadeOutTime / self.fadeOutDuration
+        if t >= 1 then
+            self.opacity = 0
+            self.isFadingOut = false
+            self.ended = true
+        else
+            self.opacity = 1 - t
+        end
+    end
+
 end
 
 function DialogCloud:draw(scale, offsetX, offsetY)
     if self.ended then return end
+    local alpha = self.opacity or 1
+    local prevR, prevG, prevB, prevA = love.graphics.getColor()
     love.graphics.push()
     love.graphics.scale(1/scale, 1/scale)
     love.graphics.push()
     love.graphics.scale(scale, scale)
     --draw sprout
     if (self.started) then
+        love.graphics.setColor(1, 1, 1, alpha)
         self.sproutAnimation:draw(self.sproutSpritesheet, self.sproutX, self.sproutY)
     end
     --draw left bar
     -- love.graphics.setColor(1, 0, 0, 1) for debug
-    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
     love.graphics.setLineStyle("rough")
     love.graphics.line(self.leftBarX + 0.5, self.leftBarBottomY, self.leftBarX + 0.5, math.floor(self.leftBarCurrentY))
     --draw bottom bar
@@ -166,18 +186,18 @@ function DialogCloud:draw(scale, offsetX, offsetY)
     end
     if self.drawTopBar then
         -- love.graphics.setColor(1, 0, 0, 1) for debug
-        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
         love.graphics.line(self.x + 3, self.y + 0.5, self.x + self.width - 3, self.y + 0.5)
     end
     if self.drawRightBar then
         -- love.graphics.setColor(1, 0, 0, 1) for debug
-        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
         love.graphics.line(self.x + self.width - 0.5, self.y + 3, self.x + self.width - 0.5, self.y + self.height - 3)
     end
     if self.drawTopRight then
         love.graphics.draw(self.topRightCorner, self.x + self.width - 3, self.y)
         -- love.graphics.setColor(0, 0, 1.0, 0.5) for debug
-        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], 1)
+        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], alpha)
         love.graphics.rectangle("fill", self.x + 2, self.y + 1, self.width - 4, 1)
         love.graphics.rectangle("fill", self.x + self.width - 2, self.y + 2, 1, self.height - 4)
         love.graphics.rectangle("fill", self.x + self.width - 3, self.y + 2, 1, 1)
@@ -185,23 +205,23 @@ function DialogCloud:draw(scale, offsetX, offsetY)
         love.graphics.rectangle("fill", self.x + self.width - 4, self.y + 2, 1, 1)
     end
     
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, alpha)
 
     --set content background fill content
     -- love.graphics.setColor(0, 0, 1.0, 0.5) for debug
     if (self.started and self.sproutAnimation.position == #self.sproutAnimation.frames) then
-        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], 1)
+        love.graphics.setColor(self.backgroundColor[1], self.backgroundColor[2], self.backgroundColor[3], alpha)
         love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY, self.mainSquareCurrentX - self.bottomBarLeftX, self.leftBarBottomY - self.leftBarCurrentY)
         love.graphics.rectangle("fill", self.x + 1, self.leftBarCurrentY - 1, self.mainSquareCurrentX - self.bottomBarLeftX - 1, 1)
         love.graphics.rectangle("fill", self.x + 1 + (self.mainSquareCurrentX - self.bottomBarLeftX), self.leftBarCurrentY + 1, 1, self.leftBarBottomY - self.leftBarCurrentY - 1)
     end
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, alpha)
     
     love.graphics.pop()
 
     --draw text
     if ( self:isCloudFullyShown()) then
-        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
         local previousFont = love.graphics.getFont()
         local textScale = math.floor(scale)
         self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
@@ -211,10 +231,12 @@ function DialogCloud:draw(scale, offsetX, offsetY)
             love.graphics.print(line, self.textBounds.startX * textScale, self.textBounds.startY * textScale + (i - 1) * lineHeight)
         end
         love.graphics.setFont(previousFont)
-        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(1, 1, 1, alpha)
     end
     
     love.graphics.pop()
+
+    love.graphics.setColor(prevR, prevG, prevB, prevA)
 end
 
 function DialogCloud:startDialogue()
@@ -225,7 +247,11 @@ end
 
 function DialogCloud:endDialogue()
     print("Dialogue ended")
-    self.ended = true
+    if not self.isFadingOut and not self.ended then
+        self.isFadingOut = true
+        self.fadeOutTime = 0
+        self.opacity = 1
+    end
 end
 
 function DialogCloud:splitTextByWidth(text, maxWidth)
