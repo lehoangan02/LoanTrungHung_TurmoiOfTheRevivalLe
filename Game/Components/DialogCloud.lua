@@ -142,6 +142,8 @@ end
 function DialogCloud:draw(scale, offsetX, offsetY)
     if self.ended then return end
     love.graphics.push()
+    love.graphics.scale(1/scale, 1/scale)
+    love.graphics.push()
     love.graphics.scale(scale, scale)
     --draw sprout
     if (self.started) then
@@ -198,22 +200,21 @@ function DialogCloud:draw(scale, offsetX, offsetY)
     love.graphics.pop()
 
     --draw text
-    if (not self:isCloudFullyShown()) then
-        return
+    if ( self:isCloudFullyShown()) then
+        love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
+        local previousFont = love.graphics.getFont()
+        local textScale = math.floor(scale)
+        self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
+        love.graphics.setFont(self.font)
+        local lineHeight = self.font:getHeight()
+        for i, line in ipairs(self.lines) do
+            love.graphics.print(line, self.textBounds.startX * textScale, self.textBounds.startY * textScale + (i - 1) * lineHeight)
+        end
+        love.graphics.setFont(previousFont)
+        love.graphics.setColor(1, 1, 1, 1)
     end
-    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
-    local previousFont = love.graphics.getFont()
-    local textScale = math.floor(scale)
-    self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
-    love.graphics.setFont(self.font)
-    local lineHeight = self.font:getHeight()
-    for i, line in ipairs(self.lines) do
-        love.graphics.print(line, self.textBounds.startX * textScale, self.textBounds.startY * textScale + (i - 1) * lineHeight)
-    end
-    love.graphics.setFont(previousFont)
-    love.graphics.setColor(1, 1, 1, 1)
     
-
+    love.graphics.pop()
 end
 
 function DialogCloud:startDialogue()
@@ -223,6 +224,7 @@ function DialogCloud:startDialogue()
 end
 
 function DialogCloud:endDialogue()
+    print("Dialogue ended")
     self.ended = true
 end
 

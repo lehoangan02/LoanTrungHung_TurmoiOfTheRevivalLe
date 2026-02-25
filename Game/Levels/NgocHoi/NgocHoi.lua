@@ -237,7 +237,7 @@ function NgocHoi:draw(windowWidth, windowHeight)
         love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX + NgocHoi.groundWidth, 200)
         love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX - NgocHoi.groundWidth, 200)
 
-        NgocHoi.siege_tower:draw()
+        NgocHoi.siege_tower:draw(scale, windowWidth, windowHeight)
         
 
         NgocHoi.soldier_animations[1]:draw(NgocHoi.soldier_spritesheet, 70, 183)

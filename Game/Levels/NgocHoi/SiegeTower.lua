@@ -65,13 +65,16 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.guy1StatefulObject:addSprite(self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
     self.timeUntilGuy1Speak = 2
+    self.timeForGuy1ToSpeak = 4
     self.startCountingDownGuy1PrepareToSpeak = false
     self.guy1DialogCloud = DialogCloud.new(
         "Welcome to the Playground Level!",
-        50,
-        50,
+        150,
+        58,
         40,
-        20
+        20,
+        {0, 0, 0},
+        {1, 1, 1}
     )
 
     self.guy2StatefulObject = StatefulObject:new()
@@ -195,8 +198,17 @@ function SiegeTower:handleGuy1Speak(dt)
             self.guy1DialogCloud:startDialogue()
         end
     end
+    self.guy1DialogCloud:update(dt)
+    if self.guy1DialogCloud:isCloudFullyShown() then
+        if self.timeForGuy1ToSpeak > 0 then
+            self.timeForGuy1ToSpeak = self.timeForGuy1ToSpeak - dt
+            if self.timeForGuy1ToSpeak <= 0 then
+                self.guy1DialogCloud:endDialogue()
+            end
+        end
+    end
 end
-function SiegeTower:draw()
+function SiegeTower:draw(scale, windowWidth, windowHeight)
 
 
 
@@ -221,7 +233,7 @@ function SiegeTower:draw()
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     self.straw_statefulObject:draw(140, self.siege_tower_positionY - 2)
 
-    self.guy1DialogCloud:draw()
+    self.guy1DialogCloud:draw(scale, windowWidth, windowHeight)
 
     -- self.world:draw()
 end
