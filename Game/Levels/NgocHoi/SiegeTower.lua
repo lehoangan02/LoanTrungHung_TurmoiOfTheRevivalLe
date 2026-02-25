@@ -32,6 +32,7 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
             siegeTower.backStatefulObject:setState(2)
             siegeTower.straw_statefulObject:setState(2)
             siegeTower.cannon2_statefulObject:setState(2)
+            self.parent.startCountingDownGuy1PrepareToSpeak = true
         end
     end
     self.Timer = 0
@@ -62,6 +63,8 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.guy1Sprite2:setFilter("nearest", "nearest")
     self.guy1StatefulObject:addSprite(self.guy1Sprite2)
     self.guy1StatefulObject:setState(1)
+    self.timeUntilGuy1Speak = 2
+    self.startCountingDownGuy1PrepareToSpeak = false
 
     self.guy2StatefulObject = StatefulObject:new()
     self.guy2Sprite1 = love.graphics.newImage("Resources/Images/siege_tower_guy2_1.png")
@@ -171,6 +174,16 @@ function SiegeTower:update(dt)
 
 end
 
+function SiegeTower:handleGuy1Speak(dt)
+    if not self.startCountingDownGuy1PrepareToSpeak then return end
+    if self.timeUntilGuy1Speak > 0 then
+        self.timeUntilGuy1Speak = self.timeUntilGuy1Speak - dt
+        if self.timeUntilGuy1Speak <= 0 then
+            self.guy1StatefulObject:setState(2)
+            self.timeUntilGuy1Speak = 0
+        end
+    end
+end
 function SiegeTower:draw()
 
 

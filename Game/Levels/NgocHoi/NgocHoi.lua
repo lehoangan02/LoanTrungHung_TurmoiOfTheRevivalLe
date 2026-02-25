@@ -225,12 +225,7 @@ end
 function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.push()
     love.graphics.clear(1, 1, 1, 1)
-    -- love.graphics.clear(0.6, 0.6, 0.6, 1)
-    
 
-    -- local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
-    -- love.graphics.scale(scale, scale)
-    -- love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
