@@ -11,7 +11,7 @@ local Lever = require "Game.Levels.BallDrop.Lever"
 
 function BallDropLevel:load()
 
-    BallDropLevel.loadScreen = LoadScreen.new()
+    BallDropLevel.loadScreen = LoadScreen.new("Resources/Images/White_tiger_Hang_Trong.jpg")
     BallDropLevel.loadScreen:reset()
 
     BallDropLevel.loadScreen:addTask(function()
@@ -145,6 +145,7 @@ function BallDropLevel:load()
 
     BallDropLevel.successY = 1720
     BallDropLevel.success = false
+    BallDropLevel.timeToLinger = 1
     
     print("Total magnets found: " .. #BallDropLevel.magnets)
     print("Spike block starts at: " .. BallDropLevel.spikeBlockInitPosition.x .. ", " .. BallDropLevel.spikeBlockInitPosition.y)
@@ -246,7 +247,14 @@ function BallDropLevel:update(dt)
         BallDropLevel.success = true
     end
 
-    return -1
+    if BallDropLevel.success then
+        BallDropLevel.timeToLinger = BallDropLevel.timeToLinger - dt
+        if BallDropLevel.timeToLinger <= 0 then
+            return LevelEnum.SolderLoadCannon
+        end
+    end
+
+    return LevelEnum.Nothing
 end
 
 function BallDropLevel:adjustGravity()
@@ -377,10 +385,6 @@ function BallDropLevel:draw(windowWidth, windowHeight)
 end
 
 function BallDropLevel:unload()
-    if BallDropLevel.world then
-        BallDropLevel.world:destroy()
-        BallDropLevel.world = nil
-    end
 end
 
 return BallDropLevel
