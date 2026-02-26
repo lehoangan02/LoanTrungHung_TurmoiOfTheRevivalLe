@@ -59,6 +59,7 @@ function HoldTextButton:update(dt)
 end
 
 function HoldTextButton:draw(scale, offsetX, offsetY)
+    local prevLineWidth = love.graphics.getLineWidth()
     love.graphics.push()
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
@@ -111,6 +112,7 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.pop()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(defaultFont)
+    love.graphics.setLineWidth(prevLineWidth)
 end
 
 return HoldTextButton
