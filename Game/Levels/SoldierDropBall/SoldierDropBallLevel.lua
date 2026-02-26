@@ -71,11 +71,19 @@ function SoldierDropBallLevel:load()
 end
 
 function SoldierDropBallLevel:update(dt)
+    if not SoldierDropBallLevel.loadScreen:isDone() then
+        SoldierDropBallLevel.loadScreen:update(dt)
+        return -1
+    end
     local LevelEnum = require("Game.Levels.LevelEnum")
     return SoldierDropBallLevel.soldier:update(dt)
 end
 
 function SoldierDropBallLevel:draw(windowWidth, windowHeight)
+    if not SoldierDropBallLevel.loadScreen:isDone() then
+        SoldierDropBallLevel.loadScreen:draw()
+        return
+    end
 
     local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
     love.graphics.scale(scale, scale)
