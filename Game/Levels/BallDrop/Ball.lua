@@ -11,6 +11,7 @@ function Ball.new(world, x, y)
     instance.ballImage:setFilter("nearest", "nearest")
     
     instance.explodeSpriteSheet = love.graphics.newImage("Resources/Images/explode_large.png")
+    instance.explodeSpriteSheet:setFilter("nearest", "nearest")
     instance.explodeGrid = anim8.newGrid(32, 32, instance.explodeSpriteSheet:getWidth(), instance.explodeSpriteSheet:getHeight())
     instance.explodeAnimation = anim8.newAnimation(instance.explodeGrid('1-4', 1), 0.2, 'pauseAtEnd')
     

@@ -34,6 +34,7 @@ function LoadCannonLevel:load()
 
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
+
 end
 
 function LoadCannonLevel:spawnCannonBall()
@@ -46,6 +47,7 @@ function LoadCannonLevel:spawnCannonBall()
     LoadCannonLevel.cannonBallCollider = LoadCannonLevel.world:newCollider("Circle", {95, 0, radius})
     LoadCannonLevel.cannonBallCollider:setType("dynamic")
     LoadCannonLevel.cannonBallCollider:setRestitution(0.3)
+    LoadCannonLevel.cannonBallVisible = true
 end
 
 function LoadCannonLevel:isCannonBallInStraw()
@@ -57,6 +59,10 @@ function LoadCannonLevel:isCannonBallInStraw()
     local result =  ballY > 144 and ballY < 145 and ballSpeedY >= 0 and ballSpeedY < 1
     print("Ball is in straw: " .. tostring(result) .. ", Ball Y: " .. ballY .. ", Ball Speed Y: " .. ballSpeedY)
     return result
+end
+
+function LoadCannonLevel:setCannonBallVisible(visible)
+    LoadCannonLevel.cannonBallVisible = visible
 end
 
 function LoadCannonLevel:update(dt)
@@ -84,7 +90,9 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
             local ballX, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
             love.graphics.draw(LoadCannonLevel.cannonBallImage, ballX, ballY, 0, 1, 1, LoadCannonLevel.cannonBallImage:getWidth() / 2, LoadCannonLevel.cannonBallImage:getHeight() / 2)
         end
-        love.graphics.draw(self.cannonSprite, 0, 0)
+        if LoadCannonLevel.cannonBallVisible then
+            love.graphics.draw(self.cannonSprite, 0, 0)
+        end
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 2, -1)
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 0, 0)
         

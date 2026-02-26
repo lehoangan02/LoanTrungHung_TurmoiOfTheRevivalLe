@@ -15,10 +15,11 @@ local SoldierStateEnum = {
     LiftingBall = 6
 }
 
-function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction)
+function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction)
 
     LoadRoleSoldier.spawnBallFunction = spawnBallFunction
     LoadRoleSoldier.isCannonBallInStrawFunction = isCannonBallInStrawFunction
+    LoadRoleSoldier.setCannonBallVisibleFunction = setCannonBallVisibleFunction
 
     LoadRoleSoldier.state = SoldierStateEnum.Idle
 
