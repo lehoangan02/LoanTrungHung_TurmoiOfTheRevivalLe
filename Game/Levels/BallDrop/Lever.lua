@@ -14,6 +14,7 @@ function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping, initAngle,
 
     if not SwingLever.spikeImage then
         SwingLever.spikeImage = love.graphics.newImage("Resources/Images/Spike.png")
+        SwingLever.spikeImage:setFilter("nearest", "nearest")
     end
 
     local axleRadius = 5

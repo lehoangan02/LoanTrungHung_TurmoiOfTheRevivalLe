@@ -68,7 +68,7 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.timeForGuy1ToSpeak = 2
     self.startCountingDownGuy1PrepareToSpeak = false
     self.guy1DialogCloud = DialogCloud.new(
-        "Welcome to the Playground Level!",
+        "Cannon is disabled!",
         150,
         57,
         40,
@@ -85,6 +85,18 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.guy2Sprite2:setFilter("nearest", "nearest")
     self.guy2StatefulObject:addSprite(self.guy2Sprite2)
     self.guy2StatefulObject:setState(1)
+    self.timeUntilGuy2Speak = 0.5
+    self.timeForGuy2ToSpeak = 2
+    self.startCountingDownGuy2PrepareToSpeak = false
+    self.guy2DialogCloud = DialogCloud.new(
+        "Out of ammo!",
+        148,
+        111,
+        40,
+        20,
+        {0, 0, 0},
+        {1, 1, 1}
+    )
 
     self.guy34Sprite = love.graphics.newImage("Resources/Images/siege_tower_guy34.png")
     self.guy34Sprite:setFilter("nearest", "nearest")
@@ -184,6 +196,13 @@ function SiegeTower:update(dt)
     self.cannon4_statefulObject:update(dt)
 
     self:handleGuy1Speak(dt)
+    self:handleGuy2Speak(dt)
+
+    if (self.guy2DialogCloud:isCloudFullyFaded()) then
+        return true
+    else 
+        return false
+    end
 
 end
 
@@ -204,10 +223,35 @@ function SiegeTower:handleGuy1Speak(dt)
             self.timeForGuy1ToSpeak = self.timeForGuy1ToSpeak - dt
             if self.timeForGuy1ToSpeak <= 0 then
                 self.guy1DialogCloud:endDialogue()
+                self.startCountingDownGuy2PrepareToSpeak = true
+                print("Guy 1 finished speaking, start counting down for Guy 2 to speak")
             end
         end
     end
 end
+
+function SiegeTower:handleGuy2Speak(dt)
+    if not self.startCountingDownGuy2PrepareToSpeak then return end
+    if self.timeUntilGuy2Speak > 0 then
+        self.timeUntilGuy2Speak = self.timeUntilGuy2Speak - dt
+        if self.timeUntilGuy2Speak <= 0 then
+            self.guy2StatefulObject:setState(2)
+            self.timeUntilGuy2Speak = 0
+            print("Guy 2 starts speaking")
+            self.guy2DialogCloud:startDialogue()
+        end
+    end
+    self.guy2DialogCloud:update(dt)
+    if self.guy2DialogCloud:isCloudFullyShown() then
+        if self.timeForGuy2ToSpeak > 0 then
+            self.timeForGuy2ToSpeak = self.timeForGuy2ToSpeak - dt
+            if self.timeForGuy2ToSpeak <= 0 then
+                self.guy2DialogCloud:endDialogue()
+            end
+        end
+    end
+end
+
 function SiegeTower:draw(scale, windowWidth, windowHeight)
 
 
@@ -234,6 +278,7 @@ function SiegeTower:draw(scale, windowWidth, windowHeight)
     self.straw_statefulObject:draw(140, self.siege_tower_positionY - 2)
 
     self.guy1DialogCloud:draw(scale, windowWidth, windowHeight)
+    self.guy2DialogCloud:draw(scale, windowWidth, windowHeight)
 
     -- self.world:draw()
 end

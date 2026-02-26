@@ -65,6 +65,7 @@ function Blocker.new(world, gameMap, visualLayerName, colliderLayerName, machine
     end
 
     self.springImage = love.graphics.newImage("Resources/Images/Coil_Spring.png")
+    self.springImage:setFilter("nearest", "nearest")
     self.numSpringCoils = 1
     local anchorX = obj.x + (5 * 16)
     local anchorY = startY

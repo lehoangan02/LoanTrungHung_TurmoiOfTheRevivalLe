@@ -216,10 +216,13 @@ function NgocHoi:update(dt)
 
     NgocHoi.cannonBall2:update(dt)
     
-    NgocHoi.siege_tower:update(dt) 
+    if NgocHoi.siege_tower:update(dt) == true then
+        return LevelEnum.SoldierDropBall
+    else
+        return LevelEnum.Nothing
+    end
 
     -- print("Bullet Timer: " .. NgocHoi.BulletTimer)
-    return LevelEnum.Nothing
 end
 
 function NgocHoi:draw(windowWidth, windowHeight)

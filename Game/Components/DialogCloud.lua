@@ -17,7 +17,7 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.borderColor = borderColor or { 0, 0, 0 }
     instance.backgroundColor = backgroundColor or { 1, 1, 1 }
 
-    instance.padding = 3
+    instance.padding = 2
     instance.textBounds = {
         startX = x + instance.padding,
         startY = y + instance.padding,
@@ -92,6 +92,10 @@ end
 
 function DialogCloud:isCloudFullyShown()
     return self.drawTopBar and self.drawRightBar
+end
+
+function DialogCloud:isCloudFullyFaded()
+    return self.ended and (self.opacity or 0) <= 0
 end
 
 function DialogCloud:update(dt)
