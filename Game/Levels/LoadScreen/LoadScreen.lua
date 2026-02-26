@@ -1,5 +1,7 @@
 local LoadScreen = {}
 local instance = nil
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local FontLoader = require("Game.Fonts.FontLoader")
 
 function LoadScreen.new(imagePath)
     if instance then
@@ -12,6 +14,7 @@ function LoadScreen.new(imagePath)
 
     local self = setmetatable({}, {__index = LoadScreen})
     self.backgroundImage = love.graphics.newImage(imagePath)
+    self.backgroundImage:setFilter("nearest", "nearest")
     
     self.tasks = {}
     self.currentTaskIndex = 1
@@ -89,38 +92,69 @@ function LoadScreen:draw()
     -- Darken overlay
     love.graphics.setColor(0, 0, 0, 0.5)
     love.graphics.rectangle("fill", 0, 0, width, height)
-    
-    -- Loading text
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.printf("Loading...", 0, height / 2 - 20, width, "center")
-    
-    -- Progress bar
-    local barWidth = 200
-    local barHeight = 10
-    local x = (width - barWidth) / 2
-    local y = height / 2
-    
+
+    -- Use base-resolution space for bar geometry so it scales nicely
+    local scale, fontScale, offsetX, offsetY = ResizeWindowTransform.getTransform(width, height, BASE_W, BASE_H)
+    local baseW, baseH = BASE_W, BASE_H
+
+    local barWidth = 160
+    local barHeight = 8
+    local barBaseX = (baseW - barWidth) / 2
+    local barBaseY = baseH / 2
+
+    love.graphics.push()
+    love.graphics.translate(offsetX, offsetY)
+    love.graphics.scale(scale, scale)
+
     love.graphics.setColor(0.3, 0.3, 0.3)
-    love.graphics.rectangle("fill", x, y, barWidth, barHeight)
-    
+    love.graphics.rectangle("fill", barBaseX, barBaseY, barWidth, barHeight)
+
     love.graphics.setColor(0.2, 0.8, 0.2)
-    local fillWidth = (self.progress / self.maxProgress) * barWidth
-    love.graphics.rectangle("fill", x, y, fillWidth, barHeight)
-    
+    local fillWidth = 0
+    if self.maxProgress > 0 then
+        fillWidth = (self.progress / self.maxProgress) * barWidth
+    end
+    love.graphics.rectangle("fill", barBaseX, barBaseY, fillWidth, barHeight)
+
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", x, y, barWidth, barHeight)
-    
-    -- Percentage
-    local percentage = math.floor((self.progress / self.maxProgress) * 100)
-    love.graphics.printf(percentage .. "%", 0, y + 40, width, "center")
-    
-    -- Current task
+    love.graphics.rectangle("line", barBaseX, barBaseY, barWidth, barHeight)
+
+    love.graphics.pop()
+
+    -- Now draw text in window coordinates using fontScale for crisp scaling
+    local fontLoader = FontLoader:getInstance()
+    local previousFont = love.graphics.getFont()
+    local baseFontSize = 12
+    local fontSize = math.max(1, math.floor(baseFontSize * fontScale))
+    local font = fontLoader:loadFont("Geo", fontSize)
+    love.graphics.setFont(font)
+
+    local percentage = 0
+    if self.maxProgress > 0 then
+        percentage = math.floor((self.progress / self.maxProgress) * 100)
+    end
+
+    -- Convert base Y positions into window space so layout stays aligned
+    local loadingBaseY = barBaseY - 20
+    local percentBaseY = barBaseY + 20
+    local taskBaseY = barBaseY + 40
+
+    local loadingY = offsetY + loadingBaseY * scale
+    local percentY = offsetY + percentBaseY * scale
+    local taskY = offsetY + taskBaseY * scale
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf("Loading...", 0, loadingY, width, "center")
+    love.graphics.printf(percentage .. "%", 0, percentY, width, "center")
+
     if self.currentTaskIndex <= #self.tasks then
         love.graphics.printf(
             "Task " .. self.currentTaskIndex .. " of " .. #self.tasks,
-            0, y + 70, width, "center"
+            0, taskY, width, "center"
         )
     end
+
+    love.graphics.setFont(previousFont)
 end
 
 function LoadScreen:getResult(index)
