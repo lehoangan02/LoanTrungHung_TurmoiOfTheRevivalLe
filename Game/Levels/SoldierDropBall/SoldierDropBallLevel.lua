@@ -2,6 +2,8 @@ local Level = require "Game.Levels.Level"
 local SoldierDropBallLevel = setmetatable({}, {__index = Level})
 SoldierDropBallLevel.__index = SoldierDropBallLevel
 
+local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
+
 function SoldierDropBallLevel:shake(duration, magnitude)
     self.shakeDuration = duration
     self.shakeMagnitude = magnitude
@@ -9,6 +11,37 @@ function SoldierDropBallLevel:shake(duration, magnitude)
 end
 
 function SoldierDropBallLevel:load()
+
+    SoldierDropBallLevel.loadScreen = LoadScreen.new("Resources/Images/Hoangho_gt.jpg")
+
+    SoldierDropBallLevel.loadScreen:reset()
+
+    SoldierDropBallLevel.loadScreen:addTask(function()
+        print("Dummy task 1 - waiting...")
+        love.timer.sleep(0.1)
+        print("Dummy task 1 - done!")
+    end, 20)
+
+    SoldierDropBallLevel.loadScreen:addTask(function()
+        print("Dummy task 2 - waiting...")
+        love.timer.sleep(0.15)
+        print("Dummy task 2 - done!")
+    end, 25)
+
+    SoldierDropBallLevel.loadScreen:addTask(function()
+        print("Dummy task 3 - waiting...")
+        love.timer.sleep(0.2)
+        print("Dummy task 3 - done!")
+    end, 30)
+
+    SoldierDropBallLevel.loadScreen:addTask(function()
+        print("Dummy task 4 - loading actual level...")
+        love.timer.sleep(0.2)
+        print("Dummy task 4 - done!")
+    end, 25)
+
+    SoldierDropBallLevel.loadScreen:start()
+
     SoldierDropBallLevel.worldGravity = 250
     
     SoldierDropBallLevel.cameraX = 120

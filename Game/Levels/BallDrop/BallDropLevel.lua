@@ -28,7 +28,7 @@ function BallDropLevel:load()
 
     BallDropLevel.loadScreen:addTask(function()
         print("Dummy task 3 - waiting...")
-        love.timer.sleep(55.2)
+        love.timer.sleep(0.2)
         print("Dummy task 3 - done!")
     end, 30)
 
