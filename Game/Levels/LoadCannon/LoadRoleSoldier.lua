@@ -5,6 +5,8 @@ local anim8 = require "Game/Libraries/anim8"
 
 local InputManager = require "Game.Input.InputManager"
 
+local DEBUG = true
+
 local SoldierStateEnum = {
     Idle = 0,
     CarryCharge = 1,
@@ -110,7 +112,9 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LiftingBall) then
         LoadRoleSoldier.loadingCannonAnimation:update(dt * - InputManager:getCrankValue() * 60)
         if (LoadRoleSoldier.loadingCannonAnimation.position >= 38) then
-            print("Finished loading cannon ball")
+            if DEBUG then
+                print("Finished loading cannon ball")
+            end
         end
     end
 
@@ -146,18 +150,20 @@ function LoadRoleSoldier:update(dt)
             print("Ball is in straw, picking ball")
             LoadRoleSoldier.state = SoldierStateEnum.PickingBall
             LoadRoleSoldier.pickingBallAnimation:gotoFrame(1)
+            LoadRoleSoldier.setCannonBallVisibleFunction(false)
         end
     elseif (LoadRoleSoldier.state == SoldierStateEnum.PickingBall and LoadRoleSoldier.crankValue > -15.75) then
         LoadRoleSoldier.crankValue = -15.75
         LoadRoleSoldier.state = SoldierStateEnum.WalkLeft
         LoadRoleSoldier.walkingAnimation:gotoFrame(10)
-    elseif (LoadRoleSoldier.state == SoldierStateEnum.PickingBall and LoadRoleSoldier.crankValue < -18.5) then
-        LoadRoleSoldier.crankValue = -18.5
+        LoadRoleSoldier.setCannonBallVisibleFunction(true)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.PickingBall and LoadRoleSoldier.crankValue < -18.35) then
+        LoadRoleSoldier.crankValue = -18.35
         LoadRoleSoldier.positionX = -43
         LoadRoleSoldier.state = SoldierStateEnum.WalkRight
         LoadRoleSoldier.walkingAnimation:gotoFrame(1)
-    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkRight and LoadRoleSoldier.crankValue > -18.5) then
-        LoadRoleSoldier.crankValue = -18.5
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkRight and LoadRoleSoldier.crankValue > -18.35) then
+        LoadRoleSoldier.crankValue = -18.35
         LoadRoleSoldier.positionX = -43
         LoadRoleSoldier.state = SoldierStateEnum.PickingBall
         LoadRoleSoldier.pickingBallAnimation:gotoFrame(14)
@@ -168,7 +174,21 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.loadingCannonAnimation:gotoFrame(1)
     end
 
-    print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
+    if DEBUG then
+        print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
+    end
+
+    if (LoadRoleSoldier.state == SoldierStateEnum.PickingBall and LoadRoleSoldier.pickingBallAnimation.position >= #LoadRoleSoldier.pickingBallAnimation.frames) then
+        if DEBUG then
+            print("Finished lifting cannon ball")
+        end
+    end
+
+    if (LoadRoleSoldier.state == SoldierStateEnum.LiftingBall and LoadRoleSoldier.loadingCannonAnimation.position >= 38) then
+        return true
+    else 
+        return false
+    end
 end
 
 function LoadRoleSoldier:draw()

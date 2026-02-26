@@ -3,6 +3,7 @@ local LoadCannonLevel = setmetatable({}, {__index = Level})
 LoadCannonLevel.__index = LoadCannonLevel
 
 local bf = require("Game/Libraries/breezefield-master")
+local DEBUG = false
 
 function LoadCannonLevel:load()
     LoadCannonLevel.worldGravity = 250
@@ -22,7 +23,12 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
-    LoadCannonLevel.soldier:load(LoadCannonLevel.spawnCannonBall, LoadCannonLevel.isCannonBallInStraw)
+    -- Pass plain callback functions; methods don't rely on self
+    LoadCannonLevel.soldier:load(
+        function() LoadCannonLevel.spawnCannonBall() end,
+        function() return LoadCannonLevel.isCannonBallInStraw() end,
+        function(visible) LoadCannonLevel.setCannonBallVisible(visible) end
+    )
 
     LoadCannonLevel.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
     LoadCannonLevel.strawDampingImage:setFilter("nearest", "nearest")
@@ -34,6 +40,9 @@ function LoadCannonLevel:load()
 
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
+
+    LoadCannonLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
+    LoadCannonLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
 
 end
 
@@ -57,23 +66,30 @@ function LoadCannonLevel:isCannonBallInStraw()
     local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
     local _, ballSpeedY = LoadCannonLevel.cannonBallCollider:getLinearVelocity()
     local result =  ballY > 144 and ballY < 145 and ballSpeedY >= 0 and ballSpeedY < 1
-    print("Ball is in straw: " .. tostring(result) .. ", Ball Y: " .. ballY .. ", Ball Speed Y: " .. ballSpeedY)
+    if DEBUG then
+        print("Ball is in straw: " .. tostring(result) .. ", Ball Y: " .. ballY .. ", Ball Speed Y: " .. ballSpeedY)
+    end
     return result
 end
 
-function LoadCannonLevel:setCannonBallVisible(visible)
+function LoadCannonLevel.setCannonBallVisible(visible)
     LoadCannonLevel.cannonBallVisible = visible
+    print("Setting cannon ball visible: " .. tostring(visible))
 end
 
 function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
-    LoadCannonLevel.soldier:update(dt)
+    local res = LoadCannonLevel.soldier:update(dt)
     LoadCannonLevel.world:update(dt)
-    if LoadCannonLevel.isBallSpawned then
+    if LoadCannonLevel.isBallSpawned and DEBUG then
         local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
         print("Ball Y position: " .. ballY)
     end
-    return LevelEnum.Nothing
+    if not res then
+        return LevelEnum.Nothing
+    else
+        return LevelEnum.StartMenu
+    end
 end
 
 function LoadCannonLevel:draw(windowWidth, windowHeight)
@@ -86,13 +102,14 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
         
         love.graphics.draw(self.roomSprite, 0, 0)
         LoadCannonLevel.soldier:draw()
-        if (self.isBallSpawned) then
+        if self.isBallSpawned and LoadCannonLevel.cannonBallVisible then
             local ballX, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
             love.graphics.draw(LoadCannonLevel.cannonBallImage, ballX, ballY, 0, 1, 1, LoadCannonLevel.cannonBallImage:getWidth() / 2, LoadCannonLevel.cannonBallImage:getHeight() / 2)
         end
         if LoadCannonLevel.cannonBallVisible then
-            love.graphics.draw(self.cannonSprite, 0, 0)
+            love.graphics.draw(self.backCannonBallsSprite, 0, 0)
         end
+        love.graphics.draw(self.cannonSprite, 0, 0)
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 2, -1)
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 0, 0)
         
