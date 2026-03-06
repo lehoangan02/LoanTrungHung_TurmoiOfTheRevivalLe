@@ -17,11 +17,13 @@ local SoldierStateEnum = {
     LiftingBall = 6
 }
 
-function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction)
+function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction,
+    bulletCollider)
 
     LoadRoleSoldier.spawnBallFunction = spawnBallFunction
     LoadRoleSoldier.isCannonBallInStrawFunction = isCannonBallInStrawFunction
     LoadRoleSoldier.setCannonBallVisibleFunction = setCannonBallVisibleFunction
+    LoadRoleSoldier.bulletCollider = bulletCollider
 
     LoadRoleSoldier.state = SoldierStateEnum.Idle
 
@@ -70,6 +72,8 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
     local loadingCannonGrid = anim8.newGrid(LoadRoleSoldier.loadingCannonSpriteSheet:getWidth() / 38, 112, LoadRoleSoldier.loadingCannonSpriteSheet:getWidth(), LoadRoleSoldier.loadingCannonSpriteSheet:getHeight())
     LoadRoleSoldier.loadingCannonAnimation = anim8.newAnimation(loadingCannonGrid("1-38", 1), 0.1)
 
+    LoadRoleSoldier.startedWarningForBullet = false
+    LoadRoleSoldier.warningImage = love.graphics.newImage("Resources/Images/Warning.png")
 end
 
 function LoadRoleSoldier:update(dt)
@@ -173,6 +177,11 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.state = SoldierStateEnum.LiftingBall
         LoadRoleSoldier.loadingCannonAnimation:gotoFrame(1)
     end
+
+    if (LoadRoleSoldier.crankValue < -5.5 and LoadRoleSoldier.startedWarningForBullet == false) then
+        LoadRoleSoldier.startedWarningForBullet = true
+    end
+
 
     if DEBUG then
         print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)

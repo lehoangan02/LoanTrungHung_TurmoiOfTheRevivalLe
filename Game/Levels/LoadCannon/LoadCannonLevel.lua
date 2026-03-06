@@ -22,12 +22,18 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite = love.graphics.newImage("Resources/Images/LowerCannon.png")
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
+    LoadCannonLevel.bulletCollider = LoadCannonLevel.world:newCollider("Rectangle", {60, 60, 10, 4})
+    LoadCannonLevel.bulletCollider:setType("kinematic")
+    LoadCannonLevel.initialBulletPosition = {x = 60, y = 60}
+    LoadCannonLevel.bulletCollider:setPosition(LoadCannonLevel.initialBulletPosition.x, LoadCannonLevel.initialBulletPosition.y)
+
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
     -- Pass plain callback functions; methods don't rely on self
     LoadCannonLevel.soldier:load(
         function() LoadCannonLevel.spawnCannonBall() end,
         function() return LoadCannonLevel.isCannonBallInStraw() end,
-        function(visible) LoadCannonLevel.setCannonBallVisible(visible) end
+        function(visible) LoadCannonLevel.setCannonBallVisible(visible) end,
+        LoadCannonLevel.bulletCollider
     )
 
     LoadCannonLevel.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
