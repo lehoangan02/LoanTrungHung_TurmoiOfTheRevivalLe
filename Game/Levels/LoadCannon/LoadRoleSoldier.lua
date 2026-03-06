@@ -74,6 +74,13 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
 
     LoadRoleSoldier.startedWarningForBullet = false
     LoadRoleSoldier.warningImage = love.graphics.newImage("Resources/Images/Warning.png")
+    LoadRoleSoldier.warningImage:setFilter("nearest", "nearest")
+    
+    LoadRoleSoldier.warningTimer = 0
+    LoadRoleSoldier.warningDuration = 1
+
+    LoadRoleSoldier.blinkingTimer = 0
+    LoadRoleSoldier.warningVisible = true
 end
 
 function LoadRoleSoldier:update(dt)
@@ -180,8 +187,33 @@ function LoadRoleSoldier:update(dt)
 
     if (LoadRoleSoldier.crankValue < -5.5 and LoadRoleSoldier.startedWarningForBullet == false) then
         LoadRoleSoldier.startedWarningForBullet = true
+        LoadRoleSoldier.warningTimer = LoadRoleSoldier.warningDuration
     end
+    if LoadRoleSoldier.warningTimer > 0 then
+        LoadRoleSoldier.warningTimer = LoadRoleSoldier.warningTimer - dt
+        
+        local progress = 1 - (LoadRoleSoldier.warningTimer / LoadRoleSoldier.warningDuration)
 
+        local blinkInterval
+
+        if progress < 0.25 then
+            blinkInterval = 0.3
+        elseif progress < 0.5 then
+            blinkInterval = 0.2
+        elseif progress < 0.75 then
+            blinkInterval = 0.12
+        else
+            blinkInterval = 0.06
+        end
+
+        LoadRoleSoldier.blinkingTimer = LoadRoleSoldier.blinkingTimer + dt
+
+        if LoadRoleSoldier.blinkingTimer >= blinkInterval then
+            LoadRoleSoldier.blinkingTimer = 0
+            LoadRoleSoldier.warningVisible = not LoadRoleSoldier.warningVisible
+        end
+
+    end
 
     if DEBUG then
         print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
@@ -216,6 +248,8 @@ function LoadRoleSoldier:draw()
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LiftingBall) then
         LoadRoleSoldier.loadingCannonAnimation:draw(LoadRoleSoldier.loadingCannonSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, -61, -64)
     end
-    
+    if LoadRoleSoldier.warningTimer > 0 and LoadRoleSoldier.warningVisible then
+        love.graphics.draw(LoadRoleSoldier.warningImage, 0, 0)
+    end
 end
 return LoadRoleSoldier
