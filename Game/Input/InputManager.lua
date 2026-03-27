@@ -26,15 +26,15 @@ local triggerMultiplier = 1.3
 local currentCrankValue = 0
 
 
-function InputManager:load(pauseCallback, resumeCallback)
+function InputManager:load(pauseCallback)
     InputManager.pauseCallback = pauseCallback
-    InputManager.resumeCallback = resumeCallback
 end
 
 function InputManager:update(dt)
     InputManager:HandleEvents()
     InputManager:HandlePeripherals()
     InputManager:CaluclateCrankValue(dt)
+    InputManager:HandlePause()
 end
 
 function InputManager:isEventFKeyPressed()
@@ -158,6 +158,13 @@ end
 function InputManager:HandlePeripherals()
     KY040:update()
     controller:update()
+end
+
+function InputManager:HandlePause()
+    if InputManager:isEventPauseKeyPressed() then
+        print("Pause key pressed. Toggling pause state.")
+        InputManager.pauseCallback()
+    end
 end
 
 function InputManager:CaluclateCrankValue(dt)

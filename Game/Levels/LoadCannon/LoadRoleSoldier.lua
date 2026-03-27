@@ -5,7 +5,7 @@ local anim8 = require "Game/Libraries/anim8"
 
 local InputManager = require "Game.Input.InputManager"
 
-local DEBUG = true
+local DEBUG = false
 
 local SoldierStateEnum = {
     Idle = 0,

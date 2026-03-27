@@ -8,25 +8,23 @@ GameManager.__index = GameManager
 
 function GameManager.new()
     local self = setmetatable({}, GameManager)
+    self.isPaused = false
     return self
 end
 
 function GameManager:pause()
-    GameManager.isPaused = true
-end
-function GameManager:resume()
-    GameManager.isPaused = false
+    GameManager.isPaused = not GameManager.isPaused
 end
 
 function GameManager:start()
-    inputManager:load(GameManager.pause, GameManager.resume)
+    inputManager:load(GameManager.pause)
     GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SolderLoadCannon)
 end
 function GameManager:update(dt)
+    inputManager:update(dt)
     if GameManager.isPaused then
         return
     end
-    inputManager:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     local nextLevel = GameManager.currentLevel:update(dt)
     if (nextLevel ~= LevelEnum.Nothing) then
