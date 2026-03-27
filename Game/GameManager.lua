@@ -11,8 +11,15 @@ function GameManager.new()
     return self
 end
 
+function GameManager:pause()
+    GameManager.isPaused = true
+end
+function GameManager:resume()
+    GameManager.isPaused = false
+end
+
 function GameManager:start()
-    inputManager:load()
+    inputManager:load(GameManager.pause, GameManager.resume)
     GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SolderLoadCannon)
 end
 function GameManager:update(dt)
@@ -26,12 +33,6 @@ function GameManager:update(dt)
         GameManager.currentLevel:unload()
         GameManager.currentLevel = levelLoader:loadLevel(nextLevel)
     end
-end
-function GameManager:pause()
-    GameManager.isPaused = true
-end
-function GameManager:resume()
-    GameManager.isPaused = false
 end
 function GameManager:quit()
 end

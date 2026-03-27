@@ -26,8 +26,9 @@ local triggerMultiplier = 1.3
 local currentCrankValue = 0
 
 
-function InputManager:load()
-    
+function InputManager:load(pauseCallback, resumeCallback)
+    InputManager.pauseCallback = pauseCallback
+    InputManager.resumeCallback = resumeCallback
 end
 
 function InputManager:update(dt)
