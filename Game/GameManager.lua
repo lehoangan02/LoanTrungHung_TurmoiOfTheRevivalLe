@@ -16,6 +16,9 @@ function GameManager:start()
     GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SolderLoadCannon)
 end
 function GameManager:update(dt)
+    if GameManager.isPaused then
+        return
+    end
     inputManager:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     local nextLevel = GameManager.currentLevel:update(dt)
@@ -25,8 +28,10 @@ function GameManager:update(dt)
     end
 end
 function GameManager:pause()
+    GameManager.isPaused = true
 end
 function GameManager:resume()
+    GameManager.isPaused = false
 end
 function GameManager:quit()
 end
