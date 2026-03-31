@@ -7,6 +7,7 @@ local DEBUG = false
 
 local StatefulObject = require("Game.Components.StatefulObject")
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function BlastFortLevel:load()
 
@@ -65,6 +66,9 @@ function BlastFortLevel:load()
 end
 
 function BlastFortLevel:update(dt)
+    if not BlastFortLevel.loadScreen:isDone() then
+        BlastFortLevel.loadScreen:update(dt)
+    end
     return LevelEnum.Nothing
 end
 
@@ -73,12 +77,14 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
         BlastFortLevel.loadScreen:draw()
     end
 
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    love.graphics.push()
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
-    love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
 
     BlastFortLevel.fortStatefulObject:draw(0, 0)
     BlastFortLevel.world:draw()
+    love.graphics.pop()
 end
 
 function BlastFortLevel:unload()
