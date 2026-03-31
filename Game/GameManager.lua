@@ -18,7 +18,7 @@ end
 
 function GameManager:start()
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SolderLoadCannon)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.TowerBlastFort)
 end
 function GameManager:update(dt)
     inputManager:update(dt)

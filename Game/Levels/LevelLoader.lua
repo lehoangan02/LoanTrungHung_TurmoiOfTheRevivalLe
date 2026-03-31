@@ -28,6 +28,10 @@ function LevelLoader:loadLevel(level)
         local LoadCannonLevel = require("Game.Levels.LoadCannon.LoadCannonLevel")
         LoadCannonLevel:load()
         currentLevel = LoadCannonLevel
+    elseif (level == LevelEnum.TowerBlastFort) then
+        local TowerBlastFortLevel = require("Game.Levels.BlastFort.BlastFortLevel")
+        TowerBlastFortLevel:load()
+        currentLevel = TowerBlastFortLevel
     else
         error("Unknown level: " .. tostring(level))
     end
