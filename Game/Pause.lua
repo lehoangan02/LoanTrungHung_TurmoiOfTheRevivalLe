@@ -33,9 +33,9 @@ function Pause:draw()
     love.graphics.rectangle("fill", 0, 0, self.windowWidth, self.windowHeight)
     -- Panel
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.rectangle("fill", panelX, panelY, panelWidth, panelHeight, 10, 10)
+    love.graphics.rectangle("fill", self.panelX, self.panelY, self.panelWidth, self.panelHeight, 10, 10)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.printf("Paused", panelX, panelY + 20, panelWidth, "center")
+    love.graphics.printf("Paused", self.panelX, self.panelY + 20, self.panelWidth, "center")
     -- Options
     for i, option in ipairs(self.options) do
         if i == self.selected then
@@ -43,7 +43,7 @@ function Pause:draw()
         else
             love.graphics.setColor(1, 1, 1, 1)
         end
-        love.graphics.printf(option, panelX, panelY + 60 + (i-1)*40, panelWidth, "center")
+        love.graphics.printf(option, self.panelX, self.panelY + 60 + (i-1)*40, self.panelWidth, "center")
     end
 
     love.graphics.setColor(1, 1, 1, 1)
@@ -52,8 +52,8 @@ end
 
 function Pause:toggle()
     self.isPaused = not self.isPaused
-    if (self.isPaused) then Pause:movePanelDown()
-    else Pause:movePanelUp() end
+    if (self.isPaused) then self:movePanelDown()
+    else self:movePanelUp() end
 end
 
 local function easeOutCubic(t)
