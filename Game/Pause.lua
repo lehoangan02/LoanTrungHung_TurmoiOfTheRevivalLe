@@ -1,4 +1,5 @@
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local DrawText = require("Game.Custom.DrawText")
 
 local OVERLAY_ALPHA = 0.5
 local Pause = {}
@@ -38,19 +39,21 @@ function Pause:draw(windowWidth, windowHeight)
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.rectangle("fill", self.panelX, self.panelY, self.panelWidth, self.panelHeight, 10, 10)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.printf("Paused", self.panelX, self.panelY + 20, self.panelWidth, "center")
-    -- Options
-    for i, option in ipairs(self.options) do
-        if i == self.selected then
-            love.graphics.setColor(1, 1, 0, 1)
-        else
-            love.graphics.setColor(1, 1, 1, 1)
-        end
-        love.graphics.printf(option, self.panelX, self.panelY + 60 + (i-1)*40, self.panelWidth, "center")
-    end
-
-    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()
+
+    local centerX = self.panelX + self.panelWidth / 2
+    DrawText.print("Paused", centerX, self.panelY + 20, scale, offsetX, offsetY, {
+        fontSize = 20, align = "center",
+        color = {r = 1, g = 1, b = 1, a = 1},
+    })
+
+    for i, option in ipairs(self.options) do
+        local color = (i == self.selected) and {r = 1, g = 1, b = 0, a = 1} or {r = 1, g = 1, b = 1, a = 1}
+        DrawText.print(option, centerX, self.panelY + 60 + (i - 1) * 40, scale, offsetX, offsetY, {
+            fontSize = 16, align = "center",
+            color = color,
+        })
+    end
 end
 
 function Pause:toggle()
