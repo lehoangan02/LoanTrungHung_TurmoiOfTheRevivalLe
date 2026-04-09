@@ -1,5 +1,6 @@
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 local DrawText = require("Game.Custom.DrawText")
+local InputManager = require("Game.Input.InputManager")
 
 local OVERLAY_ALPHA = 0.5
 local Pause = {}
@@ -83,6 +84,14 @@ function Pause:movePanelUp()
 end
 
 function Pause:update(dt)
+    if self.isPaused then
+        if InputManager:isEventUpKeyPressed() then
+            self.selected = ((self.selected - 2) % #self.options) + 1
+        elseif InputManager:isEventDownKeyPressed() then
+            self.selected = (self.selected % #self.options) + 1
+        end
+    end
+
     if self.animating then
         self.animationTime = self.animationTime + dt
         local t = math.min(self.animationTime / self.animationCurrentDuration, 1)
