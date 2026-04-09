@@ -1,7 +1,7 @@
 local StatefulObject = {}
 StatefulObject.__index = StatefulObject
 
-function StatefulObject:new(initialState)
+function StatefulObject:new()
     local obj = setmetatable({}, self)
     obj.states = {}
     obj.current_state_index = nil
