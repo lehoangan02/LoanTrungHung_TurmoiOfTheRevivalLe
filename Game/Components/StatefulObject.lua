@@ -15,6 +15,15 @@ function StatefulObject:addSprite(image)
     })
 end
 
+function StatefulObject:setPosition(x, y, index) 
+    if index < 1 or index > #self.states then
+        error("Invalid state index: " .. tostring(index))
+    end
+    local state = self.states[index]
+    state.x = x
+    state.y = y
+end
+
 function StatefulObject:addAnimation(animation, spritesheet)
     table.insert(self.states, {
         type = "animation",
@@ -52,6 +61,13 @@ function StatefulObject:draw(x, y)
     else
         error("Unknown state type: " .. tostring(currentState.type))
     end
+end
+
+function StatefulObject:draw()
+    local currentState = self.states[self.current_state_index]
+    local x = currentState.x or 0
+    local y = currentState.y or 0
+    self:draw(x, y)
 end
 
 function StatefulObject:getCurrentAnimation()
