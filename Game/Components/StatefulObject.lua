@@ -8,13 +8,6 @@ function StatefulObject:new()
     return obj
 end
 
-function StatefulObject:addSprite(image)
-    table.insert(self.states, {
-        type = "sprite",
-        image = image
-    })
-end
-
 function StatefulObject:setPosition(x, y, index) 
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
@@ -22,6 +15,19 @@ function StatefulObject:setPosition(x, y, index)
     local state = self.states[index]
     state.x = x
     state.y = y
+end
+
+function StatefulObject:checkInterpolation()
+end
+
+function StatefulObject:setInterpolation(interpolationStyle, direction, index)
+end
+
+function StatefulObject:addSprite(image)
+    table.insert(self.states, {
+        type = "sprite",
+        image = image
+    })
 end
 
 function StatefulObject:addAnimation(animation, spritesheet)
