@@ -1,3 +1,6 @@
+local StatefulObjectEnum = require("Game.Components.StatefulObjectEnum")
+local Algorithm = require("Game.Custom.Algorithm")
+
 local StatefulObject = {}
 StatefulObject.__index = StatefulObject
 
@@ -17,10 +20,29 @@ function StatefulObject:setPosition(x, y, index)
     state.y = y
 end
 
-function StatefulObject:checkInterpolation()
+-- INCOMPLETE
+function StatefulObject:_fillMissingInterpolationData()
+    for _, state in ipairs(self.states) do
+        if not state.interpolation then
+            
+        end
+    end
 end
 
+-- INCOMPLETE
+function StatefulObject:_checkInterpolation()
+    for _, state in ipairs(self.states) do
+        if state.interpolation then
+            return true
+        end
+    end
+end
+
+-- INCOMPLETE
 function StatefulObject:setInterpolation(interpolationStyle, direction, index)
+    if index < 1 or index > #self.states then
+        error("Invalid state index: " .. tostring(index))
+    end
 end
 
 function StatefulObject:addSprite(image)

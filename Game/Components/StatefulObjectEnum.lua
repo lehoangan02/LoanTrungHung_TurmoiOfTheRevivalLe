@@ -11,3 +11,8 @@ local StatefulObjectInterpolationDirection = {
     Out = 1,
     InOut = 2,
 }
+
+return {
+    StatefulObjectInterpolationTypeEnum,
+    StatefulObjectInterpolationDirection
+}
