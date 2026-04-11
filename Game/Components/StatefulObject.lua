@@ -30,10 +30,28 @@ function StatefulObject:_fillMissingInterpolationData()
 end
 
 -- INCOMPLETE
-function StatefulObject:_checkInterpolation()
+function StatefulObject:_isInterpolationValid()
     for _, state in ipairs(self.states) do
         if state.interpolation then
-            return true
+            for i, state in ipairs(self.states) do
+                if i > 1 and i < #self.states then
+                    if not state.interpolationInfo.inDirection then
+                        error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
+                    end
+
+                    if not state.interpolationInfo.outDirection then
+                        error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
+                    end
+                elseif i == 1 then
+                    if not state.interpolationInfo.outDirection then
+                        error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
+                    end
+                elseif i == #self.states then
+                    if not state.interpolationInfo.inDirection then
+                        error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
+                    end
+                end
+            end
         end
     end
 end
