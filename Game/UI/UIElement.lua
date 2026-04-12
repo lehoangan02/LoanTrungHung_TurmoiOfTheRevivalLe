@@ -11,15 +11,15 @@ function UIElement:new(x, y, width, height)
 end
 
 function UIElement:update(dt)
-    error("UIElement:update() not implemented")
+    error("Abstract function must be implemented!")
 end
 
 function UIElement:setPosition(x, y)
-    error("UIElement:setPosition() not implemented")
+    error("Abstract function must be implemented!")
 end
 
-function UIElement:draw(scale)
-    error("UIElement:draw() not implemented")
+function UIElement:draw(scale, offsetX, offsetY)
+    error("Abstract function must be implemented!")
 end
 
 return UIElement

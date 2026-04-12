@@ -3,7 +3,7 @@ local MenuLevel = setmetatable({}, {__index = Level})
 MenuLevel.__index = MenuLevel
 
 local Color = require("Game.UI.Color")
-local HoldTextButton = require("Game.UI.HoldTextButton")
+local HoldTextButton = require("Game.UI.Button.HoldTextButton")
 local UIGridLayout = require("Game.UI.UIGridLayout")
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 

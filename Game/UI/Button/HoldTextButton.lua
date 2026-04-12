@@ -1,5 +1,5 @@
-local UIElement = require("Game.UI.UIElement")
-local HoldTextButton = setmetatable({}, UIElement)
+local TextButton = require("Game.UI.Button.TextButton")
+local HoldTextButton = setmetatable({}, TextButton)
 HoldTextButton.__index = HoldTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
@@ -9,10 +9,7 @@ local InputManager = require("Game.Input.InputManager")
 
 function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     local self = setmetatable({}, HoldTextButton)
-    self.x = x or 0
-    self.y = y or 0
-    self.width = width
-    self.height = height
+    self.new(x, y, width, height)
     self.onComplete = onComplete
     self.progress = 0
     self.color = color or {r = 1, g = 1, b = 1, a = 1}
@@ -21,17 +18,6 @@ function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     self.text = text or ""
     self.infocus = false
     return self
-end
-
-function HoldTextButton:setPosition(x, y)
-    self.x = x
-    self.y = y
-    self.centerX = x + self.width / 2
-    self.centerY = y + self.height / 2
-end
-
-function HoldTextButton:setFocus(isFocused)
-    self.infocus = isFocused
 end
 
 function HoldTextButton:update(dt)

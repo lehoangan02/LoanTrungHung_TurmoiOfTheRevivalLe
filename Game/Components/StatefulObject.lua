@@ -109,7 +109,7 @@ function StatefulObject:draw(x, y)
     end
 end
 
-function StatefulObject:draw()
+function StatefulObject:drawAutonomously()
     local currentState = self.states[self.current_state_index]
     local x = currentState.x or 0
     local y = currentState.y or 0
