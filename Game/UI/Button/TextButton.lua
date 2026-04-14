@@ -1,31 +1,31 @@
 local UIElement = require("Game.UI.UIElement")
 
-local TextuButton = setmetatable({}, UIElement)
-TextuButton.__index = TextuButton
+local TextButton = setmetatable({}, UIElement)
+TextButton.__index = TextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
 
 local InputManager = require("Game.Input.InputManager")
 
-function TextuButton:new(x, y, width, height, onComplete, color, text)
+function TextButton:new(x, y, width, height, onComplete, color, text)
     self.new(x, y, width, height)
 end
 
-function TextuButton:setPosition(x, y)
+function TextButton:setPosition(x, y)
     self.x = x
     self.y = y
     self.centerX = x + self.width / 2
     self.centerY = y + self.height / 2
 end
 
-function TextuButton:update(dt)
+function TextButton:update(dt)
     error("Abstract function must be implemented")
 end
 
-function TextuButton:draw(scale, offsetX, offsetY)
+function TextButton:draw(scale, offsetX, offsetY)
     error("Abstract function must be implemented")
 end
-function TextuButton:setFocus(isFocused)
+function TextButton:setFocus(isFocused)
     self.infocus = isFocused
 end
