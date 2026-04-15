@@ -2,12 +2,12 @@ local ResizeWindowTransform = {}
 
 function ResizeWindowTransform.getTransform(windowWidth, windowHeight, baseWidth, baseHeight)
     local fontScale = math.max(1, math.floor(
-    math.min(windowHeight / BASE_H, windowWidth / BASE_W)))
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    math.min(windowHeight / baseHeight, windowWidth / baseWidth)))
+    local scale = math.min(windowHeight / (baseHeight or 240), windowWidth / (baseWidth or 240))
     local centerX = windowWidth / 2
     local centerY = windowHeight / 2
-    local gameWidth = BASE_W * scale
-    local gameHeight = BASE_H * scale
+    local gameWidth = baseWidth * scale
+    local gameHeight = baseHeight * scale
     local offsetX = centerX - gameWidth / 2
     local offsetY = centerY - gameHeight / 2
     local offsetXCameraMode = (windowWidth / 2) * (1-scale)

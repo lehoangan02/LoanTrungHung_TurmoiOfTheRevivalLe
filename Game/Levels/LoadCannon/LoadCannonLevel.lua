@@ -2,6 +2,8 @@ local Level = require("Game.Levels.Level")
 local LoadCannonLevel = setmetatable({}, {__index = Level})
 LoadCannonLevel.__index = LoadCannonLevel
 
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+
 local bf = require("Game/Libraries/breezefield-master")
 local DEBUG = false
 
@@ -100,9 +102,12 @@ end
 
 function LoadCannonLevel:draw(windowWidth, windowHeight)
 
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    -- local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    -- love.graphics.scale(scale, scale)
+    -- love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
-    love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
 
     LoadCannonLevel.cam:attach()
         
