@@ -3,6 +3,7 @@ local SoldierDropBallLevel = setmetatable({}, {__index = Level})
 SoldierDropBallLevel.__index = SoldierDropBallLevel
 
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function SoldierDropBallLevel:shake(duration, magnitude)
     self.shakeDuration = duration
@@ -83,9 +84,9 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
         return
     end
 
-    local scale = math.min(windowHeight / (BASE_H or 240), windowWidth / (BASE_W or 240))
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
-    love.graphics.translate((windowWidth / 2) * (1-scale) / scale, (windowHeight / 2) * (1-scale) / scale)
 
     SoldierDropBallLevel.cam:attach()
         love.graphics.draw(self.roomSprite, 0, 0)
