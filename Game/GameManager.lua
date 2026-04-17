@@ -20,7 +20,7 @@ function GameManager:start()
     local w, h = love.graphics.getDimensions()
     GameManager.pauseScreen = Pause.new(w, h)
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SoldierDropBall)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.PlayGround)
 end
 function GameManager:update(dt)
     inputManager:update(dt)

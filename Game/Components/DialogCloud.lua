@@ -160,7 +160,7 @@ function DialogCloud:update(dt)
 
 end
 
-function DialogCloud:draw(scale, offsetX, offsetY)
+function DialogCloud:draw(scale, fontScale, offsetX, offsetY)
     if self.ended then return end
     local alpha = self.opacity or 1
     local prevR, prevG, prevB, prevA = love.graphics.getColor()
@@ -227,7 +227,8 @@ function DialogCloud:draw(scale, offsetX, offsetY)
     if ( self:isCloudFullyShown()) then
         love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
         local previousFont = love.graphics.getFont()
-        local textScale = math.floor(scale)
+        print("Font scale: " .. tostring(fontScale))
+        local textScale = fontScale
         self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
         love.graphics.setFont(self.font)
         local lineHeight = self.font:getHeight()

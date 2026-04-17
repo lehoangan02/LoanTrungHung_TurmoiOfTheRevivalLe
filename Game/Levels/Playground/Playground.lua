@@ -2,6 +2,8 @@ local Level = require("Game.Levels.Level")
 local PlayGround = setmetatable({}, {__index = Level})
 PlayGround.__index = PlayGround
 
+local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+
 function PlayGround:load()
     local DialogCloud = require("Game.Components.DialogCloud")
     self.dialog = DialogCloud.new(
@@ -25,10 +27,10 @@ end
 
 function PlayGround:draw(windowWidth, windowHeight)
     love.graphics.clear(0.2, 0.2, 0.2)
-    local scale = math.min(windowWidth / BASE_W, windowHeight / BASE_H)
+    local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.push()
     love.graphics.scale(scale, scale)
-    self.dialog:draw(scale, windowWidth, windowHeight)
+    self.dialog:draw(scale, fontScale, windowWidth, windowHeight)
     love.graphics.pop()
     
 end

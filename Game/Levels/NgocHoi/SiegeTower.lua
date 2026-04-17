@@ -252,9 +252,7 @@ function SiegeTower:handleGuy2Speak(dt)
     end
 end
 
-function SiegeTower:draw(scale, windowWidth, windowHeight)
-
-
+function SiegeTower:draw(scale, fontScale, windowWidth, windowHeight)
 
     local wheelWidth = self.wheel:getWidth()
     local wheelHeight = self.wheel:getHeight()
@@ -277,8 +275,8 @@ function SiegeTower:draw(scale, windowWidth, windowHeight)
     love.graphics.draw(self.straw, 100, self.siege_tower_positionY - 2)
     self.straw_statefulObject:draw(140, self.siege_tower_positionY - 2)
 
-    self.guy1DialogCloud:draw(scale, windowWidth, windowHeight)
-    self.guy2DialogCloud:draw(scale, windowWidth, windowHeight)
+    self.guy1DialogCloud:draw(scale, fontScale, windowWidth, windowHeight)
+    self.guy2DialogCloud:draw(scale, fontScale, windowWidth, windowHeight)
 
     -- self.world:draw()
 end

@@ -1,9 +1,8 @@
 local ResizeWindowTransform = {}
 
 function ResizeWindowTransform.getTransform(windowWidth, windowHeight, baseWidth, baseHeight)
-    local fontScale = math.max(1, math.floor(
-    math.min(windowHeight / baseHeight, windowWidth / baseWidth)))
     local scale = math.min(windowHeight / (baseHeight or 240), windowWidth / (baseWidth or 240))
+    local fontScale = math.max(1, math.floor(scale))
     local centerX = windowWidth / 2
     local centerY = windowHeight / 2
     local gameWidth = baseWidth * scale
