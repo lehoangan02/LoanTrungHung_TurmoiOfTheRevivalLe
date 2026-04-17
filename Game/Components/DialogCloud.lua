@@ -34,9 +34,8 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.opacity = 1
     instance.isFadingOut = false
 
-    instance.fontSize = 5
-    instance.font = FontLoader:loadFont("Geo", instance.fontSize)
-    instance:processText()
+    instance.fontSize = 8
+    instance.font = nil
 
     instance.sproutSpritesheet = love.graphics.newImage("Resources/Images/DialogCloudSprout.png")
     instance.sproutSpritesheet:setFilter("nearest", "nearest")
@@ -229,11 +228,13 @@ function DialogCloud:draw(scale, fontScale, offsetX, offsetY)
         local previousFont = love.graphics.getFont()
         print("Font scale: " .. tostring(fontScale))
         local textScale = fontScale
-        self.font = FontLoader:loadFont("Geo", self.fontSize * textScale)
+        print("Text scale " .. self.fontSize * textScale)
+        self.font = FontLoader:loadFont("Geo", self.fontSize * fontScale)
+        self:processText()
         love.graphics.setFont(self.font)
         local lineHeight = self.font:getHeight()
         for i, line in ipairs(self.lines) do
-            love.graphics.print(line, self.textBounds.startX * textScale, self.textBounds.startY * textScale + (i - 1) * lineHeight)
+            love.graphics.print(line, math.floor(self.textBounds.startX * textScale), math.floor(self.textBounds.startY * textScale + (i - 1) * lineHeight))
         end
         love.graphics.setFont(previousFont)
         love.graphics.setColor(1, 1, 1, alpha)

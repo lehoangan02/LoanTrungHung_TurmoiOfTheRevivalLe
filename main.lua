@@ -5,7 +5,7 @@ BASE_H = 240
 
 function love.load()
     love.window.setTitle("Turmoi of The Revival Le")
-    love.window.setMode(BASE_W, BASE_H, { resizable = true })
+    love.window.setMode(BASE_W, BASE_H, { highdpi = true, resizable = true })
     
     GameManager = require("Game.GameManager")
 

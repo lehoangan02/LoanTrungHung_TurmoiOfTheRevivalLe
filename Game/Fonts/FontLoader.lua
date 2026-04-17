@@ -12,7 +12,8 @@ end
 function FontLoader:loadFont(name, fontSize)
     local fontSize = fontSize or 16
     local fontPath = "Resources/Fonts/" .. name .. "/" .. name .. "-Regular.ttf"
-    local font = love.graphics.newFont(fontPath, fontSize)
+    local font = love.graphics.newFont(fontPath, fontSize, "mono")
+    -- font:setFilter("nearest", "nearest")
     return font
 end
 
