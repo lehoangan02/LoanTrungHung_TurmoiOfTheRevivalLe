@@ -38,7 +38,7 @@ function Pause:draw(windowWidth, windowHeight)
     love.graphics.rectangle("fill", 0, 0, BASE_W, BASE_H)
     -- Panel
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.rectangle("fill", self.panelX, self.panelY, self.panelWidth, self.panelHeight, 10, 10)
+    love.graphics.rectangle("fill", self.panelX, self.panelY, self.panelWidth, self.panelHeight, 0, 0)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()
 
