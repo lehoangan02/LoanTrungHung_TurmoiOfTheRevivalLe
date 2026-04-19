@@ -8,16 +8,15 @@ local fontLoader = FontLoader:getInstance()
 local InputManager = require("Game.Input.InputManager")
 
 function HoldTextButton:new(x, y , width, height, onComplete, color, text)
-    local self = setmetatable({}, HoldTextButton)
-    self.new(x, y, width, height)
-    self.onComplete = onComplete
-    self.progress = 0
-    self.color = color or {r = 1, g = 1, b = 1, a = 1}
-    self.centerX = x + width / 2
-    self.centerY = y + height / 2
-    self.text = text or ""
-    self.infocus = false
-    return self
+    local instance = TextButton.new(self, x, y, width, height)
+    instance.onComplete = onComplete
+    instance.progress = 0
+    instance.color = color or {r = 1, g = 1, b = 1, a = 1}
+    instance.centerX = x + width / 2
+    instance.centerY = y + height / 2
+    instance.text = text or ""
+    instance.infocus = false
+    return instance
 end
 
 function HoldTextButton:update(dt)
@@ -50,8 +49,7 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
    
-    local pad = 3
-    local borderRadius = math.min(8, self.progress / 2) + pad
+    local borderRadius = math.min(8, self.progress / 2) + self.pad
 
     if self.infocus then
         love.graphics.setColor(0, 0, 0, 1)
@@ -61,10 +59,10 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.setLineWidth(2)
     love.graphics.rectangle(
         "line",
-        self.x - pad,
-        self.y - pad,
-        self.width + pad * 2,
-        self.height + pad * 2,
+        self.x - self.pad,
+        self.y - self.pad,
+        self.width + self.pad * 2,
+        self.height + self.pad * 2,
         borderRadius
     )
 

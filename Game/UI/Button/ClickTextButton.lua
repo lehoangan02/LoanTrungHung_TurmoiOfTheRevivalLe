@@ -31,4 +31,8 @@ end
 function ClickTextButton:draw(scale, offsetX, offsetY)
     local prevLineWidth = love.graphics.getLineWidth()
     love.graphics.push()
+    love.graphics.translate(offsetX, offsetY)
+    love.graphics.scale(scale, scale)
+
+    
 end

@@ -9,7 +9,9 @@ local fontLoader = FontLoader:getInstance()
 local InputManager = require("Game.Input.InputManager")
 
 function TextButton:new(x, y, width, height, onComplete, color, text)
-    self.new(x, y, width, height)
+    local instance = UIElement.new(self, x, y, width, height)
+    instance.pad = 3
+    return instance
 end
 
 function TextButton:setPosition(x, y)
@@ -29,3 +31,5 @@ end
 function TextButton:setFocus(isFocused)
     self.infocus = isFocused
 end
+
+return TextButton
