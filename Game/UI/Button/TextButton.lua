@@ -11,6 +11,8 @@ local InputManager = require("Game.Input.InputManager")
 function TextButton:new(x, y, width, height, onComplete, color, text)
     local instance = UIElement.new(self, x, y, width, height)
     instance.pad = 3
+    instance.defaultRoundedness = 3
+    instance.maxRoundedness = 8
     return instance
 end
 

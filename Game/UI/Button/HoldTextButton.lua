@@ -49,7 +49,7 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
    
-    local borderRadius = math.min(8, self.progress / 2) + self.pad
+    local borderRadius = math.min(self.maxRoundedness, self.progress) + self.defaultRoundedness
 
     if self.infocus then
         love.graphics.setColor(0, 0, 0, 1)
@@ -63,17 +63,19 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
         self.y - self.pad,
         self.width + self.pad * 2,
         self.height + self.pad * 2,
+        borderRadius,
         borderRadius
     )
 
     love.graphics.setColor(self.color.r, self.color.g, self.color.b, self.color.a)
-    local r = math.min(8, self.progress / 2)
+    local r = math.min(self.maxRoundedness, self.progress)
     love.graphics.rectangle(
         "fill",
         self.x,
         self.y,
         self.progress / 100 * self.width,
         self.height,
+        r,
         r
     )
     love.graphics.pop()
