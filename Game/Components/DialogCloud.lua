@@ -222,12 +222,13 @@ function DialogCloud:draw(scale, fontScale, offsetX, offsetY)
     
     love.graphics.pop()
 
+    love.graphics.push()
     --draw text
     if ( self:isCloudFullyShown()) then
         love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], alpha)
         local previousFont = love.graphics.getFont()
         print("Font scale: " .. tostring(fontScale))
-        local textScale = fontScale
+        local textScale = scale
         print("Text scale " .. self.fontSize * textScale)
         self.font = FontLoader:loadFont("Geo", self.fontSize * fontScale)
         self:processText()
@@ -239,6 +240,7 @@ function DialogCloud:draw(scale, fontScale, offsetX, offsetY)
         love.graphics.setFont(previousFont)
         love.graphics.setColor(1, 1, 1, alpha)
     end
+    love.graphics.pop()
     
     love.graphics.pop()
 

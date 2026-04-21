@@ -26,11 +26,12 @@ function PlayGround:update(dt)
 end
 
 function PlayGround:draw(windowWidth, windowHeight)
-    love.graphics.clear(0.2, 0.2, 0.2)
+    love.graphics.clear(0.8, 0.8, 0.8, 0.5)
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.push()
+    love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
-    self.dialog:draw(scale, fontScale, windowWidth, windowHeight)
+    self.dialog:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.pop()
     
 end
