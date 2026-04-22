@@ -58,6 +58,12 @@ function BlastFortLevel:load()
     BlastFortLevel.frontTowerSprite:setFilter("nearest", "nearest")
     BlastFortLevel.backTowerSprite = love.graphics.newImage("Resources/Images/SmallTowerBack.png")
     BlastFortLevel.backTowerSprite:setFilter("nearest", "nearest")
+    BlastFortLevel.towerFrontStatefulObject = StatefulObject:new()
+    BlastFortLevel.towerFrontStatefulObject:addSprite(BlastFortLevel.frontTowerSprite)
+    BlastFortLevel.towerFrontStatefulObject:setState(1)
+    BlastFortLevel.towerBackStatefulObject = StatefulObject:new()
+    BlastFortLevel.towerBackStatefulObject:addSprite(BlastFortLevel.backTowerSprite)
+    BlastFortLevel.towerBackStatefulObject:setState(1)
 
     BlastFortLevel.targetSize = { centerX = 100, centerY = 100, width = 100, height = 100 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
@@ -83,6 +89,8 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     love.graphics.scale(scale, scale)
 
     BlastFortLevel.fortStatefulObject:draw(0, 0)
+    BlastFortLevel.towerBackStatefulObject:draw(0, 0)
+    BlastFortLevel.towerFrontStatefulObject:draw(0, 0)
     BlastFortLevel.world:draw()
     love.graphics.pop()
 end
