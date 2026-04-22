@@ -65,9 +65,10 @@ function BlastFortLevel:load()
     BlastFortLevel.towerBackStatefulObject:addSprite(BlastFortLevel.backTowerSprite)
     BlastFortLevel.towerBackStatefulObject:setState(1)
 
-    BlastFortLevel.targetSize = { centerX = 100, centerY = 100, width = 100, height = 100 }
+    BlastFortLevel.targetSize = { centerX = 160, centerY = 140, width = 4, height = 30 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
     { BlastFortLevel.targetSize.centerX, BlastFortLevel.targetSize.centerY, BlastFortLevel.targetSize.width, BlastFortLevel.targetSize.height})
+    BlastFortLevel.targetCollider:setAngle(math.rad(-22))
     BlastFortLevel.targetCollider.body:setGravityScale(0)
 end
 
