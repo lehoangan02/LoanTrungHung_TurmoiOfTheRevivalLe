@@ -9,11 +9,11 @@ function Algorithm:contains(arr, value)
     return false
 end
 
-function isTable(v)
+function IsTable(v)
     return type(v) == "table"
 end
 
-function isArray(t)
+function IsArray(t)
     if type(t) ~= "table" then
         return false
     end

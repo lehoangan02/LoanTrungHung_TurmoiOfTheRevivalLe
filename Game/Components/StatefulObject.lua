@@ -22,9 +22,9 @@ end
 
 -- INCOMPLETE
 function StatefulObject:_fillMissingInterpolationData()
-    for _, state in ipairs(self.states) do
+    for i, state in ipairs(self.states) do
         if not state.interpolation then
-            
+            print("[StatefulObject] missing interpolation for state at index " .. tostring(i))
         end
     end
 end
@@ -56,10 +56,20 @@ function StatefulObject:_isInterpolationValid()
     end
 end
 
--- INCOMPLETE
 function StatefulObject:setInterpolation(interpolationStyle, direction, index)
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
+    end
+    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style!") end
+    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Ojbect] Invalid interpolation style!") end
+
+    if direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.InOut then
+        self.states[index].outDirection = interpolationStyle
+        self.states[index].inDirection = interpolationStyle
+    elseif direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.In then
+        self.states[index].inDirection = interpolationStyle
+    else
+        self.states[index].outDirection = interpolationStyle
     end
 end
 
