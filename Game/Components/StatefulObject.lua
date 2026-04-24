@@ -20,38 +20,31 @@ function StatefulObject:setPosition(x, y, index)
     state.y = y
 end
 
--- INCOMPLETE
-function StatefulObject:_fillMissingInterpolationData()
-    for i, state in ipairs(self.states) do
-        if not state.interpolation then
-            print("[StatefulObject] missing interpolation for state at index " .. tostring(i))
-        end
-    end
-end
-
--- INCOMPLETE
 function StatefulObject:_isInterpolationValid()
-    for _, state in ipairs(self.states) do
+    for i, state in ipairs(self.states) do
         if state.interpolation then
-            for i, state in ipairs(self.states) do
-                if i > 1 and i < #self.states then
-                    if not state.interpolationInfo.inDirection then
-                        error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
-                    end
-
-                    if not state.interpolationInfo.outDirection then
-                        error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
-                    end
-                elseif i == 1 then
-                    if not state.interpolationInfo.outDirection then
-                        error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
-                    end
-                elseif i == #self.states then
-                    if not state.interpolationInfo.inDirection then
-                        error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
-                    end
+            if i > 1 and i < #self.states then
+                if not state.interpolationInfo.inDirection then
+                    error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
+                end
+                if not state.interpolationInfo.outDirection then
+                    error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
+                end
+            elseif i == 1 then
+                if not state.interpolationInfo.outDirection then
+                    error("Interpolation of direction " ..  "out " .. "was not set at state index: " .. tostring(i))
+                end
+            elseif i == #self.states then
+                if not state.interpolationInfo.inDirection then
+                    error("Interpolation of direction " ..  "in " .. "was not set at state index: " .. tostring(i))
                 end
             end
+        else
+            error("No interpolation info")
+        end
+
+        if not state.x or not state.y then
+            error("No position set for state: ", i)
         end
     end
 end
@@ -64,12 +57,12 @@ function StatefulObject:setInterpolation(interpolationStyle, direction, index)
     if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Ojbect] Invalid interpolation style!") end
 
     if direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.InOut then
-        self.states[index].outDirection = interpolationStyle
-        self.states[index].inDirection = interpolationStyle
+        self.states[index].interpolationInfo.outDirection = interpolationStyle
+        self.states[index].interpolationInfo.inDirection = interpolationStyle
     elseif direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.In then
-        self.states[index].inDirection = interpolationStyle
+        self.states[index].interpolationInfo.inDirection = interpolationStyle
     else
-        self.states[index].outDirection = interpolationStyle
+        self.states[index].interpolationInfo.outDirection = interpolationStyle
     end
 end
 
