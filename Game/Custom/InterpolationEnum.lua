@@ -13,6 +13,6 @@ local InterpolationDirection = {
 }
 
 return {
-    StatefulObjectInterpolationTypeEnum = InterpolationTypeEnum,
+    InterpolationTypeEnum = InterpolationTypeEnum,
     InterpolationDirection = InterpolationDirection
 }

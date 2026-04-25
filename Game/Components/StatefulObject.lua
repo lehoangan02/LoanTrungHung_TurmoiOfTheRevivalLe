@@ -1,13 +1,24 @@
-local StatefulObjectEnum = require("Game.Custom.InterpolationEnum")
+local InterpolationEnum = require("Game.Custom.InterpolationEnum")
 local Algorithm = require("Game.Custom.Algorithm")
 
 local StatefulObject = {}
 StatefulObject.__index = StatefulObject
 
+local function newEmptyState()
+    return {
+        x = 0, y = 0,
+        duration = 0,
+        interpolation = false,
+        interpolationInfo = { inDirection = nil, outDirection = nil }
+    }
+end
+
 function StatefulObject:new()
     local obj = setmetatable({}, self)
     obj.states = {}
     obj.current_state_index = nil
+    obj.interpolatedX = 0
+    obj.interpolatedY = 0
     return obj
 end
 
@@ -53,13 +64,13 @@ function StatefulObject:setInterpolation(interpolationStyle, direction, index)
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
     end
-    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style!") end
-    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
+    if not Algorithm:contains(InterpolationEnum.StatefulObjectInterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style!") end
+    if not Algorithm:contains(InterpolationEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
 
-    if direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.InOut then
+    if direction == InterpolationEnum.StatefulObjectInterpolationDirection.InOut then
         self.states[index].interpolationInfo.outDirection = interpolationStyle
         self.states[index].interpolationInfo.inDirection = interpolationStyle
-    elseif direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.In then
+    elseif direction == InterpolationEnum.StatefulObjectInterpolationDirection.In then
         self.states[index].interpolationInfo.inDirection = interpolationStyle
     else
         self.states[index].interpolationInfo.outDirection = interpolationStyle
@@ -67,18 +78,18 @@ function StatefulObject:setInterpolation(interpolationStyle, direction, index)
 end
 
 function StatefulObject:addSprite(image)
-    table.insert(self.states, {
-        type = "sprite",
-        image = image
-    })
+    local state = newEmptyState()
+    state.type = "sprite"
+    state.image = image
+    table.insert(self.states, state)
 end
 
 function StatefulObject:addAnimation(animation, spritesheet)
-    table.insert(self.states, {
-        type = "animation",
-        animation = animation,
-        spritesheet = spritesheet
-    })
+    local state = newEmptyState()
+    state.type = "animation"
+    state.animation = animation
+    state.spritesheet = spritesheet
+    table.insert(self.states, state)
 end
 
 function StatefulObject:setState(index)
@@ -86,6 +97,26 @@ function StatefulObject:setState(index)
         error("Invalid state index: " .. tostring(index))
     end
     self.current_state_index = index
+
+    if self.current_state_index == index then return end
+
+    local source = self.states[self.current_state_index]
+    local target = self.states[index]
+
+    local duration = target.duration or 0
+    local inStyle = target.interpolationInfo.inDirection or InterpolationEnum.InterpolationTypeEnum.Jump
+    local outStyle = target.interpolationInfo.outDirection or InterpolationEnum.InterpolationTypeEnum.Jump
+
+    self.transition = {
+        fromX = self.interpolatedX,
+        fromY = self.interpolatedY,
+        toX = target.x,
+        toY = target.y,
+        duration = duration,
+        elapsed = 0,
+        inStyle = inStyle,
+        outStyle = outStyle,
+    }
 end
 
 function StatefulObject:update(dt)
@@ -96,7 +127,32 @@ function StatefulObject:update(dt)
     if currentState.type == "animation" then
         currentState.animation:update(dt)
     end
+
+    if self:isTransitioning() then
+        local transition = self.transition
+        transition.elapsed = transition.elapsed + dt
+        local t = math.min(transition.elapsed / transition.duration, 1)
+        
+        if t >= 1 then 
+            self.interpolatedX = transition.toX
+            self.interpolatedY = transition.toY
+            self.transition = nil
+        else
+            local ease = ComposeEasingFunctions(t, currentState.interpolationInfo.inStyle, transition.target.interpolationInfo.outStyle)
+            currentState.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease 
+            currentState.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
+        end
+    else
+        self.interpolatedX = self.x
+        self.interpolatedY = self.y
+    end
 end
+
+function StatefulObject:isTransitioning()
+    if self.transition then return true
+    else return false
+    end
+end 
 
 function StatefulObject:draw(x, y)
     if not self.current_state_index then
@@ -114,8 +170,8 @@ end
 
 function StatefulObject:drawAutonomously()
     local currentState = self.states[self.current_state_index]
-    local x = currentState.x or 0
-    local y = currentState.y or 0
+    local x = currentState.interpolatedX or 0
+    local y = currentState.interpolatedY or 0
     self:draw(x, y)
 end
 
