@@ -1,4 +1,4 @@
-local StatefulObjectInterpolationTypeEnum = {
+local InterpolationTypeEnum = {
     Jump = 0,
     Linear = 1,
     EaseCubic = 2,
@@ -6,13 +6,13 @@ local StatefulObjectInterpolationTypeEnum = {
     EaseBack = 4,
 }
 
-local StatefulObjectInterpolationDirection = {
+local InterpolationDirection = {
     In = 0,
     Out = 1,
     InOut = 2,
 }
 
 return {
-    StatefulObjectInterpolationTypeEnum = StatefulObjectInterpolationTypeEnum,
-    StatefulObjectStatefulObjectInterpolationDirection = StatefulObjectInterpolationDirection
+    StatefulObjectInterpolationTypeEnum = InterpolationTypeEnum,
+    InterpolationDirection = InterpolationDirection
 }

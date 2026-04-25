@@ -37,13 +37,26 @@ function IsArray(t)
 end
 
 function GetEasingFunction(style, dir)
-    if style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.Jump then 
+    if style == InterpolationEnum.InterpolationTypeEnum.Jump then 
         return function(t) return t >= 1 and t or 0 end
-    elseif style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.Linear then
+    elseif style == InterpolationEnum.InterpolationTypeEnum.Linear then
         return function(t) return t end
-    elseif style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.EaseCubic then
-        return dir == InterpolationEnum.StatefulObjectInterpolationDirection.InOut and function(t) return t < 0.5 and 4*t^3 or (2 - (2 - t^3)) / 2 end
-            or dir == InterpolationEnum.StatefulObjectInterpolationDirection.In and function(t) return t^3 end
-            or dir == InterpolationEnum.StatefulObjectInterpolationDirection.Out and function(t) return 1 - (1 - t^3) end
+    elseif style == InterpolationEnum.InterpolationTypeEnum.EaseCubic then
+        return dir == InterpolationEnum.InterpolationDirection.InOut and function(t) return t < 0.5 and 4*t^3 or (2 - (2 - t^3)) / 2 end
+            or dir == InterpolationEnum.InterpolationDirection.In and function(t) return t^3 end
+            or dir == InterpolationEnum.InterpolationDirection.Out and function(t) return 1 - (1 - t^3) end
+    end
+    return nil
+end
+
+function ComposeEasingFunctions(t, outStyle, inStyle)
+    if t <= 0 then return 0 end
+    if t >= 1 then return 1 end
+    if t < 0.5 then
+        local fn = GetEasingFunction(outStyle, InterpolationEnum.InterpolationDirection.In)
+        if fn then return fn(t * 2) / 2 end
+    else
+        local fn = GetEasingFunction(inStyle, InterpolationEnum.InterpolationDirection.Out)
+        if fn then return 0.5 + fn((t - 0.5) * 2) / 2 end
     end
 end
