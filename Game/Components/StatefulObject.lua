@@ -1,4 +1,4 @@
-local StatefulObjectEnum = require("Game.Components.StatefulObjectEnum")
+local StatefulObjectEnum = require("Game.Custom.InterpolationEnum")
 local Algorithm = require("Game.Custom.Algorithm")
 
 local StatefulObject = {}
@@ -54,7 +54,7 @@ function StatefulObject:setInterpolation(interpolationStyle, direction, index)
         error("Invalid state index: " .. tostring(index))
     end
     if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style!") end
-    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Ojbect] Invalid interpolation style!") end
+    if not Algorithm:contains(StatefulObjectEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
 
     if direction == StatefulObjectEnum.StatefulObjectInterpolationDirection.InOut then
         self.states[index].interpolationInfo.outDirection = interpolationStyle

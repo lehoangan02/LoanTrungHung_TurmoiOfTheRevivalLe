@@ -1,3 +1,5 @@
+local InterpolationEnum = require("Game.Custom.InterpolationEnum")
+
 local Algorithm = {}
 
 function Algorithm:contains(arr, value)
@@ -32,4 +34,16 @@ function IsArray(t)
     end
 
     return count == maxIndex
+end
+
+function GetEasingFunction(style, dir)
+    if style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.Jump then 
+        return function(t) return t >= 1 and t or 0 end
+    elseif style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.Linear then
+        return function(t) return t end
+    elseif style == InterpolationEnum.StatefulObjectInterpolationTypeEnum.EaseCubic then
+        return dir == InterpolationEnum.StatefulObjectInterpolationDirection.InOut and function(t) return t < 0.5 and 4*t^3 or (2 - (2 - t^3)) / 2 end
+            or dir == InterpolationEnum.StatefulObjectInterpolationDirection.In and function(t) return t^3 end
+            or dir == InterpolationEnum.StatefulObjectInterpolationDirection.Out and function(t) return 1 - (1 - t^3) end
+    end
 end
