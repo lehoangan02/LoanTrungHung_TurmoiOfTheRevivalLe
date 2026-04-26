@@ -175,8 +175,8 @@ function StatefulObject:update(dt)
             self.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
         end
     else
-        self.interpolatedX = self.x
-        self.interpolatedY = self.y
+        self.interpolatedX = self.states[self.current_state_index].x
+        self.interpolatedY = self.states[self.current_state_index].y
     end
 end
 
