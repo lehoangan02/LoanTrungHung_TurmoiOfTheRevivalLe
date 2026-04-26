@@ -66,18 +66,20 @@ function BlastFortLevel:load()
     BlastFortLevel.backTowerSprite:setFilter("nearest", "nearest")
     BlastFortLevel.towerFrontStatefulObject = StatefulObject:new()
     BlastFortLevel.towerFrontStatefulObject:addSprite(BlastFortLevel.frontTowerSprite)
-    BlastFortLevel.towerFrontStatefulObject:setState(1)
+    print("Set the first time")
     BlastFortLevel.towerFrontStatefulObject:setPosition(-100, -100, 1)
+    BlastFortLevel.towerFrontStatefulObject:setState(1)
     BlastFortLevel.towerFrontStatefulObject:setInterpolation(InterpolationEnum.InterpolationTypeEnum.Linear, InterpolationEnum.InterpolationDirection.InOut, 1)
     BlastFortLevel.towerFrontStatefulObject:cloneState(1)
     BlastFortLevel.towerFrontStatefulObject:setPosition(0, 0, 2)
     BlastFortLevel.towerBackStatefulObject = StatefulObject:new()
     BlastFortLevel.towerBackStatefulObject:addSprite(BlastFortLevel.backTowerSprite)
+    print("Set the first time")
+    BlastFortLevel.towerBackStatefulObject:setPosition(-100, -100, 1)
     BlastFortLevel.towerBackStatefulObject:setState(1)
-    BlastFortLevel.towerFrontStatefulObject:setPosition(-100, -100, 1)
     BlastFortLevel.towerBackStatefulObject:setInterpolation(InterpolationEnum.InterpolationTypeEnum.Linear, InterpolationEnum.InterpolationDirection.InOut, 1)
     BlastFortLevel.towerBackStatefulObject:cloneState(1)
-    BlastFortLevel.towerFrontStatefulObject:setPosition(0, 0, 2)
+    BlastFortLevel.towerBackStatefulObject:setPosition(0, 0, 2)
 
 
 
@@ -100,6 +102,9 @@ function BlastFortLevel:update(dt)
         BlastFortLevel.controlBooleans.pulledTowerToPosition = true
         print("Moved!")
     end
+    BlastFortLevel.towerBackStatefulObject:update(dt)
+    BlastFortLevel.towerFrontStatefulObject:update(dt)
+
     return LevelEnum.Nothing
 end
 

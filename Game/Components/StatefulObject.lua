@@ -123,6 +123,8 @@ function StatefulObject:setState(index)
         self.interpolatedX = target.x
         self.interpolatedY = target.y
         self.current_state_index = index
+        print("Target pos: " .. tostring(self.interpolatedX) .. " " .. tostring(self.interpolatedY))
+        print("HERE")
         return
     end
 
@@ -131,7 +133,6 @@ function StatefulObject:setState(index)
     local source = self.states[self.current_state_index]
     self.current_state_index = index
     
-    print("HERE")
     local duration = target.duration or 0
     local inStyle = target.interpolationInfo.inDirection or InterpolationEnum.InterpolationTypeEnum.Jump
     local outStyle = source.interpolationInfo.outDirection or InterpolationEnum.InterpolationTypeEnum.Jump
@@ -166,6 +167,7 @@ function StatefulObject:update(dt)
         if t >= 1 then 
             self.interpolatedX = transition.toX
             self.interpolatedY = transition.toY
+            print("Cur pos: " .. tostring(self.interpolatedX) .. " " .. tostring(self.interpolatedY))
             self.transition = nil
         else
             local ease = ComposeEasingFunctions(t, transition.inStyle, transition.outStyle)
