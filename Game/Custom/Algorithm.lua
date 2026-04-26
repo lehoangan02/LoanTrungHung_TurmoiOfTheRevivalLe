@@ -3,7 +3,7 @@ local InterpolationEnum = require("Game.Custom.InterpolationEnum")
 local Algorithm = {}
 
 function Algorithm:contains(arr, value)
-    for _, v in ipairs(arr) do
+    for _, v in pairs(arr) do
         if v == value then
             return true
         end
@@ -44,12 +44,12 @@ function GetEasingFunction(style, dir)
     elseif style == InterpolationEnum.InterpolationTypeEnum.EaseCubic then
         return dir == InterpolationEnum.InterpolationDirection.InOut and function(t) return t < 0.5 and 4*t^3 or (2 - (2 - t^3)) / 2 end
             or dir == InterpolationEnum.InterpolationDirection.In and function(t) return t^3 end
-            or dir == InterpolationEnum.InterpolationDirection.Out and function(t) return 1 - (1 - t^3) end
+            or dir == InterpolationEnum.InterpolationDirection.Out and function(t) return 1 - (1 - t)^3 end
     end
     return nil
 end
 
-function ComposeEasingFunctions(t, outStyle, inStyle)
+function ComposeEasingFunctions(t, inStyle, outStyle)
     if t <= 0 then return 0 end
     if t >= 1 then return 1 end
     if t < 0.5 then
@@ -60,3 +60,5 @@ function ComposeEasingFunctions(t, outStyle, inStyle)
         if fn then return 0.5 + fn((t - 0.5) * 2) / 2 end
     end
 end
+
+return Algorithm

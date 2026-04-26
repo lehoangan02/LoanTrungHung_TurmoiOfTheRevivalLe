@@ -31,6 +31,25 @@ function StatefulObject:setPosition(x, y, index)
     state.y = y
 end
 
+function StatefulObject:cloneState(index)
+    if index < 1 or index > #self.states then
+        error("Invalid state index: " .. tostring(index))
+    end
+    local newState = newEmptyState()
+    newState.x = self.states[index].x
+    newState.y = self.states[index].y
+    newState.interpolationInfo = self.states[index].interpolationInfo
+    newState.type = self.states[index].type
+    if newState.type == "sprite" then
+        newState.image = self.states[index].image
+    else
+        newState.animation = self.states[index].animation
+        newState.spritesheet = self.states[index].spritesheet
+    end
+    table.insert(self.states, newState)
+    return #self.states
+end
+
 function StatefulObject:_isInterpolationValid()
     for i, state in ipairs(self.states) do
         if state.interpolation then
@@ -64,13 +83,13 @@ function StatefulObject:setInterpolation(interpolationStyle, direction, index)
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
     end
-    if not Algorithm:contains(InterpolationEnum.StatefulObjectInterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style!") end
-    if not Algorithm:contains(InterpolationEnum.StatefulObjectInterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
+    if not Algorithm:contains(InterpolationEnum.InterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style! (" .. interpolationStyle ..")") end
+    if not Algorithm:contains(InterpolationEnum.InterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
 
-    if direction == InterpolationEnum.StatefulObjectInterpolationDirection.InOut then
+    if direction == InterpolationEnum.InterpolationDirection.InOut then
         self.states[index].interpolationInfo.outDirection = interpolationStyle
         self.states[index].interpolationInfo.inDirection = interpolationStyle
-    elseif direction == InterpolationEnum.StatefulObjectInterpolationDirection.In then
+    elseif direction == InterpolationEnum.InterpolationDirection.In then
         self.states[index].interpolationInfo.inDirection = interpolationStyle
     else
         self.states[index].interpolationInfo.outDirection = interpolationStyle
@@ -82,6 +101,7 @@ function StatefulObject:addSprite(image)
     state.type = "sprite"
     state.image = image
     table.insert(self.states, state)
+    return #self.states
 end
 
 function StatefulObject:addAnimation(animation, spritesheet)
@@ -90,22 +110,31 @@ function StatefulObject:addAnimation(animation, spritesheet)
     state.animation = animation
     state.spritesheet = spritesheet
     table.insert(self.states, state)
+    return #self.states
 end
 
 function StatefulObject:setState(index)
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
     end
-    self.current_state_index = index
+
+    local target = self.states[index]
+    if not self.current_state_index then
+        self.interpolatedX = target.x
+        self.interpolatedY = target.y
+        self.current_state_index = index
+        return
+    end
 
     if self.current_state_index == index then return end
 
     local source = self.states[self.current_state_index]
-    local target = self.states[index]
-
+    self.current_state_index = index
+    
+    print("HERE")
     local duration = target.duration or 0
     local inStyle = target.interpolationInfo.inDirection or InterpolationEnum.InterpolationTypeEnum.Jump
-    local outStyle = target.interpolationInfo.outDirection or InterpolationEnum.InterpolationTypeEnum.Jump
+    local outStyle = source.interpolationInfo.outDirection or InterpolationEnum.InterpolationTypeEnum.Jump
 
     self.transition = {
         fromX = self.interpolatedX,
@@ -132,15 +161,16 @@ function StatefulObject:update(dt)
         local transition = self.transition
         transition.elapsed = transition.elapsed + dt
         local t = math.min(transition.elapsed / transition.duration, 1)
+        print("t: " .. tostring(t))
         
         if t >= 1 then 
             self.interpolatedX = transition.toX
             self.interpolatedY = transition.toY
             self.transition = nil
         else
-            local ease = ComposeEasingFunctions(t, currentState.interpolationInfo.inStyle, transition.target.interpolationInfo.outStyle)
-            currentState.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease 
-            currentState.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
+            local ease = ComposeEasingFunctions(t, transition.inStyle, transition.outStyle)
+            self.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
+            self.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
         end
     else
         self.interpolatedX = self.x
@@ -169,9 +199,9 @@ function StatefulObject:draw(x, y)
 end
 
 function StatefulObject:drawAutonomously()
-    local currentState = self.states[self.current_state_index]
-    local x = currentState.interpolatedX or 0
-    local y = currentState.interpolatedY or 0
+    local x = self.interpolatedX or 0
+    local y = self.interpolatedY or 0
+    print("[StatefulObject] Drawing at " .. tostring(x) .. " " .. tostring(y) .. "!")
     self:draw(x, y)
 end
 

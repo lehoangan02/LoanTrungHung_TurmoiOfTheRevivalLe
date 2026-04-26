@@ -6,6 +6,7 @@ local bf = require("Game/Libraries/breezefield-master")
 local DEBUG = false
 
 local StatefulObject = require("Game.Components.StatefulObject")
+local InterpolationEnum = require("Game.Custom.InterpolationEnum")
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
@@ -45,6 +46,11 @@ function BlastFortLevel:load()
     BlastFortLevel.worldGravity = 250
     BlastFortLevel.world = bf.newWorld(0, BlastFortLevel.worldGravity, true)
 
+    BlastFortLevel.timer = 0
+
+    BlastFortLevel.controlBooleans = {}
+    BlastFortLevel.controlBooleans.pulledTowerToPosition = false
+
     BlastFortLevel.intactSprite = love.graphics.newImage("Resources/Images/CannonBlastFort.png")
     BlastFortLevel.intactSprite:setFilter("nearest", "nearest")
     BlastFortLevel.blownSprite = love.graphics.newImage("Resources/Images/CannonBlownFort.png")
@@ -61,9 +67,19 @@ function BlastFortLevel:load()
     BlastFortLevel.towerFrontStatefulObject = StatefulObject:new()
     BlastFortLevel.towerFrontStatefulObject:addSprite(BlastFortLevel.frontTowerSprite)
     BlastFortLevel.towerFrontStatefulObject:setState(1)
+    BlastFortLevel.towerFrontStatefulObject:setPosition(-100, -100, 1)
+    BlastFortLevel.towerFrontStatefulObject:setInterpolation(InterpolationEnum.InterpolationTypeEnum.Linear, InterpolationEnum.InterpolationDirection.InOut, 1)
+    BlastFortLevel.towerFrontStatefulObject:cloneState(1)
+    BlastFortLevel.towerFrontStatefulObject:setPosition(0, 0, 2)
     BlastFortLevel.towerBackStatefulObject = StatefulObject:new()
     BlastFortLevel.towerBackStatefulObject:addSprite(BlastFortLevel.backTowerSprite)
     BlastFortLevel.towerBackStatefulObject:setState(1)
+    BlastFortLevel.towerFrontStatefulObject:setPosition(-100, -100, 1)
+    BlastFortLevel.towerBackStatefulObject:setInterpolation(InterpolationEnum.InterpolationTypeEnum.Linear, InterpolationEnum.InterpolationDirection.InOut, 1)
+    BlastFortLevel.towerBackStatefulObject:cloneState(1)
+    BlastFortLevel.towerFrontStatefulObject:setPosition(0, 0, 2)
+
+
 
     BlastFortLevel.targetSize = { centerX = 160, centerY = 140, width = 4, height = 30 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
@@ -75,6 +91,14 @@ end
 function BlastFortLevel:update(dt)
     if not BlastFortLevel.loadScreen:isDone() then
         BlastFortLevel.loadScreen:update(dt)
+        return LevelEnum.Nothing
+    end
+    BlastFortLevel.timer = BlastFortLevel.timer + dt
+    if BlastFortLevel.timer >= 1 and BlastFortLevel.controlBooleans.pulledTowerToPosition == false then
+        BlastFortLevel.towerBackStatefulObject:setState(2)
+        BlastFortLevel.towerFrontStatefulObject:setState(2)
+        BlastFortLevel.controlBooleans.pulledTowerToPosition = true
+        print("Moved!")
     end
     return LevelEnum.Nothing
 end
@@ -82,6 +106,7 @@ end
 function BlastFortLevel:draw(windowWidth, windowHeight)
     if not BlastFortLevel.loadScreen:isDone() then
         BlastFortLevel.loadScreen:draw()
+        return
     end
 
     love.graphics.push()
@@ -90,8 +115,8 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     love.graphics.scale(scale, scale)
 
     BlastFortLevel.fortStatefulObject:draw(0, 0)
-    BlastFortLevel.towerBackStatefulObject:draw(0, 0)
-    BlastFortLevel.towerFrontStatefulObject:draw(0, 0)
+    BlastFortLevel.towerBackStatefulObject:drawAutonomously()
+    BlastFortLevel.towerFrontStatefulObject:drawAutonomously()
     BlastFortLevel.world:draw()
     love.graphics.pop()
 end
