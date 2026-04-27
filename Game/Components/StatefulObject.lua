@@ -40,6 +40,7 @@ function StatefulObject:cloneState(index)
     newState.y = self.states[index].y
     newState.interpolationInfo = self.states[index].interpolationInfo
     newState.type = self.states[index].type
+    newState.duration = self.states[index].duration
     if newState.type == "sprite" then
         newState.image = self.states[index].image
     else
@@ -79,12 +80,14 @@ function StatefulObject:_isInterpolationValid()
     end
 end
 
-function StatefulObject:setInterpolation(interpolationStyle, direction, index)
+function StatefulObject:setInterpolation(interpolationStyle, direction, duration, index)
     if index < 1 or index > #self.states then
         error("Invalid state index: " .. tostring(index))
     end
     if not Algorithm:contains(InterpolationEnum.InterpolationTypeEnum, interpolationStyle) then error("[Stateful Object] Invalid interpolation style! (" .. interpolationStyle ..")") end
     if not Algorithm:contains(InterpolationEnum.InterpolationDirection, direction) then error("[Stateful Object] Invalid interpolation style!") end
+
+    self.states[self.current_state_index].duration = duration
 
     if direction == InterpolationEnum.InterpolationDirection.InOut then
         self.states[index].interpolationInfo.outDirection = interpolationStyle
@@ -161,6 +164,8 @@ function StatefulObject:update(dt)
     if self:isTransitioning() then
         local transition = self.transition
         transition.elapsed = transition.elapsed + dt
+        print("Elapsed: " ..  tostring(transition.elapsed))
+        print("Transition duration: " .. tostring(transition.duration))
         local t = math.min(transition.elapsed / transition.duration, 1)
         print("t: " .. tostring(t))
         
