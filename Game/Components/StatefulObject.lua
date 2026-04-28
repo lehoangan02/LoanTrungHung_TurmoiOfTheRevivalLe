@@ -177,7 +177,7 @@ function StatefulObject:update(dt)
         else
             local ease = ComposeEasingFunctions(t, transition.inStyle, transition.outStyle)
             self.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
-            self.interpolatedX = transition.fromX + (transition.toX - transition.fromX) * ease
+            self.interpolatedY = transition.fromY + (transition.toY - transition.fromY) * ease
         end
     else
         self.interpolatedX = self.states[self.current_state_index].x
