@@ -3,7 +3,7 @@ LoadRoleSoldier.__index = LoadRoleSoldier
 
 local anim8 = require "Game/Libraries/anim8"
 
-local InputManager = require "Game.Input.InputManager"
+local InputManager = require("Game.Input.InputManager")
 
 local DEBUG = false
 

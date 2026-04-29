@@ -9,6 +9,7 @@ local StatefulObject = require("Game.Components.StatefulObject")
 local InterpolationEnum = require("Game.Custom.InterpolationEnum")
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local TrajectoryVisualization = require("Game.Components.TrajectoryVisualization")
 
 function BlastFortLevel:load()
 
@@ -82,7 +83,7 @@ function BlastFortLevel:load()
     BlastFortLevel.towerBackStatefulObject:cloneState(1)
     BlastFortLevel.towerBackStatefulObject:setPosition(0, 0, 2)
 
-
+    BlastFortLevel.trajectoryVisualization = TrajectoryVisualization:new(100, 100, 10, math.rad(-30), 0)
 
     BlastFortLevel.targetSize = { centerX = 160, centerY = 140, width = 4, height = 30 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
@@ -123,6 +124,7 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     BlastFortLevel.fortStatefulObject:draw(0, 0)
     BlastFortLevel.towerBackStatefulObject:drawAutonomously()
     BlastFortLevel.towerFrontStatefulObject:drawAutonomously()
+    BlastFortLevel.trajectoryVisualization:draw(windowWidth, windowHeight)
     BlastFortLevel.world:draw()
     love.graphics.pop()
 end
