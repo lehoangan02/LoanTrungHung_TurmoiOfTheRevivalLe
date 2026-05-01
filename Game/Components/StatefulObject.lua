@@ -236,4 +236,10 @@ function StatefulObject:getCurrentSprite()
     end
 end
 
+function StatefulObject:isLocatedAtIndexPosition(index)
+    if self.current_state_index == index and not self:isTransitioning() then
+        return true
+    else return false end
+end
+
 return StatefulObject
