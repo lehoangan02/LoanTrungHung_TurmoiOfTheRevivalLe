@@ -35,7 +35,7 @@ function TrajectoryVisualization:update(dt)
     self.launchAngle = math.min(LAUNCH_ANGLE_MAX,
         math.max(LAUNCH_ANGLE_MIN, self.launchAngle)
     )
-    print(self.launchAngle)
+    -- print(self.launchAngle)
     self.vx, self.vy = math.cos(self.launchAngle) * self.launchSpeed, math.sin(self.launchAngle) * self.launchSpeed
     self.points = {}
     for i = 0, 16 do

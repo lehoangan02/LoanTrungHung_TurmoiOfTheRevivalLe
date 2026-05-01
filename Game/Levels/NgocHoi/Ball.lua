@@ -30,6 +30,7 @@ function Ball.new(world, speed, onExplode)
 end
 
 function Ball:toss(x, y, angleDeg)
+    if self.exploded then return end
     self:deactivate()
 
     self.collider = self.world:newCollider("Circle", { x, y, self.radius })

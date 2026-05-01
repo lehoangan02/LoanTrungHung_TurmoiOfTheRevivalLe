@@ -89,10 +89,10 @@ function BlastFortLevel:load()
     BlastFortLevel.LAUNCH_SPEED = 230
     BlastFortLevel.trajectoryVisualization = TrajectoryVisualization:new(38, 130, BlastFortLevel.LAUNCH_SPEED, math.rad(-30), BlastFortLevel.worldGravity)
 
-    BlastFortLevel.targetSize = { centerX = 160, centerY = 140, width = 4, height = 30 }
+    BlastFortLevel.targetSize = { centerX = 158, centerY = 138, width = 4, height = 24 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
     { BlastFortLevel.targetSize.centerX, BlastFortLevel.targetSize.centerY, BlastFortLevel.targetSize.width, BlastFortLevel.targetSize.height})
-    BlastFortLevel.targetCollider:setAngle(math.rad(-22))
+    BlastFortLevel.targetCollider:setAngle(math.rad(12))
     BlastFortLevel.targetCollider.body:setGravityScale(0)
 
     BlastFortLevel.cannonBall = Ball.new(BlastFortLevel.world, BlastFortLevel.LAUNCH_SPEED, function(duration, magnitude) end)
@@ -101,6 +101,18 @@ function BlastFortLevel:load()
         if other.isBall then
             print("Target hit!")
             BlastFortLevel.fortStatefulObject:setState(2)
+            other.parent.to_explode = true
+        end
+    end
+
+    BlastFortLevel.groundCollider = BlastFortLevel.world:newCollider("Rectangle",
+        {120, 180, 240, 5}
+    )
+    BlastFortLevel.groundCollider:setGravityScale(0)
+    BlastFortLevel.groundCollider:setType("static")
+    function BlastFortLevel.groundCollider:enter(other, collision)
+        if other.isBall then
+            print("Ball hit the ground")
             other.parent.to_explode = true
         end
     end
@@ -129,9 +141,11 @@ function BlastFortLevel:update(dt)
     if BlastFortLevel.controlBooleans.displayTrajectoryVisualization then
         if InputManager:isEventFKeyPressed() then
             print("Fired cannonball!")
-            BlastFortLevel.cannonBall:toss(34, 134, math.deg(-BlastFortLevel.trajectoryVisualization.launchAngle))
+            BlastFortLevel.cannonBall:toss(38, 130, math.deg(-BlastFortLevel.trajectoryVisualization.launchAngle))
         end
     end
+
+    BlastFortLevel.world:update(dt)
 
     return LevelEnum.Nothing
 end
