@@ -10,6 +10,8 @@ local InterpolationEnum = require("Game.Custom.InterpolationEnum")
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 local TrajectoryVisualization = require("Game.Components.TrajectoryVisualization")
+local Ball = require("Game.Levels.NgocHoi.Ball")
+local InputManager = require("Game.Input.InputManager")
 
 function BlastFortLevel:load()
 
@@ -51,6 +53,7 @@ function BlastFortLevel:load()
 
     BlastFortLevel.controlBooleans = {}
     BlastFortLevel.controlBooleans.pulledTowerToPosition = false
+    BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
 
     BlastFortLevel.intactSprite = love.graphics.newImage("Resources/Images/CannonBlastFort.png")
     BlastFortLevel.intactSprite:setFilter("nearest", "nearest")
@@ -83,13 +86,24 @@ function BlastFortLevel:load()
     BlastFortLevel.towerBackStatefulObject:cloneState(1)
     BlastFortLevel.towerBackStatefulObject:setPosition(0, 0, 2)
 
-    BlastFortLevel.trajectoryVisualization = TrajectoryVisualization:new(100, 100, 10, math.rad(-30), 0)
+    BlastFortLevel.LAUNCH_SPEED = 230
+    BlastFortLevel.trajectoryVisualization = TrajectoryVisualization:new(38, 130, BlastFortLevel.LAUNCH_SPEED, math.rad(-30), BlastFortLevel.worldGravity)
 
     BlastFortLevel.targetSize = { centerX = 160, centerY = 140, width = 4, height = 30 }
     BlastFortLevel.targetCollider = BlastFortLevel.world:newCollider("Rectangle",
     { BlastFortLevel.targetSize.centerX, BlastFortLevel.targetSize.centerY, BlastFortLevel.targetSize.width, BlastFortLevel.targetSize.height})
     BlastFortLevel.targetCollider:setAngle(math.rad(-22))
     BlastFortLevel.targetCollider.body:setGravityScale(0)
+
+    BlastFortLevel.cannonBall = Ball.new(BlastFortLevel.world, BlastFortLevel.LAUNCH_SPEED, function(duration, magnitude) end)
+    BlastFortLevel.targetCollider.parent = BlastFortLevel
+    function BlastFortLevel.targetCollider:enter(other, collision)
+        if other.isBall then
+            print("Target hit!")
+            BlastFortLevel.fortStatefulObject:setState(2)
+            other.parent.to_explode = true
+        end
+    end
 end
 
 function BlastFortLevel:update(dt)
@@ -104,8 +118,20 @@ function BlastFortLevel:update(dt)
         BlastFortLevel.controlBooleans.pulledTowerToPosition = true
         print("Moved!")
     end
+    if BlastFortLevel.controlBooleans.pulledTowerToPosition then
+        BlastFortLevel.controlBooleans.displayTrajectoryVisualization = true
+    end
     BlastFortLevel.towerBackStatefulObject:update(dt)
     BlastFortLevel.towerFrontStatefulObject:update(dt)
+    BlastFortLevel.trajectoryVisualization:update(dt)
+    BlastFortLevel.cannonBall:update(dt)
+
+    if BlastFortLevel.controlBooleans.displayTrajectoryVisualization then
+        if InputManager:isEventFKeyPressed() then
+            print("Fired cannonball!")
+            BlastFortLevel.cannonBall:toss(34, 134, math.deg(-BlastFortLevel.trajectoryVisualization.launchAngle))
+        end
+    end
 
     return LevelEnum.Nothing
 end
@@ -124,7 +150,10 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     BlastFortLevel.fortStatefulObject:draw(0, 0)
     BlastFortLevel.towerBackStatefulObject:drawAutonomously()
     BlastFortLevel.towerFrontStatefulObject:drawAutonomously()
-    BlastFortLevel.trajectoryVisualization:draw(windowWidth, windowHeight)
+    if BlastFortLevel.controlBooleans.displayTrajectoryVisualization then 
+        BlastFortLevel.trajectoryVisualization:draw(windowWidth, windowHeight)
+    end
+    BlastFortLevel.cannonBall:draw()
     BlastFortLevel.world:draw()
     love.graphics.pop()
 end

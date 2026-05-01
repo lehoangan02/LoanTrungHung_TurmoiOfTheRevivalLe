@@ -164,10 +164,10 @@ function StatefulObject:update(dt)
     if self:isTransitioning() then
         local transition = self.transition
         transition.elapsed = transition.elapsed + dt
-        print("Elapsed: " ..  tostring(transition.elapsed))
-        print("Transition duration: " .. tostring(transition.duration))
+        -- print("Elapsed: " ..  tostring(transition.elapsed))
+        -- print("Transition duration: " .. tostring(transition.duration))
         local t = math.min(transition.elapsed / transition.duration, 1)
-        print("t: " .. tostring(t))
+        -- print("t: " .. tostring(t))
         
         if t >= 1 then 
             self.interpolatedX = transition.toX
@@ -208,7 +208,7 @@ end
 function StatefulObject:drawAutonomously()
     local x = self.interpolatedX or 0
     local y = self.interpolatedY or 0
-    print("[StatefulObject] Drawing at " .. tostring(x) .. " " .. tostring(y) .. "!")
+    -- print("[StatefulObject] Drawing at " .. tostring(x) .. " " .. tostring(y) .. "!")
     self:draw(x, y)
 end
 

@@ -3,14 +3,16 @@ TrajectoryVisualization.__index = TrajectoryVisualization
 
 local InputManager = require("Game.Input.InputManager")
 
-local LAUNCH_ANGLE_MIN = 10
-local LAUNCH_ANGLE_MAX = 80
+local LAUNCH_ANGLE_MIN = math.rad(-80)
+local LAUNCH_ANGLE_MAX = math.rad(-0)
 
 function TrajectoryVisualization:new(originX, originY, launchSpeed, launchAngle, gravity)
     local instance = setmetatable({}, TrajectoryVisualization)
     instance.originX = originX
     instance.originY = originY
     instance.points = {}
+    instance.launchAngle = launchAngle
+    instance.launchSpeed = launchSpeed
     instance.gravity = gravity
     instance.vx, instance.vy = math.cos(launchAngle) * launchSpeed, math.sin(launchAngle) * launchSpeed
 
@@ -26,15 +28,17 @@ function TrajectoryVisualization:new(originX, originY, launchSpeed, launchAngle,
     return instance
 end
 
-function TrajectoryVisualization:update(dt, active)
-    if not active then return end
+function TrajectoryVisualization:update(dt)
     local crankVal = InputManager:getCrankValue()
     local diff = crankVal - self.previousCrankVal
     self.launchAngle = self.launchAngle + diff
     self.launchAngle = math.min(LAUNCH_ANGLE_MAX,
         math.max(LAUNCH_ANGLE_MIN, self.launchAngle)
     )
-    for i = 1, 16 do
+    print(self.launchAngle)
+    self.vx, self.vy = math.cos(self.launchAngle) * self.launchSpeed, math.sin(self.launchAngle) * self.launchSpeed
+    self.points = {}
+    for i = 0, 16 do
         local t = i * 0.12
         self.points[#self.points + 1] = {
             x = self.originX + self.vx * t,
