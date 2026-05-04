@@ -127,8 +127,10 @@ function BlastFortLevel:update(dt)
     if BlastFortLevel.timer >= 1 and BlastFortLevel.controlBooleans.pulledTowerToPosition == false then
         BlastFortLevel.towerBackStatefulObject:setState(2)
         BlastFortLevel.towerFrontStatefulObject:setState(2)
-        BlastFortLevel.controlBooleans.pulledTowerToPosition = true
         print("Moved!")
+    end
+    if BlastFortLevel.towerFrontStatefulObject:isLocatedAtIndexPosition(2) then 
+        BlastFortLevel.controlBooleans.pulledTowerToPosition = true
     end
     if BlastFortLevel.controlBooleans.pulledTowerToPosition then
         BlastFortLevel.controlBooleans.displayTrajectoryVisualization = true
@@ -139,7 +141,7 @@ function BlastFortLevel:update(dt)
     BlastFortLevel.cannonBall:update(dt)
 
     if BlastFortLevel.controlBooleans.displayTrajectoryVisualization then
-        if InputManager:isEventFKeyPressed() then
+        if InputManager:isEventFKeyPressed() and BlastFortLevel.controlBooleans.pulledTowerToPosition then
             print("Fired cannonball!")
             BlastFortLevel.cannonBall:toss(38, 130, math.deg(-BlastFortLevel.trajectoryVisualization.launchAngle))
         end
