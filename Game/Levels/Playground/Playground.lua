@@ -7,11 +7,11 @@ local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 function PlayGround:load()
     local DialogCloud = require("Game.Components.DialogCloud")
     self.dialog = DialogCloud.new(
-        "Welcome to the Playground Level!",
+        "Chiến thắng!",
         50,
         50,
-        40,
-        20
+        100,
+        100
     )
 end
 

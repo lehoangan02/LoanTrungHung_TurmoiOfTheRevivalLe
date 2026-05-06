@@ -94,6 +94,7 @@ function BlastFortLevel:load()
     { BlastFortLevel.targetSize.centerX, BlastFortLevel.targetSize.centerY, BlastFortLevel.targetSize.width, BlastFortLevel.targetSize.height})
     BlastFortLevel.targetCollider:setAngle(math.rad(12))
     BlastFortLevel.targetCollider.body:setGravityScale(0)
+    BlastFortLevel.targetCollider:setType("static")
 
     BlastFortLevel.cannonBall = Ball.new(BlastFortLevel.world, BlastFortLevel.LAUNCH_SPEED, function(duration, magnitude) end)
     BlastFortLevel.targetCollider.parent = BlastFortLevel
@@ -102,6 +103,9 @@ function BlastFortLevel:load()
             print("Target hit!")
             BlastFortLevel.fortStatefulObject:setState(2)
             other.parent.to_explode = true
+            BlastFortLevel.fortStatefulObject:setState(2)
+            BlastFortLevel.targetCollider:destroy()
+            BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
         end
     end
 
@@ -114,6 +118,7 @@ function BlastFortLevel:load()
         if other.isBall then
             print("Ball hit the ground")
             other.parent.to_explode = true
+            BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
         end
     end
 end
@@ -127,13 +132,14 @@ function BlastFortLevel:update(dt)
     if BlastFortLevel.timer >= 1 and BlastFortLevel.controlBooleans.pulledTowerToPosition == false then
         BlastFortLevel.towerBackStatefulObject:setState(2)
         BlastFortLevel.towerFrontStatefulObject:setState(2)
-        print("Moved!")
+        -- print("Moved!")
     end
     if BlastFortLevel.towerFrontStatefulObject:isLocatedAtIndexPosition(2) then 
+        if BlastFortLevel.controlBooleans.pulledTowerToPosition == false then
+            BlastFortLevel.controlBooleans.displayTrajectoryVisualization = true
+        end
         BlastFortLevel.controlBooleans.pulledTowerToPosition = true
-    end
-    if BlastFortLevel.controlBooleans.pulledTowerToPosition then
-        BlastFortLevel.controlBooleans.displayTrajectoryVisualization = true
+        
     end
     BlastFortLevel.towerBackStatefulObject:update(dt)
     BlastFortLevel.towerFrontStatefulObject:update(dt)
