@@ -5,23 +5,28 @@ PlayGround.__index = PlayGround
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
 
 function PlayGround:load()
-    local DialogCloud = require("Game.Components.DialogCloud")
-    self.dialog = DialogCloud.new(
-        "Chiến thắng!",
-        50,
-        50,
-        100,
-        100
-    )
+    -- local DialogCloud = require("Game.Components.DialogCloud")
+    -- self.dialog = DialogCloud.new(
+    --     "Chiến thắng!",
+    --     50,
+    --     50,
+    --     100,
+    --     100
+    -- )
+
+    local WinBanner = require("Game.Components.WinBanner")
+    self.winBanner = WinBanner.new("Resources/Images/Win_banner.png", "You Won!")
 end
 
 function PlayGround:update(dt)
     local InputManager = require("Game.Input.InputManager")
     if (InputManager:isEventFKeyPressed()) then
-        print("F key pressed, starting dialogue")
-        self.dialog:startDialogue()
+        -- print("F key pressed, starting dialogue")
+        -- self.dialog:startDialogue()
+        self.winBanner:trigger()
     end
-    self.dialog:update(dt)
+    -- self.dialog:update(dt)
+    self.winBanner:update(dt)
     return LevelEnum.Nothing
 end
 
@@ -31,7 +36,8 @@ function PlayGround:draw(windowWidth, windowHeight)
     love.graphics.push()
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
-    self.dialog:draw(scale, fontScale, offsetX, offsetY)
+    -- self.dialog:draw(scale, fontScale, offsetX, offsetY)
+    self.winBanner:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.pop()
     
 end
