@@ -199,12 +199,16 @@ function WinBanner:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(self.image, -imgW/2, -imgH/2)
     
-    -- Draw children
-    for _, child in ipairs(self.children) do
-        child:draw(1, 0, 0)
-    end
-    
     love.graphics.pop()
+    
+    -- Draw children from an unscaled coordinate space so UI elements can load crisp fonts!
+    -- Note: Playground already translates by global offsetX/Y, so we don't add them here!
+    for _, child in ipairs(self.children) do
+        local combinedScale = scale * animScale
+        local childOffsetX = self.x * scale
+        local childOffsetY = (self.y + self.verticalOffset) * scale
+        child:draw(combinedScale, childOffsetX, childOffsetY)
+    end
     
     -- 2. Draw Text
     love.graphics.push()
