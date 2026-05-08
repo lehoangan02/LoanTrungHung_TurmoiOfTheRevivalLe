@@ -16,6 +16,17 @@ function PlayGround:load()
 
     local WinBanner = require("Game.Components.WinBanner")
     self.winBanner = WinBanner.new("Resources/Images/Win_banner.png", "You Won!")
+    
+    local HoldTextButton = require("Game.UI.Button.HoldTextButton")
+    self.holdButton = HoldTextButton:new(0, 0, 80, 20, function()
+        print("Banner Button Held!")
+    end, {r = 1, g = 0.8, b = 0, a = 1}, "Continue")
+    
+    -- Set infocus to true so it reacts to 'D' (or whatever LeftRudder is mapped to)
+    self.holdButton:setFocus(true)
+    
+    -- Link it to the banner!
+    self.winBanner:addChild(self.holdButton)
 end
 
 function PlayGround:update(dt)

@@ -30,8 +30,8 @@ function WinBanner.new(imagePath, text, x, y)
     self.numLinks = 10
     self.linkLength = 5
     self.chainAttachY = 15 -- Adjust this to move the chain up/down relative to the banner
-    self.chainLeftAttachX = -40  -- X position of the left chain
-    self.chainRightAttachX = 40 -- X position of the right chain
+    self.chainLeftAttachX = -30  -- X position of the left chain
+    self.chainRightAttachX = 30 -- X position of the right chain
     
     self.chainLeft = {}
     self.chainRight = {}
@@ -133,6 +133,21 @@ function WinBanner:update(dt)
     
     updateVerletChain(self.chainLeft, self.chainLeftAttachX, self.chainAttachY)
     updateVerletChain(self.chainRight, self.chainRightAttachX, self.chainAttachY)
+    
+    -- Dynamically link the attached child (like a button) to the bottom of the chains so it swings!
+    if #self.children > 0 then
+        local child = self.children[1]
+        local lastLeft = self.chainLeft[#self.chainLeft]
+        local lastRight = self.chainRight[#self.chainRight]
+        
+        local cx = (lastLeft.x + lastRight.x) / 2
+        local cy = (lastLeft.y + lastRight.y) / 2
+        
+        -- Hang the button exactly in the middle of the two chain ends
+        if child.width then
+            child:setPosition(cx - child.width / 2, cy)
+        end
+    end
     
     for _, child in ipairs(self.children) do
         child:update(dt)
