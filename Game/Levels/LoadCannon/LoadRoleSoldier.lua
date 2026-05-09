@@ -5,7 +5,7 @@ local anim8 = require "Game/Libraries/anim8"
 
 local InputManager = require("Game.Input.InputManager")
 
-local DEBUG = false
+local DEBUG = true
 
 local SoldierStateEnum = {
     Idle = 0,
@@ -76,7 +76,7 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
     LoadRoleSoldier.warningImage:setFilter("nearest", "nearest")
     
     LoadRoleSoldier.warningTimer = 0
-    LoadRoleSoldier.warningDuration = 3
+    LoadRoleSoldier.warningDuration = 2.8
 
     LoadRoleSoldier.blinkingTimer = 0
     LoadRoleSoldier.warningVisible = true
@@ -191,7 +191,7 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.loadingCannonAnimation:gotoFrame(1)
     end
 
-    if (LoadRoleSoldier.crankValue < -4.3 and LoadRoleSoldier.startedWarningForBullet == false) then
+    if (LoadRoleSoldier.crankValue < -4.1 and LoadRoleSoldier.startedWarningForBullet == false) then
         LoadRoleSoldier.startedWarningForBullet = true
         LoadRoleSoldier.warningTimer = LoadRoleSoldier.warningDuration
         LoadRoleSoldier.blinkingTimer = 0
@@ -231,6 +231,11 @@ function LoadRoleSoldier:update(dt)
             LoadRoleSoldier.bullet_animation:resume()
             if LoadRoleSoldier.shakeFunction then
                 LoadRoleSoldier.shakeFunction(0.2, 3) -- Give it a solid shake!
+            end
+            
+            -- Check for player loss
+            if LoadRoleSoldier.crankValue <= -6.0 and LoadRoleSoldier.crankValue >= -6.7 then
+                print("Player has lost!")
             end
         end
 
