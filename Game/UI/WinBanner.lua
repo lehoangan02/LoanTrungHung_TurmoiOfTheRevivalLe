@@ -33,6 +33,10 @@ function WinBanner.new(imagePath, text, x, y)
     self.chainLeftAttachX = -30  -- X position of the left chain
     self.chainRightAttachX = 30 -- X position of the right chain
     
+    -- X position offset for the SECOND pair of chains (relative to the center of the first button)
+    self.chain2LeftAttachOffsetX = -30
+    self.chain2RightAttachOffsetX = 30
+    
     self.chainLeft = {}
     self.chainRight = {}
     
@@ -40,6 +44,17 @@ function WinBanner.new(imagePath, text, x, y)
         local cy = self.chainAttachY + i * self.linkLength
         table.insert(self.chainLeft, {x = self.chainLeftAttachX, y = cy, oldX = self.chainLeftAttachX, oldY = cy})
         table.insert(self.chainRight, {x = self.chainRightAttachX, y = cy, oldX = self.chainRightAttachX, oldY = cy})
+    end
+    
+    -- Second level chains (for a second button)
+    self.numLinks2 = math.floor(self.numLinks / 2)
+    self.chainLeft2 = {}
+    self.chainRight2 = {}
+    
+    for i = 1, self.numLinks2 do
+        local cy = self.chainAttachY + 50 + i * self.linkLength
+        table.insert(self.chainLeft2, {x = self.chainLeftAttachX, y = cy, oldX = self.chainLeftAttachX, oldY = cy})
+        table.insert(self.chainRight2, {x = self.chainRightAttachX, y = cy, oldX = self.chainRightAttachX, oldY = cy})
     end
     
     return self
@@ -63,6 +78,10 @@ function WinBanner:trigger()
     for i = 2, self.numLinks do
         self.chainLeft[i].oldX = self.chainLeft[i].x - i * 4
         self.chainRight[i].oldX = self.chainRight[i].x - i * 5
+    end
+    for i = 2, self.numLinks2 do
+        self.chainLeft2[i].oldX = self.chainLeft2[i].x - i * 4
+        self.chainRight2[i].oldX = self.chainRight2[i].x - i * 5
     end
 end
 
@@ -136,16 +155,39 @@ function WinBanner:update(dt)
     
     -- Dynamically link the attached child (like a button) to the bottom of the chains so it swings!
     if #self.children > 0 then
-        local child = self.children[1]
-        local lastLeft = self.chainLeft[#self.chainLeft]
-        local lastRight = self.chainRight[#self.chainRight]
+        local child1 = self.children[1]
+        local lastLeft1 = self.chainLeft[#self.chainLeft]
+        local lastRight1 = self.chainRight[#self.chainRight]
         
-        local cx = (lastLeft.x + lastRight.x) / 2
-        local cy = (lastLeft.y + lastRight.y) / 2
+        local cx1 = (lastLeft1.x + lastRight1.x) / 2
+        local cy1 = (lastLeft1.y + lastRight1.y) / 2
         
-        -- Hang the button exactly in the middle of the two chain ends
-        if child.width then
-            child:setPosition(cx - child.width / 2, cy)
+        -- Hang the first button exactly in the middle of the two chain ends
+        if child1.width then
+            child1:setPosition(cx1 - child1.width / 2, cy1)
+        end
+        
+        -- Cascade to a second button if it exists
+        if #self.children > 1 then
+            local child2 = self.children[2]
+            
+            -- Anchor second chains using the configurable offset from the center of the first button
+            local attachXLeft2 = cx1 + self.chain2LeftAttachOffsetX
+            local attachXRight2 = cx1 + self.chain2RightAttachOffsetX
+            local attachY2 = cy1 + (child1.height or 30)
+            
+            updateVerletChain(self.chainLeft2, attachXLeft2, attachY2)
+            updateVerletChain(self.chainRight2, attachXRight2, attachY2)
+            
+            local lastLeft2 = self.chainLeft2[#self.chainLeft2]
+            local lastRight2 = self.chainRight2[#self.chainRight2]
+            
+            local cx2 = (lastLeft2.x + lastRight2.x) / 2
+            local cy2 = (lastLeft2.y + lastRight2.y) / 2
+            
+            if child2.width then
+                child2:setPosition(cx2 - child2.width / 2, cy2)
+            end
         end
     end
     
@@ -195,6 +237,11 @@ function WinBanner:draw(scale, fontScale, offsetX, offsetY)
     
     drawVerletChain(self.chainLeft)
     drawVerletChain(self.chainRight)
+    
+    if #self.children > 1 then
+        drawVerletChain(self.chainLeft2)
+        drawVerletChain(self.chainRight2)
+    end
     
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(self.image, -imgW/2, -imgH/2)
