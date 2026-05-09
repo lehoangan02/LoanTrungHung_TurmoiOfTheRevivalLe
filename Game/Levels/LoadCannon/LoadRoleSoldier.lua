@@ -17,13 +17,12 @@ local SoldierStateEnum = {
     LiftingBall = 6
 }
 
-function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction,
-    bulletCollider)
+function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction, shakeFunction)
 
     LoadRoleSoldier.spawnBallFunction = spawnBallFunction
     LoadRoleSoldier.isCannonBallInStrawFunction = isCannonBallInStrawFunction
     LoadRoleSoldier.setCannonBallVisibleFunction = setCannonBallVisibleFunction
-    LoadRoleSoldier.bulletCollider = bulletCollider
+    LoadRoleSoldier.shakeFunction = shakeFunction
 
     LoadRoleSoldier.state = SoldierStateEnum.Idle
 
@@ -81,6 +80,13 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
 
     LoadRoleSoldier.blinkingTimer = 0
     LoadRoleSoldier.warningVisible = true
+
+    -- Setup Yellow Bullet Animation
+    LoadRoleSoldier.bulletAnimFired = false
+    LoadRoleSoldier.bullet_spritesheet = love.graphics.newImage("Resources/Images/Bullet_Yellow.png")
+    LoadRoleSoldier.bullet_spritesheet:setFilter("nearest", "nearest")
+    LoadRoleSoldier.bullet_grid = anim8.newGrid(50, 9, LoadRoleSoldier.bullet_spritesheet:getWidth(), LoadRoleSoldier.bullet_spritesheet:getHeight())
+    LoadRoleSoldier.bullet_animation = anim8.newAnimation(LoadRoleSoldier.bullet_grid('1-3', 1), 0.1, 'pauseAtEnd')
 end
 
 function LoadRoleSoldier:update(dt)
@@ -190,6 +196,8 @@ function LoadRoleSoldier:update(dt)
         LoadRoleSoldier.warningTimer = LoadRoleSoldier.warningDuration
         LoadRoleSoldier.blinkingTimer = 0
     end
+    LoadRoleSoldier.bullet_animation:update(dt)
+
     if LoadRoleSoldier.warningTimer > 0 then
         LoadRoleSoldier.warningTimer = LoadRoleSoldier.warningTimer - dt
         
@@ -214,6 +222,16 @@ function LoadRoleSoldier:update(dt)
         if LoadRoleSoldier.blinkingTimer >= blinkInterval then
             LoadRoleSoldier.blinkingTimer = 0
             LoadRoleSoldier.warningVisible = not LoadRoleSoldier.warningVisible
+        end
+        
+        -- Trigger bullet animation EXACTLY when the warning finishes
+        if LoadRoleSoldier.warningTimer <= 0 and not LoadRoleSoldier.bulletAnimFired then
+            LoadRoleSoldier.bulletAnimFired = true
+            LoadRoleSoldier.bullet_animation:gotoFrame(1)
+            LoadRoleSoldier.bullet_animation:resume()
+            if LoadRoleSoldier.shakeFunction then
+                LoadRoleSoldier.shakeFunction(0.2, 3) -- Give it a solid shake!
+            end
         end
 
     end
@@ -255,6 +273,13 @@ function LoadRoleSoldier:draw()
         love.graphics.setColor(1, 1, 1, 0.8)
         love.graphics.draw(LoadRoleSoldier.warningImage, 0, 0)
         love.graphics.setColor(1, 1, 1, 1)
+    end
+    
+    -- Draw the yellow bullet animation
+    if LoadRoleSoldier.bulletAnimFired and LoadRoleSoldier.bullet_animation.status ~= "paused" then
+        local bx, by = 225, 120
+        -- Adjust drawing offsets slightly
+        LoadRoleSoldier.bullet_animation:draw(LoadRoleSoldier.bullet_spritesheet, bx, by, 0, 1, 1, 25, 4.5)
     end
 end
 return LoadRoleSoldier

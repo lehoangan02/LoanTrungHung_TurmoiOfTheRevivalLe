@@ -17,6 +17,12 @@ function LoadCannonLevel:load()
     local camera = require("Game.Libraries.camera")
     LoadCannonLevel.cam = camera()
     LoadCannonLevel.cam:lookAt(LoadCannonLevel.cameraX, LoadCannonLevel.cameraY)
+    
+    LoadCannonLevel.shakeTime = 0
+    LoadCannonLevel.shakeDuration = 0
+    LoadCannonLevel.shakeMagnitude = 0
+    LoadCannonLevel.shakeX = 0
+    LoadCannonLevel.shakeY = 0
 
     LoadCannonLevel.roomSprite = love.graphics.newImage("Resources/Images/LowerSiegeTower.png")
     LoadCannonLevel.roomSprite:setFilter("nearest", "nearest")
@@ -24,18 +30,13 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite = love.graphics.newImage("Resources/Images/LowerCannon.png")
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
-    LoadCannonLevel.bulletCollider = LoadCannonLevel.world:newCollider("Rectangle", {60, 60, 10, 4})
-    LoadCannonLevel.bulletCollider:setType("kinematic")
-    LoadCannonLevel.initialBulletPosition = {x = 60, y = 60}
-    LoadCannonLevel.bulletCollider:setPosition(LoadCannonLevel.initialBulletPosition.x, LoadCannonLevel.initialBulletPosition.y)
 
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
-    -- Pass plain callback functions; methods don't rely on self
     LoadCannonLevel.soldier:load(
         function() LoadCannonLevel.spawnCannonBall() end,
         function() return LoadCannonLevel.isCannonBallInStraw() end,
         function(visible) LoadCannonLevel.setCannonBallVisible(visible) end,
-        LoadCannonLevel.bulletCollider
+        function(dur, mag) LoadCannonLevel:shake(dur, mag) end
     )
 
     LoadCannonLevel.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
@@ -52,6 +53,12 @@ function LoadCannonLevel:load()
     LoadCannonLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
     LoadCannonLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
 
+end
+
+function LoadCannonLevel:shake(duration, magnitude)
+    LoadCannonLevel.shakeDuration = duration
+    LoadCannonLevel.shakeTime = duration
+    LoadCannonLevel.shakeMagnitude = magnitude
 end
 
 function LoadCannonLevel:spawnCannonBall()
@@ -93,6 +100,25 @@ function LoadCannonLevel:update(dt)
         local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
         print("Ball Y position: " .. ballY)
     end
+    
+    if LoadCannonLevel.shakeTime and LoadCannonLevel.shakeTime > 0 then
+        LoadCannonLevel.shakeTime = LoadCannonLevel.shakeTime - dt
+        local t = LoadCannonLevel.shakeTime / LoadCannonLevel.shakeDuration
+        local strength = LoadCannonLevel.shakeMagnitude * t
+        LoadCannonLevel.shakeX = love.math.random(-strength, strength)
+        LoadCannonLevel.shakeY = love.math.random(-strength, strength)
+        if LoadCannonLevel.shakeX == 0 then LoadCannonLevel.shakeX = strength end
+        if LoadCannonLevel.shakeY == 0 then LoadCannonLevel.shakeY = strength end
+    else
+        LoadCannonLevel.shakeX = 0
+        LoadCannonLevel.shakeY = 0
+    end
+
+    LoadCannonLevel.cam:lookAt(
+        LoadCannonLevel.cameraX + LoadCannonLevel.shakeX,
+        LoadCannonLevel.cameraY + LoadCannonLevel.shakeY
+    )
+    
     if not res then
         return LevelEnum.Nothing
     else
