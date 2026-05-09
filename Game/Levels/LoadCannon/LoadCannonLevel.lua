@@ -96,7 +96,7 @@ function LoadCannonLevel:update(dt)
     if not res then
         return LevelEnum.Nothing
     else
-        return LevelEnum.StartMenu
+        return LevelEnum.TowerBlastFort
     end
 end
 

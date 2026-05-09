@@ -371,7 +371,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         )
         love.graphics.setColor(1, 0, 0, 1)
             -- Debug: draw a red circle at the spike block's initial position
-            love.graphics.circle("fill", BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, 5)
+            -- love.graphics.circle("fill", BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, 5)
         love.graphics.setColor(1, 1, 1, 1)
     BallDropLevel.cam:detach()
 

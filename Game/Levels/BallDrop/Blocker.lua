@@ -221,7 +221,18 @@ end
 
 function Blocker:draw()
     if self.visualLayer then 
-        self.gameMap:drawLayer(self.visualLayer) 
+        love.graphics.push()
+        -- Store the fractional offset and let love.graphics handle the subpixel translation
+        -- This prevents STI from rounding layer coordinates and causing twitchiness!
+        local diffX, diffY = self.visualLayer.x, self.visualLayer.y
+        self.visualLayer.x, self.visualLayer.y = 0, 0
+        
+        love.graphics.translate(diffX, diffY)
+        self.gameMap:drawLayer(self.visualLayer)
+        
+        -- Restore original
+        self.visualLayer.x, self.visualLayer.y = diffX, diffY
+        love.graphics.pop()
     end
     
     if self.blocker and self.springImage then

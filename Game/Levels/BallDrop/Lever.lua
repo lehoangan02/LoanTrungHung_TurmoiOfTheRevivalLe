@@ -17,6 +17,16 @@ function SwingLever.new(world, axleX, axleY, maxMotorTorque, damping, initAngle,
         SwingLever.spikeImage:setFilter("nearest", "nearest")
     end
 
+    if not SwingLever.leverImage then
+        SwingLever.leverImage = love.graphics.newImage("Resources/Images/Lever.png")
+        SwingLever.leverImage:setFilter("nearest", "nearest")
+    end
+
+    if not SwingLever.axleImage then
+        SwingLever.axleImage = love.graphics.newImage("Resources/Images/Axle.png")
+        SwingLever.axleImage:setFilter("nearest", "nearest")
+    end
+
     local axleRadius = 5
     self.axle = world:newCollider("Circle", {axleX, axleY, axleRadius})
     self.axle:setType("static")
@@ -91,15 +101,52 @@ function SwingLever:update(dt)
 end
 
 function SwingLever:draw()
-    love.graphics.setColor(0.7, 0.7, 0.7)
-    local shape = self.lever.fixture:getShape()
-    local points = {self.lever.body:getWorldPoints(shape:getPoints())}
-    love.graphics.polygon("fill", points)
+    if SwingLever.leverImage then
+        love.graphics.setColor(1, 1, 1, 1)
+        local lx, ly = self.lever.body:getPosition()
+        local lang = self.lever.body:getAngle()
+        local imgW, imgH = SwingLever.leverImage:getDimensions()
+        
+        -- Scale the image to match the physical dimensions of the lever (50x5)
+        local scaleX = self.leverWidth / imgW
+        local scaleY = self.leverHeight / imgH
+        
+        love.graphics.draw(
+            SwingLever.leverImage,
+            lx, ly,
+            lang,
+            scaleX, scaleY,
+            imgW / 2, imgH / 2
+        )
+    else
+        love.graphics.setColor(0.7, 0.7, 0.7)
+        local shape = self.lever.fixture:getShape()
+        local points = {self.lever.body:getWorldPoints(shape:getPoints())}
+        love.graphics.polygon("fill", points)
+    end
 
-    love.graphics.setColor(0.3, 0.3, 0.3)
-    local ax, ay = self.axle:getPosition()
-    local radius = self.axle.fixture:getShape():getRadius()
-    love.graphics.circle("fill", ax, ay, radius)
+    if SwingLever.axleImage then
+        love.graphics.setColor(1, 1, 1, 1)
+        local ax, ay = self.axle:getPosition()
+        local imgW, imgH = SwingLever.axleImage:getDimensions()
+        
+        -- The physics axle has a radius of 5 (diameter 10)
+        local scaleX = 10 / imgW
+        local scaleY = 10 / imgH
+        
+        love.graphics.draw(
+            SwingLever.axleImage,
+            ax, ay,
+            0,
+            scaleX, scaleY,
+            imgW / 2, imgH / 2
+        )
+    else
+        love.graphics.setColor(0.3, 0.3, 0.3)
+        local ax, ay = self.axle:getPosition()
+        local radius = self.axle.fixture:getShape():getRadius()
+        love.graphics.circle("fill", ax, ay, radius)
+    end
 
     love.graphics.setColor(1, 1, 1, 1)
 
