@@ -17,8 +17,8 @@ function PlayGround:load()
         100
     )
 
-    local WinScreenUI = require("Game.UI.WinScreenUI")
-    self.winScreen = WinScreenUI.new(function()
+    local LostScreenUI = require("Game.UI.LostScreenUI")
+    self.lostScreen = LostScreenUI.new(function()
         print("Banner Button Held!")
     end)
 end
@@ -28,10 +28,10 @@ function PlayGround:update(dt)
     if (InputManager:isEventFKeyPressed()) then
         print("F key pressed, starting dialogue")
         -- self.dialog:startDialogue()
-        self.winScreen:trigger("You won!", "Next Level")
+        self.lostScreen:trigger("You lost!", "Retry")
     end
     self.dialog:update(dt)
-    self.winScreen:update(dt)
+    self.lostScreen:update(dt)
     return LevelEnum.Nothing
 end
 
@@ -43,7 +43,7 @@ function PlayGround:draw(windowWidth, windowHeight)
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
     self.dialog:draw(scale, fontScale, offsetX, offsetY)
-    self.winScreen:draw(scale, fontScale, offsetX, offsetY)
+    self.lostScreen:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.pop()
     
 end

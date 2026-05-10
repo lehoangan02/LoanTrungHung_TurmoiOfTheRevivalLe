@@ -1,23 +1,23 @@
 -- USAGE EXAMPLE:
--- WinBanner is managed by WinScreenUI, but if used standalone:
+-- LostBanner is managed by LostScreenUI, but if used standalone:
 -- 1. Create the banner:
---      self.winBanner = WinBanner.new("Resources/Images/Win_banner.png", "You Won!")
+--      self.lostBanner = LostBanner.new("Resources/Images/Lost_banner.png", "You Lost!")
 -- 2. Add buttons (which hang as chained children):
---      self.winBanner:addChild(HoldTextButton:new(...))
+--      self.lostBanner:addChild(HoldTextButton:new(...))
 -- 3. Call `trigger()` when you want it to pop up:
---      self.winBanner:trigger()
+--      self.lostBanner:trigger()
 -- 4. Update and Draw:
---      self.winBanner:update(dt)
---      self.winBanner:draw(scale, fontScale, offsetX, offsetY)
+--      self.lostBanner:update(dt)
+--      self.lostBanner:draw(scale, fontScale, offsetX, offsetY)
 
 local UIElement = require("Game.UI.UIElement")
 local FontLoader = require("Game.Fonts.FontLoader")
 
-local WinBanner = setmetatable({}, {__index = UIElement})
-WinBanner.__index = WinBanner
+local LostBanner = setmetatable({}, {__index = UIElement})
+LostBanner.__index = LostBanner
 
-function WinBanner.new(imagePath, text, x, y)
-    local self = setmetatable(UIElement:new(x or BASE_W / 2, y or BASE_H / 2, 0, 0), WinBanner)
+function LostBanner.new(imagePath, text, x, y)
+    local self = setmetatable(UIElement:new(x or BASE_W / 2, y or BASE_H / 2, 0, 0), LostBanner)
     
     self.image = love.graphics.newImage(imagePath)
     self.image:setFilter("nearest", "nearest")
@@ -72,17 +72,17 @@ function WinBanner.new(imagePath, text, x, y)
     return self
 end
 
-function WinBanner:setPosition(x, y)
+function LostBanner:setPosition(x, y)
     self.x = x
     self.y = y
 end
 
-function WinBanner:addChild(element, localX, localY)
+function LostBanner:addChild(element, localX, localY)
     element:setPosition(localX or 0, localY or 0)
     table.insert(self.children, element)
 end
 
-function WinBanner:trigger()
+function LostBanner:trigger()
     self.active = true
     self.timer = 0 -- Reset timer to replay the animation
     
@@ -104,7 +104,7 @@ local function easeOutBack(t)
     return (t * t * ((s + 1) * t + s) + 1)
 end
 
-function WinBanner:update(dt)
+function LostBanner:update(dt)
     if not self.active then return end
 
     if self.timer < self.duration then
@@ -208,7 +208,7 @@ function WinBanner:update(dt)
     end
 end
 
-function WinBanner:draw(scale, fontScale, offsetX, offsetY)
+function LostBanner:draw(scale, fontScale, offsetX, offsetY)
     if not self.active then return end
     
     fontScale = fontScale or scale
@@ -296,4 +296,4 @@ function WinBanner:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.pop()
 end
 
-return WinBanner
+return LostBanner

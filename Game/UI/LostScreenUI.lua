@@ -1,31 +1,31 @@
--- USAGE EXAMPLE (as seen in PlaygroundLevel):
+-- USAGE EXAMPLE:
 -- 1. Require and instantiate the screen UI in your level's load function:
---      local WinScreenUI = require("Game.UI.WinScreenUI")
---      self.winScreen = WinScreenUI.new(function() print("Continue clicked!") end)
+--      local LostScreenUI = require("Game.UI.LostScreenUI")
+--      self.lostScreen = LostScreenUI.new(function() print("Retry clicked!") end)
 --
 -- 2. Call the trigger method when you want it to pop up:
---      self.winScreen:trigger("You won!", "Next Level")
+--      self.lostScreen:trigger("You Lost!", "Retry")
 --
 -- 3. Update and draw in your level's update/draw loops:
---      self.winScreen:update(dt)
---      self.winScreen:draw(scale, fontScale, offsetX, offsetY)
+--      self.lostScreen:update(dt)
+--      self.lostScreen:draw(scale, fontScale, offsetX, offsetY)
 
 local UIElement = require("Game.UI.UIElement")
-local WinBanner = require("Game.UI.WinBanner")
+local LostBanner = require("Game.UI.LostBanner")
 local HoldTextButton = require("Game.UI.Button.HoldTextButton")
 
-local WinScreenUI = setmetatable({}, {__index = UIElement})
-WinScreenUI.__index = WinScreenUI
+local LostScreenUI = setmetatable({}, {__index = UIElement})
+LostScreenUI.__index = LostScreenUI
 
-function WinScreenUI.new(onComplete)
-    local self = setmetatable(UIElement:new(0, 0, BASE_W, BASE_H), WinScreenUI)
+function LostScreenUI.new(onComplete)
+    local self = setmetatable(UIElement:new(0, 0, BASE_W, BASE_H), LostScreenUI)
     
-    self.winBanner = WinBanner.new("Resources/Images/Win_banner.png", "You Won!")
+    self.lostBanner = LostBanner.new("Resources/Images/Lost_banner.png", "You Lost!")
     
     -- First Button (Continue)
-    self.holdButton = HoldTextButton:new(0, 0, 80, 20, onComplete, {r = 1, g = 0.8, b = 0, a = 1}, "Continue")
+    self.holdButton = HoldTextButton:new(0, 0, 80, 20, onComplete, {r = 1, g = 0.8, b = 0, a = 1}, "Retry")
     self.holdButton:setFocus(true)
-    self.winBanner:addChild(self.holdButton)
+    self.lostBanner:addChild(self.holdButton)
     
     -- Second Button (Main Menu)
     self.mainMenuButton = HoldTextButton:new(0, 0, 80, 20, function()
@@ -33,26 +33,26 @@ function WinScreenUI.new(onComplete)
         print("Returning to Main Menu...")
     end, {r = 0.8, g = 0.8, b = 0.8, a = 1}, "Main Menu")
     self.mainMenuButton:setFocus(false)
-    self.winBanner:addChild(self.mainMenuButton)
+    self.lostBanner:addChild(self.mainMenuButton)
     
     return self
 end
 
 -- Pass text here to update it before triggering the animation
-function WinScreenUI:trigger(bannerText, buttonText)
+function LostScreenUI:trigger(bannerText, buttonText)
     if bannerText then
-        self.winBanner.text = bannerText
+        self.lostBanner.text = bannerText
     end
     if buttonText then
         self.holdButton.text = buttonText
     end
-    self.winBanner:trigger()
+    self.lostBanner:trigger()
 end
 
-function WinScreenUI:update(dt)
-    if not self.winBanner.active then return end
+function LostScreenUI:update(dt)
+    if not self.lostBanner.active then return end
     
-    self.winBanner:update(dt)
+    self.lostBanner:update(dt)
     
     -- Handle focus switching between the buttons
     local InputManager = require("Game.Input.InputManager")
@@ -67,8 +67,8 @@ function WinScreenUI:update(dt)
     end
 end
 
-function WinScreenUI:draw(scale, fontScale, offsetX, offsetY)
-    self.winBanner:draw(scale, fontScale, offsetX, offsetY)
+function LostScreenUI:draw(scale, fontScale, offsetX, offsetY)
+    self.lostBanner:draw(scale, fontScale, offsetX, offsetY)
 end
 
-return WinScreenUI
+return LostScreenUI
