@@ -156,7 +156,6 @@ function LoadCannonLevel:update(dt)
 end
 
 function LoadCannonLevel:draw(windowWidth, windowHeight)
-    love.graphics.clear(0.8, 0.8, 0.8, 1)
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.push()
     love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
@@ -180,7 +179,12 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
         
         LoadCannonLevel.world:draw()
 
-
+        if LoadCannonLevel.isLost then
+            -- Dark overlay (blur simulation)
+            love.graphics.setColor(0, 0, 0, 0.7)
+            love.graphics.rectangle("fill", -1000, -1000, 2000, 2000)
+            love.graphics.setColor(1, 1, 1, 1)
+        end
         
     LoadCannonLevel.cam:detach()
     love.graphics.pop()
