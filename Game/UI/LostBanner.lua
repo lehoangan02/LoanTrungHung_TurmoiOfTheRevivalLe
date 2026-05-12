@@ -222,10 +222,10 @@ function LostBanner:draw(scale, fontScale, offsetX, offsetY)
     love.graphics.scale(1/scale, 1/scale)
     
     -- 1. Draw Image, Chains, and Children
+    -- 1. Draw the banner background
     love.graphics.push()
-    love.graphics.scale(scale, scale)
-    love.graphics.translate(self.x, self.y + self.verticalOffset)
-    love.graphics.scale(animScale, animScale)
+    love.graphics.translate(math.floor(self.x * scale), math.floor((self.y + self.verticalOffset) * scale))
+    love.graphics.scale(animScale * scale, animScale * scale)
     
     -- Draw chains
     love.graphics.setColor(0.3, 0.3, 0.3, 1)
@@ -256,7 +256,7 @@ function LostBanner:draw(scale, fontScale, offsetX, offsetY)
     end
     
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(self.image, -imgW/2, -imgH/2)
+    love.graphics.draw(self.image, math.floor(-imgW/2), math.floor(-imgH/2))
     
     love.graphics.pop()
     
@@ -276,7 +276,7 @@ function LostBanner:draw(scale, fontScale, offsetX, offsetY)
     
     self.font = FontLoader:loadFont("Geo", self.fontSize * fontScale)
     love.graphics.setFont(self.font)
-    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.setColor(1, 1, 1, 1)
     
     local textW = self.font:getWidth(self.text)
     local baseline = self.font:getBaseline()

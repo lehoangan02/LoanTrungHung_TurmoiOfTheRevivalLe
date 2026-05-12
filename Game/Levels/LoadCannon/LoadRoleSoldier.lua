@@ -14,10 +14,12 @@ local SoldierStateEnum = {
     WalkLeft = 3,
     PickingBall = 4,
     WalkRight = 5,
-    LiftingBall = 6
+    LiftingBall = 6,
+    Falling = 7
 }
 
-function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction, shakeFunction)
+function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, setCannonBallVisibleFunction, shakeFunction, onLostAnimationComplete)
+    LoadRoleSoldier.onLostAnimationComplete = onLostAnimationComplete
 
     LoadRoleSoldier.spawnBallFunction = spawnBallFunction
     LoadRoleSoldier.isCannonBallInStrawFunction = isCannonBallInStrawFunction
@@ -71,6 +73,11 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
     local loadingCannonGrid = anim8.newGrid(LoadRoleSoldier.loadingCannonSpriteSheet:getWidth() / 38, 112, LoadRoleSoldier.loadingCannonSpriteSheet:getWidth(), LoadRoleSoldier.loadingCannonSpriteSheet:getHeight())
     LoadRoleSoldier.loadingCannonAnimation = anim8.newAnimation(loadingCannonGrid("1-38", 1), 0.1)
 
+    LoadRoleSoldier.fallingSpriteSheet = love.graphics.newImage("Resources/Images/SoldierFall.png")
+    LoadRoleSoldier.fallingSpriteSheet:setFilter("nearest", "nearest")
+    local fallingGrid = anim8.newGrid(240, 240, LoadRoleSoldier.fallingSpriteSheet:getWidth(), LoadRoleSoldier.fallingSpriteSheet:getHeight())
+    LoadRoleSoldier.fallingAnimation = anim8.newAnimation(fallingGrid("1-5", 1), 0.1, 'pauseAtEnd')
+
     LoadRoleSoldier.startedWarningForBullet = false
     LoadRoleSoldier.warningImage = love.graphics.newImage("Resources/Images/Warning.png")
     LoadRoleSoldier.warningImage:setFilter("nearest", "nearest")
@@ -104,7 +111,7 @@ function LoadRoleSoldier:update(dt)
     local moveSpeed = 1000
     local carrySpeed = 800
 
-    if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then
+    if (LoadRoleSoldier.state == SoldierStateEnum.Idle or LoadRoleSoldier.state == SoldierStateEnum.Falling) then
         -- Do nothing
     elseif (LoadRoleSoldier.state == SoldierStateEnum.CarryCharge) then
         local crankVal = InputManager:getCrankValue()
@@ -140,6 +147,14 @@ function LoadRoleSoldier:update(dt)
         if (LoadRoleSoldier.loadingCannonAnimation.position >= 38) then
             if DEBUG then
                 print("Finished loading cannon ball")
+            end
+        end
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.Falling) then
+        LoadRoleSoldier.fallingAnimation:update(dt)
+        if LoadRoleSoldier.fallingAnimation.status == 'paused' and not LoadRoleSoldier.lostScreenTriggered then
+            LoadRoleSoldier.lostScreenTriggered = true
+            if LoadRoleSoldier.onLostAnimationComplete then
+                LoadRoleSoldier.onLostAnimationComplete()
             end
         end
     end
@@ -289,6 +304,10 @@ function LoadRoleSoldier:update(dt)
             -- Check for player loss
             if LoadRoleSoldier.crankValue <= -6.0 and LoadRoleSoldier.crankValue >= -6.7 then
                 print("Player has lost!")
+                if LoadRoleSoldier.state ~= SoldierStateEnum.Falling then
+                    LoadRoleSoldier.state = SoldierStateEnum.Falling
+                    LoadRoleSoldier.fallingAnimation:gotoFrame(1)
+                end
             end
         end
 
@@ -324,6 +343,8 @@ function LoadRoleSoldier:draw()
         LoadRoleSoldier.carryingBallAnimation:draw(LoadRoleSoldier.carryingBallSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, -1, 1, BASE_W - 8, 0)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LiftingBall) then
         LoadRoleSoldier.loadingCannonAnimation:draw(LoadRoleSoldier.loadingCannonSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY, 0, 1, 1, -61, -64)
+    elseif (LoadRoleSoldier.state == SoldierStateEnum.Falling) then
+        LoadRoleSoldier.fallingAnimation:draw(LoadRoleSoldier.fallingSpriteSheet, LoadRoleSoldier.positionX, LoadRoleSoldier.positionY)
     end
     if LoadRoleSoldier.warningTimer > 0 and LoadRoleSoldier.warningVisible then
         love.graphics.setColor(1, 1, 1, 0.8)

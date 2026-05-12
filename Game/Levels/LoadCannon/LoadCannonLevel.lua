@@ -30,13 +30,26 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite = love.graphics.newImage("Resources/Images/LowerCannon.png")
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
+    local LostScreenUI = require("Game.UI.LostScreenUI")
+    LoadCannonLevel.isLost = false
+    LoadCannonLevel.lostScreen = LostScreenUI.new(function()
+        print("Retry clicked!")
+        local GameManager = require("Game.GameManager")
+        GameManager:loadLevel("LoadCannon")
+    end)
+
+    local function onLostAnimationComplete()
+        LoadCannonLevel.isLost = true
+        LoadCannonLevel.lostScreen:trigger("You Lost!", "Retry")
+    end
 
     LoadCannonLevel.soldier = require("Game.Levels.LoadCannon.LoadRoleSoldier")
     LoadCannonLevel.soldier:load(
         function() LoadCannonLevel.spawnCannonBall() end,
         function() return LoadCannonLevel.isCannonBallInStraw() end,
         function(visible) LoadCannonLevel.setCannonBallVisible(visible) end,
-        function(dur, mag) LoadCannonLevel:shake(dur, mag) end
+        function(dur, mag) LoadCannonLevel:shake(dur, mag) end,
+        onLostAnimationComplete
     )
 
     LoadCannonLevel.strawDampingImage = love.graphics.newImage("Resources/Images/StrawDamping.png")
@@ -106,6 +119,10 @@ function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     local res = LoadCannonLevel.soldier:update(dt)
     LoadCannonLevel.world:update(dt)
+    
+    if LoadCannonLevel.isLost and LoadCannonLevel.lostScreen then
+        LoadCannonLevel.lostScreen:update(dt)
+    end
     if LoadCannonLevel.isBallSpawned then
         if DEBUG then
             local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
@@ -139,7 +156,9 @@ function LoadCannonLevel:update(dt)
 end
 
 function LoadCannonLevel:draw(windowWidth, windowHeight)
+    love.graphics.clear(0.8, 0.8, 0.8, 1)
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.push()
     love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
 
@@ -153,14 +172,22 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
         end
         if LoadCannonLevel.cannonBallVisible then
             love.graphics.draw(self.backCannonBallsSprite, 0, 0)
+            love.graphics.draw(LoadCannonLevel.soldier.topCannonBallSprite, 3, 11)
         end
         love.graphics.draw(self.cannonSprite, 0, 0)
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 2, -1)
         love.graphics.draw(LoadCannonLevel.strawDampingImage, 0, 0)
         
         LoadCannonLevel.world:draw()
+
+
         
     LoadCannonLevel.cam:detach()
+    love.graphics.pop()
+    
+    if LoadCannonLevel.isLost and LoadCannonLevel.lostScreen then
+        LoadCannonLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY)
+    end
 end
 
 function LoadCannonLevel:unload()
