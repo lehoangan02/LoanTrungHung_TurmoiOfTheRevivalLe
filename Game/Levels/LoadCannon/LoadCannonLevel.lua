@@ -46,9 +46,18 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonBallImage:setFilter("nearest", "nearest")
 
     LoadCannonLevel.isBallSpawned = false
+    LoadCannonLevel.hasHitStraw = false
 
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
+
+    -- Breezefield callback
+    LoadCannonLevel.strawDampingCollider.enter = function(self, other, contact)
+        if other == LoadCannonLevel.cannonBallCollider and not LoadCannonLevel.hasHitStraw then
+            LoadCannonLevel.hasHitStraw = true
+            LoadCannonLevel:shake(0.1, 1) -- Very light thump
+        end
+    end
 
     LoadCannonLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
     LoadCannonLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
@@ -67,6 +76,7 @@ function LoadCannonLevel:spawnCannonBall()
     end
     print("Spawning cannon ball")
     LoadCannonLevel.isBallSpawned = true
+    LoadCannonLevel.hasHitStraw = false
     local radius = 4
     LoadCannonLevel.cannonBallCollider = LoadCannonLevel.world:newCollider("Circle", {95, 0, radius})
     LoadCannonLevel.cannonBallCollider:setType("dynamic")
@@ -96,9 +106,11 @@ function LoadCannonLevel:update(dt)
     local LevelEnum = require("Game.Levels.LevelEnum")
     local res = LoadCannonLevel.soldier:update(dt)
     LoadCannonLevel.world:update(dt)
-    if LoadCannonLevel.isBallSpawned and DEBUG then
-        local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
-        print("Ball Y position: " .. ballY)
+    if LoadCannonLevel.isBallSpawned then
+        if DEBUG then
+            local _, ballY = LoadCannonLevel.cannonBallCollider:getPosition()
+            print("Ball Y position: " .. ballY)
+        end
     end
     
     if LoadCannonLevel.shakeTime and LoadCannonLevel.shakeTime > 0 then

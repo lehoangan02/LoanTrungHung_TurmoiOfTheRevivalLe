@@ -81,6 +81,15 @@ function LoadRoleSoldier:load(spawnBallFunction, isCannonBallInStrawFunction, se
     LoadRoleSoldier.blinkingTimer = 0
     LoadRoleSoldier.warningVisible = true
 
+    -- Second Warning Setup
+    LoadRoleSoldier.startedWarning2 = false
+    LoadRoleSoldier.warningTimer2 = 0
+    LoadRoleSoldier.warningDuration2 = 2.8
+    LoadRoleSoldier.blinkingTimer2 = 0
+    LoadRoleSoldier.warningVisible2 = true
+    LoadRoleSoldier.warning2X = -125 -- Set the configurable X position here
+    LoadRoleSoldier.warning2Y = -50  -- Set the configurable Y position here
+
     -- Setup Yellow Bullet Animation
     LoadRoleSoldier.bulletAnimFired = false
     LoadRoleSoldier.bullet_spritesheet = love.graphics.newImage("Resources/Images/Bullet_Yellow.png")
@@ -162,7 +171,6 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkLeft and LoadRoleSoldier.crankValue < -15.75) then
         LoadRoleSoldier.crankValue = -15.75
         LoadRoleSoldier.positionX = -43
-        LoadRoleSoldier.spawnBallFunction()
         if (LoadRoleSoldier.isCannonBallInStrawFunction()) then
             print("Ball is in straw, picking ball")
             LoadRoleSoldier.state = SoldierStateEnum.PickingBall
@@ -223,9 +231,54 @@ function LoadRoleSoldier:update(dt)
             LoadRoleSoldier.blinkingTimer = 0
             LoadRoleSoldier.warningVisible = not LoadRoleSoldier.warningVisible
         end
+    end
+
+    -- Update Second Warning
+    if (LoadRoleSoldier.crankValue < -12.9 and not LoadRoleSoldier.startedWarning2) then
+        print("Started Second Warning at crank value: " .. LoadRoleSoldier.crankValue)
+        LoadRoleSoldier.startedWarning2 = true
+        LoadRoleSoldier.warningTimer2 = LoadRoleSoldier.warningDuration2
+        LoadRoleSoldier.blinkingTimer2 = 0
+    end
+
+    if LoadRoleSoldier.warningTimer2 > 0 then
+        LoadRoleSoldier.warningTimer2 = LoadRoleSoldier.warningTimer2 - dt
+        LoadRoleSoldier.blinkingTimer2 = LoadRoleSoldier.blinkingTimer2 + dt
         
+        local progress = 1 - (LoadRoleSoldier.warningTimer2 / LoadRoleSoldier.warningDuration2)
+        local blinkInterval
+
+        if progress < 0.2 then
+            blinkInterval = 0.5
+        elseif progress < 0.4 then
+            blinkInterval = 0.35
+        elseif progress < 0.6 then
+            blinkInterval = 0.2
+        elseif progress < 0.8 then
+            blinkInterval = 0.1
+        else
+            blinkInterval = 0.03
+        end
+        
+        if LoadRoleSoldier.blinkingTimer2 >= blinkInterval then
+            LoadRoleSoldier.warningVisible2 = not LoadRoleSoldier.warningVisible2
+            LoadRoleSoldier.blinkingTimer2 = 0
+        end
+        
+        if LoadRoleSoldier.warningTimer2 <= 0 then
+            print("Second Warning finished at crank value: " .. LoadRoleSoldier.crankValue)
+            LoadRoleSoldier.warningVisible2 = false
+            
+            if not LoadRoleSoldier.secondWarningEnded then
+                LoadRoleSoldier.secondWarningEnded = true
+                if LoadRoleSoldier.spawnBallFunction then
+                    LoadRoleSoldier.spawnBallFunction()
+                end
+            end
+        end
+    end    
         -- Trigger bullet animation EXACTLY when the warning finishes
-        if LoadRoleSoldier.warningTimer <= 0 and not LoadRoleSoldier.bulletAnimFired then
+        if LoadRoleSoldier.startedWarningForBullet and LoadRoleSoldier.warningTimer <= 0 and not LoadRoleSoldier.bulletAnimFired then
             LoadRoleSoldier.bulletAnimFired = true
             LoadRoleSoldier.bullet_animation:gotoFrame(1)
             LoadRoleSoldier.bullet_animation:resume()
@@ -238,8 +291,6 @@ function LoadRoleSoldier:update(dt)
                 print("Player has lost!")
             end
         end
-
-    end
 
     if DEBUG then
         print("Crank Value: " .. LoadRoleSoldier.crankValue .. ", PositionX: " .. LoadRoleSoldier.positionX)
@@ -277,6 +328,13 @@ function LoadRoleSoldier:draw()
     if LoadRoleSoldier.warningTimer > 0 and LoadRoleSoldier.warningVisible then
         love.graphics.setColor(1, 1, 1, 0.8)
         love.graphics.draw(LoadRoleSoldier.warningImage, 0, 0)
+        love.graphics.setColor(1, 1, 1, 1)
+    end
+
+    -- Draw Second Warning
+    if LoadRoleSoldier.warningTimer2 > 0 and LoadRoleSoldier.warningVisible2 then
+        love.graphics.setColor(1, 1, 1, 0.8)
+        love.graphics.draw(LoadRoleSoldier.warningImage, LoadRoleSoldier.warning2X, LoadRoleSoldier.warning2Y)
         love.graphics.setColor(1, 1, 1, 1)
     end
     
