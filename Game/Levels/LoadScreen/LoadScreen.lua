@@ -23,6 +23,7 @@ function LoadScreen.new(imagePath)
     self.coroutine = nil
     self.progress = 0
     self.maxProgress = 0
+    self.isDismissed = false
     
     instance = self
     return self
@@ -49,6 +50,7 @@ function LoadScreen:start()
     self.progress = 0
     self.currentTaskIndex = 1
     self.isComplete = false
+    self.isDismissed = false
     self.results = {}
     
     self.coroutine = coroutine.create(function()
@@ -62,6 +64,9 @@ function LoadScreen:start()
 end
 
 function LoadScreen:update(dt)
+    if self.isDismissed then
+        return
+    end
     if self.isComplete then
         return
     end
@@ -76,6 +81,12 @@ function LoadScreen:update(dt)
         end
     else
         self.isComplete = true
+        
+        -- Trigger the mini-wipe transition to dismiss the load screen smoothly
+        local TransitionManager = require("Game.TransitionManager")
+        TransitionManager:start("fade", nil, 0.6, function()
+            self.isDismissed = true
+        end)
     end
 end
 
@@ -162,7 +173,7 @@ function LoadScreen:getResult(index)
 end
 
 function LoadScreen:isDone()
-    return self.isComplete
+    return self.isDismissed
 end
 
 function LoadScreen:reset()
@@ -173,6 +184,7 @@ function LoadScreen:reset()
     self.coroutine = nil
     self.progress = 0
     self.maxProgress = 0
+    self.isDismissed = false
 end
 
 return LoadScreen
