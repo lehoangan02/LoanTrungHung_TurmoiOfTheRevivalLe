@@ -83,8 +83,8 @@ function LoadScreen:update(dt)
         self.isComplete = true
         
         -- Trigger the mini-wipe transition to dismiss the load screen smoothly
-        local TransitionManager = require("Game.TransitionManager")
-        TransitionManager:start("fade", nil, 0.6, function()
+        local TransitionManager = require("Game.Transitions.TransitionManager")
+        TransitionManager:start(TransitionManager.type, nil, 0.6, function()
             self.isDismissed = true
         end)
     end

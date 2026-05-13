@@ -2,7 +2,7 @@
 local Level = {}
 Level.__index = Level
 
-local TransitionEnum = require("Game.TransitionEnum")
+local TransitionEnum = require("Game.Transitions.TransitionEnum")
 Level.transitionOut = TransitionEnum.Fade
 
 function Level:load()

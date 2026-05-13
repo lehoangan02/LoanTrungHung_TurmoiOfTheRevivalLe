@@ -4,6 +4,7 @@ SoldierDropBallLevel.__index = SoldierDropBallLevel
 
 local LoadScreen = require("Game.Levels.LoadScreen.LoadScreen")
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local TransitionEnum = require("Game.Transitions.TransitionEnum")
 
 function SoldierDropBallLevel:shake(duration, magnitude)
     self.shakeDuration = duration
@@ -12,6 +13,8 @@ function SoldierDropBallLevel:shake(duration, magnitude)
 end
 
 function SoldierDropBallLevel:load()
+
+    SoldierDropBallLevel.transitionOut = TransitionEnum.SlideUp
 
     SoldierDropBallLevel.loadScreen = LoadScreen.new("Resources/Images/Hoangho_gt.jpg")
 

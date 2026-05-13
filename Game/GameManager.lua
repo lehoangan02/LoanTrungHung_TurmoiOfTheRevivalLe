@@ -2,8 +2,8 @@ local LevelEnum = require("Game.Levels.LevelEnum")
 local levelLoader = require("Game.Levels.LevelLoader")
 local inputManager = require("Game.Input.InputManager")
 local Pause = require("Game.Pause")
-local TransitionManager = require("Game.TransitionManager")
-local TransitionEnum = require("Game.TransitionEnum")
+local TransitionManager = require("Game.Transitions.TransitionManager")
+local TransitionEnum = require("Game.Transitions.TransitionEnum")
 
 local GameManager = {}
 GameManager.__index = GameManager
