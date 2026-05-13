@@ -11,7 +11,7 @@
 --      self.lostScreen:draw(scale, fontScale, offsetX, offsetY)
 
 local UIElement = require("Game.UI.UIElement")
-local LostBanner = require("Game.UI.LostBanner")
+local LostBanner = require("Game.UI.Banner.LostBanner")
 local HoldTextButton = require("Game.UI.Button.HoldTextButton")
 
 local LostScreenUI = setmetatable({}, {__index = UIElement})

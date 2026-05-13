@@ -11,7 +11,7 @@
 --      self.winScreen:draw(scale, fontScale, offsetX, offsetY)
 
 local UIElement = require("Game.UI.UIElement")
-local WinBanner = require("Game.UI.WinBanner")
+local WinBanner = require("Game.UI.Banner.WinBanner")
 local HoldTextButton = require("Game.UI.Button.HoldTextButton")
 
 local WinScreenUI = setmetatable({}, {__index = UIElement})
