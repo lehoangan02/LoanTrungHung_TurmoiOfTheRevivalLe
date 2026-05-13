@@ -2,6 +2,8 @@ local LevelEnum = require("Game.Levels.LevelEnum")
 local levelLoader = require("Game.Levels.LevelLoader")
 local inputManager = require("Game.Input.InputManager")
 local Pause = require("Game.Pause")
+local TransitionManager = require("Game.TransitionManager")
+local TransitionEnum = require("Game.TransitionEnum")
 
 local GameManager = {}
 GameManager.__index = GameManager
@@ -20,7 +22,7 @@ function GameManager:start()
     local w, h = love.graphics.getDimensions()
     GameManager.pauseScreen = Pause.new(w, h)
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SolderLoadCannon)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.StartMenu)
 end
 function GameManager:update(dt)
     inputManager:update(dt)
@@ -28,18 +30,52 @@ function GameManager:update(dt)
     if GameManager.pauseScreen.isPaused then
         return
     end
+    
+    if TransitionManager.isTransitioning then
+        TransitionManager:update(dt)
+        -- Keep updating the current level so it doesn't freeze awkwardly
+        if GameManager.currentLevel then
+            GameManager.currentLevel:update(dt)
+        end
+        return
+    end
+
     local nextLevel = GameManager.currentLevel:update(dt)
     if (nextLevel ~= LevelEnum.Nothing) then
-        GameManager.currentLevel:unload()
-        GameManager.currentLevel = levelLoader:loadLevel(nextLevel)
+        GameManager:loadLevel(nextLevel, GameManager.currentLevel.transitionOut)
     end
+end
+
+function GameManager:loadLevel(levelEnum, transitionEnum)
+    transitionEnum = transitionEnum or TransitionEnum.Fade
+    
+    local typeStr = "fade"
+    if transitionEnum == TransitionEnum.SlideUp then
+        typeStr = "slide_up"
+    elseif transitionEnum == TransitionEnum.Grid then
+        typeStr = "grid"
+    end
+    
+    TransitionManager:start(typeStr, levelEnum, 0.7, function(lvl)
+        if GameManager.currentLevel and GameManager.currentLevel.unload then
+            GameManager.currentLevel:unload()
+        end
+        GameManager.currentLevel = levelLoader:loadLevel(lvl)
+    end)
 end
 function GameManager:quit()
 end
 function GameManager:draw(windowWidth, windowHeight)
-    GameManager.currentLevel:draw(windowWidth, windowHeight)
+    if GameManager.currentLevel then
+        GameManager.currentLevel:draw(windowWidth, windowHeight)
+    end
+    
     if GameManager.pauseScreen.isPaused or GameManager.pauseScreen.animating then
         GameManager.pauseScreen:draw(windowWidth, windowHeight)
+    end
+    
+    if TransitionManager.isTransitioning then
+        TransitionManager:draw(windowWidth, windowHeight)
     end
 
     -- love.graphics.setCanvas()

@@ -31,11 +31,12 @@ function LoadCannonLevel:load()
     LoadCannonLevel.cannonSprite:setFilter("nearest", "nearest")
 
     local LostScreenUI = require("Game.UI.LostScreenUI")
+    local LevelEnum = require("Game.Levels.LevelEnum")
     LoadCannonLevel.isLost = false
     LoadCannonLevel.lostScreen = LostScreenUI.new(function()
         print("Retry clicked!")
         local GameManager = require("Game.GameManager")
-        GameManager:loadLevel("LoadCannon")
+        GameManager:loadLevel(LevelEnum.SolderLoadCannon)
     end)
 
     local function onLostAnimationComplete()

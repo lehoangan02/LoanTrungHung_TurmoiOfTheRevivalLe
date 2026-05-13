@@ -2,6 +2,9 @@
 local Level = {}
 Level.__index = Level
 
+local TransitionEnum = require("Game.TransitionEnum")
+Level.transitionOut = TransitionEnum.Fade
+
 function Level:load()
    error("Level.load not implemented")
 end
