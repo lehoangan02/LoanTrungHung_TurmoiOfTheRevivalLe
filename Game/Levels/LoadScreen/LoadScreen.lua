@@ -54,17 +54,17 @@ function LoadScreen:start()
     self.results = {}
     
     self.coroutine = coroutine.create(function()
-        local function sleep(duration)
+        local function asyncWait(duration)
             local t = 0
             while t < duration do
-                local dt = coroutine.yield("sleep")
+                local dt = coroutine.yield("waiting_async")
                 t = t + (dt or 0)
             end
         end
 
         for i, task in ipairs(self.tasks) do
             self.currentTaskIndex = i
-            local success, result = pcall(task.func, sleep)
+            local success, result = pcall(task.func, asyncWait)
             self.results[i] = {success = success, result = result}
             coroutine.yield(task.weight)
         end
@@ -85,8 +85,8 @@ function LoadScreen:update(dt)
             if type(result) == "number" then
                 -- Task finished, result is the progress weight
                 self.progress = self.progress + result
-            elseif result == "sleep" then
-                -- Task is sleeping, do nothing
+            elseif result == "waiting_async" then
+                -- Task is waiting asynchronously, do nothing
             end
         else
             print("Error in LoadScreen coroutine:", result)
