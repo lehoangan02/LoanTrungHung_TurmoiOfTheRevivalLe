@@ -36,12 +36,11 @@ function LoadScreen:getInstance()
     return instance
 end
 
-function LoadScreen:addTask(taskFunction, progressWeight, waitTime)
+function LoadScreen:addTask(taskFunction, progressWeight)
     progressWeight = progressWeight or 1
     table.insert(self.tasks, {
         func = taskFunction,
-        weight = progressWeight,
-        waitTime = waitTime or 0
+        weight = progressWeight
     })
     self.maxProgress = self.maxProgress + progressWeight
 end
@@ -53,14 +52,21 @@ function LoadScreen:start()
     self.isComplete = false
     self.isDismissed = false
     self.results = {}
-    self.sleepTimer = 0
     
     self.coroutine = coroutine.create(function()
+        local function sleep(duration)
+            local t = 0
+            while t < duration do
+                local dt = coroutine.yield("sleep")
+                t = t + (dt or 0)
+            end
+        end
+
         for i, task in ipairs(self.tasks) do
             self.currentTaskIndex = i
-            local success, result = pcall(task.func)
+            local success, result = pcall(task.func, sleep)
             self.results[i] = {success = success, result = result}
-            coroutine.yield(task.weight, task.waitTime)
+            coroutine.yield(task.weight)
         end
     end)
 end
@@ -72,23 +78,18 @@ function LoadScreen:update(dt)
     if self.isComplete then
         return
     end
-    
-    if self.sleepTimer > 0 then
-        self.sleepTimer = self.sleepTimer - dt
-        return
-    end
 
     if self.coroutine and coroutine.status(self.coroutine) ~= "dead" then
-        local ok, progress, waitTime = coroutine.resume(self.coroutine)
-        if ok and progress then
-            self.progress = self.progress + progress
-            if waitTime and waitTime > 0 then
-                self.sleepTimer = waitTime
+        local ok, result = coroutine.resume(self.coroutine, dt)
+        if ok then
+            if type(result) == "number" then
+                -- Task finished, result is the progress weight
+                self.progress = self.progress + result
+            elseif result == "sleep" then
+                -- Task is sleeping, do nothing
             end
-        end
-        
-        if not ok then
-            print("Error in LoadScreen coroutine:", progress)
+        else
+            print("Error in LoadScreen coroutine:", result)
         end
     else
         local TransitionManager = require("Game.Transitions.TransitionManager")
@@ -204,7 +205,6 @@ function LoadScreen:reset()
     self.progress = 0
     self.maxProgress = 0
     self.isDismissed = false
-    self.sleepTimer = 0
 end
 
 return LoadScreen

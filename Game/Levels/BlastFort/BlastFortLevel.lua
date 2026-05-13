@@ -20,25 +20,29 @@ function BlastFortLevel:load()
 
     BlastFortLevel.loadScreen:reset()
 
-    BlastFortLevel.loadScreen:addTask(function()
+    BlastFortLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 1 - waiting...")
+        sleep(0.1)
         print("Dummy task 1 - done!")
-    end, 20, 0.1)
+    end, 20)
 
-    BlastFortLevel.loadScreen:addTask(function()
+    BlastFortLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 2 - waiting...")
+        sleep(0.15)
         print("Dummy task 2 - done!")
-    end, 25, 0.15)
+    end, 25)
 
-    BlastFortLevel.loadScreen:addTask(function()
+    BlastFortLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 3 - waiting...")
+        sleep(0.2)
         print("Dummy task 3 - done!")
-    end, 30, 0.2)
+    end, 30)
 
-    BlastFortLevel.loadScreen:addTask(function()
+    BlastFortLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 4 - loading actual level...")
+        sleep(0.2)
         print("Dummy task 4 - done!")
-    end, 25, 0.2)
+    end, 25)
 
     BlastFortLevel.loadScreen:start()
 

@@ -20,25 +20,29 @@ function SoldierDropBallLevel:load()
 
     SoldierDropBallLevel.loadScreen:reset()
 
-    SoldierDropBallLevel.loadScreen:addTask(function()
+    SoldierDropBallLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 1 - waiting...")
+        sleep(0)
         print("Dummy task 1 - done!")
-    end, 20, 0)
+    end, 20)
 
-    SoldierDropBallLevel.loadScreen:addTask(function()
+    SoldierDropBallLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 2 - waiting...")
+        sleep(0)
         print("Dummy task 2 - done!")
-    end, 25, 0)
+    end, 25)
 
-    SoldierDropBallLevel.loadScreen:addTask(function()
+    SoldierDropBallLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 3 - waiting...")
+        sleep(0)
         print("Dummy task 3 - done!")
-    end, 30, 0)
+    end, 30)
 
-    SoldierDropBallLevel.loadScreen:addTask(function()
+    SoldierDropBallLevel.loadScreen:addTask(function(sleep)
         print("Dummy task 4 - loading actual level...")
+        sleep(4)
         print("Dummy task 4 - done!")
-    end, 25, 4)
+    end, 25)
 
     SoldierDropBallLevel.loadScreen:start()
 
