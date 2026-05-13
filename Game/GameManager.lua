@@ -22,9 +22,12 @@ function GameManager:start()
     local w, h = love.graphics.getDimensions()
     GameManager.pauseScreen = Pause.new(w, h)
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.StartMenu)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.NgocHoi)
 end
 function GameManager:update(dt)
+    -- Cap delta time to prevent physics explosions and animation skips during heavy synchronous loads
+    if dt > 0.1 then dt = 0.1 end
+    
     inputManager:update(dt)
     GameManager.pauseScreen:update(dt)
     if GameManager.pauseScreen.isPaused then
@@ -61,6 +64,11 @@ function GameManager:loadLevel(levelEnum, transitionEnum)
             GameManager.currentLevel:unload()
         end
         GameManager.currentLevel = levelLoader:loadLevel(lvl)
+        
+        -- Reset the timer so the massive synchronous load time isn't treated as animation time
+        if love.timer then
+            love.timer.step()
+        end
     end)
 end
 function GameManager:quit()

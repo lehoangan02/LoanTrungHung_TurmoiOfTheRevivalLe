@@ -36,11 +36,12 @@ function LoadScreen:getInstance()
     return instance
 end
 
-function LoadScreen:addTask(taskFunction, progressWeight)
+function LoadScreen:addTask(taskFunction, progressWeight, waitTime)
     progressWeight = progressWeight or 1
     table.insert(self.tasks, {
         func = taskFunction,
-        weight = progressWeight
+        weight = progressWeight,
+        waitTime = waitTime or 0
     })
     self.maxProgress = self.maxProgress + progressWeight
 end
@@ -52,13 +53,14 @@ function LoadScreen:start()
     self.isComplete = false
     self.isDismissed = false
     self.results = {}
+    self.sleepTimer = 0
     
     self.coroutine = coroutine.create(function()
         for i, task in ipairs(self.tasks) do
             self.currentTaskIndex = i
             local success, result = pcall(task.func)
             self.results[i] = {success = success, result = result}
-            coroutine.yield(task.weight)
+            coroutine.yield(task.weight, task.waitTime)
         end
     end)
 end
@@ -70,20 +72,37 @@ function LoadScreen:update(dt)
     if self.isComplete then
         return
     end
+    
+    if self.sleepTimer > 0 then
+        self.sleepTimer = self.sleepTimer - dt
+        return
+    end
+
     if self.coroutine and coroutine.status(self.coroutine) ~= "dead" then
-        local ok, progress = coroutine.resume(self.coroutine)
+        local ok, progress, waitTime = coroutine.resume(self.coroutine)
         if ok and progress then
             self.progress = self.progress + progress
+            if waitTime and waitTime > 0 then
+                self.sleepTimer = waitTime
+            end
         end
         
         if not ok then
             print("Error in LoadScreen coroutine:", progress)
         end
     else
+        local TransitionManager = require("Game.Transitions.TransitionManager")
+        
+        -- The computer loads the level so fast that it finishes before the 
+        -- TransitionManager even finishes its 0.7s fade-in! We must wait 
+        -- for the entry fade-in to complete before we trigger the fade-out!
+        if TransitionManager.isTransitioning then
+            return
+        end
+        
         self.isComplete = true
         
         -- Trigger the mini-wipe transition to dismiss the load screen smoothly
-        local TransitionManager = require("Game.Transitions.TransitionManager")
         TransitionManager:start(TransitionManager.type, nil, 0.6, function()
             self.isDismissed = true
         end)
@@ -185,6 +204,7 @@ function LoadScreen:reset()
     self.progress = 0
     self.maxProgress = 0
     self.isDismissed = false
+    self.sleepTimer = 0
 end
 
 return LoadScreen

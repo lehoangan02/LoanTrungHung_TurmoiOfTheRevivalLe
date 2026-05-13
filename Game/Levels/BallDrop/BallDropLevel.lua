@@ -16,27 +16,23 @@ function BallDropLevel:load()
 
     BallDropLevel.loadScreen:addTask(function()
         print("Dummy task 1 - waiting...")
-        love.timer.sleep(0.1)
         print("Dummy task 1 - done!")
-    end, 20)
+    end, 20, 0.1)
 
     BallDropLevel.loadScreen:addTask(function()
         print("Dummy task 2 - waiting...")
-        love.timer.sleep(0.15)
         print("Dummy task 2 - done!")
-    end, 25)
+    end, 25, 0.15)
 
     BallDropLevel.loadScreen:addTask(function()
         print("Dummy task 3 - waiting...")
-        love.timer.sleep(0.2)
         print("Dummy task 3 - done!")
-    end, 30)
+    end, 30, 0.2)
 
     BallDropLevel.loadScreen:addTask(function()
         print("Dummy task 4 - loading actual level...")
-        love.timer.sleep(0.2)
         print("Dummy task 4 - done!")
-    end, 25)
+    end, 25, 0.2)
 
     BallDropLevel.loadScreen:start()
 
