@@ -1,13 +1,13 @@
 local TextButton = require("Game.UI.Button.TextButton")
-local HoldTextButton = setmetatable({}, TextButton)
-HoldTextButton.__index = HoldTextButton
+local TransparentHoldTextButton = setmetatable({}, TextButton)
+TransparentHoldTextButton.__index = TransparentHoldTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
 
 local InputManager = require("Game.Input.InputManager")
 
-function HoldTextButton:new(x, y , width, height, onComplete, color, text)
+function TransparentHoldTextButton:new(x, y , width, height, onComplete, color, text)
     local instance = TextButton.new(self, x, y, width, height)
     instance.onComplete = onComplete
     instance.progress = 0
@@ -19,7 +19,7 @@ function HoldTextButton:new(x, y , width, height, onComplete, color, text)
     return instance
 end
 
-function HoldTextButton:update(dt)
+function TransparentHoldTextButton:update(dt)
     local isHeld = self.infocus and InputManager:isLeftRudderPressed()
     local SPEED = 230
     local DECAY_SPEED = 20
@@ -43,24 +43,13 @@ function HoldTextButton:update(dt)
     end
 end
 
-function HoldTextButton:draw(scale, offsetX, offsetY)
+function TransparentHoldTextButton:draw(scale, offsetX, offsetY)
     local prevLineWidth = love.graphics.getLineWidth()
     love.graphics.push()
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
    
     local borderRadius = math.min(self.maxRoundedness, self.progress) + self.defaultRoundedness
-
-    love.graphics.setColor(0.9, 0.9, 0.9, 1) -- light grey background
-    love.graphics.rectangle(
-        "fill",
-        self.x - self.pad,
-        self.y - self.pad,
-        self.width + self.pad * 2,
-        self.height + self.pad * 2,
-        borderRadius,
-        borderRadius
-    )
 
     if self.infocus then
         love.graphics.setColor(0, 0, 0, 1)
@@ -112,4 +101,4 @@ function HoldTextButton:draw(scale, offsetX, offsetY)
     love.graphics.setLineWidth(prevLineWidth)
 end
 
-return HoldTextButton
+return TransparentHoldTextButton

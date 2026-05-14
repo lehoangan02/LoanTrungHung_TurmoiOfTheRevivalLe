@@ -1,14 +1,14 @@
 local TextButton = require("Game.UI.Button.TextButton")
 
-local ClickTextButton = setmetatable({}, TextButton)
-ClickTextButton.__index = ClickTextButton
+local TransparentClickTextButton = setmetatable({}, TextButton)
+TransparentClickTextButton.__index = TransparentClickTextButton
 
 local FontLoader = require("Game.Fonts.FontLoader")
 local fontLoader = FontLoader:getInstance()
 
 local InputManager = require("Game.Input.InputManager")
-function ClickTextButton.new(x, y, width, height, onComplete, color, text)
-    local self = setmetatable({}, ClickTextButton)
+function TransparentClickTextButton.new(x, y, width, height, onComplete, color, text)
+    local self = setmetatable({}, TransparentClickTextButton)
     self.new(x, y, width, height)
     self.onComplete = onComplete
     self.isClicked = 0
@@ -20,7 +20,7 @@ function ClickTextButton.new(x, y, width, height, onComplete, color, text)
     return self
 end
 
-function ClickTextButton:update(dt)
+function TransparentClickTextButton:update(dt)
     if self.infocus and InputManager:isEventRightKeyPressed() and not self.isClicked then
         self.isClicked = true
         if self.onComplete then 
@@ -31,24 +31,13 @@ function ClickTextButton:update(dt)
     end
 end
 
-function ClickTextButton:draw(scale, offsetX, offsetY)
+function TransparentClickTextButton:draw(scale, offsetX, offsetY)
     local prevLineWidth = love.graphics.getLineWidth()
     love.graphics.push()
     love.graphics.translate(offsetX, offsetY)
     love.graphics.scale(scale, scale)
 
     local borderRadius = math.min(8, self.progress) + self.defaultRoundedness
-
-    love.graphics.setColor(0.9, 0.9, 0.9, 1) -- light grey background
-    love.graphics.rectangle(
-        "fill",
-        self.x - self.pad,
-        self.y - self.pad,
-        self.width + self.pad * 2,
-        self.height + self.pad * 2,
-        borderRadius,
-        borderRadius
-    )
 
     if self.infocus then
         love.graphics.setColor(0, 0, 0, 1)
