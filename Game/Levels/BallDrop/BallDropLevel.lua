@@ -250,7 +250,7 @@ function BallDropLevel:update(dt)
     if BallDropLevel.success then
         BallDropLevel.timeToLinger = BallDropLevel.timeToLinger - dt
         if BallDropLevel.timeToLinger <= 0 then
-            return LevelEnum.SolderLoadCannon
+            return LevelEnum.SoldierLoadCannon
         end
     end
 

@@ -36,7 +36,7 @@ function LoadCannonLevel:load()
     LoadCannonLevel.lostScreen = LostScreenUI.new(function()
         print("Retry clicked!")
         local GameManager = require("Game.GameManager")
-        GameManager:loadLevel(LevelEnum.SolderLoadCannon)
+        GameManager:loadLevel(LevelEnum.SoldierLoadCannon)
     end)
 
     local function onLostAnimationComplete()
