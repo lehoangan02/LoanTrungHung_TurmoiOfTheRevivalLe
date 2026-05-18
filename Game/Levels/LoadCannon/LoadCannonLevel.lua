@@ -191,7 +191,11 @@ function LoadCannonLevel:draw(windowWidth, windowHeight)
     love.graphics.pop()
     
     if LoadCannonLevel.isLost and LoadCannonLevel.lostScreen then
+        love.graphics.push()
+        love.graphics.translate(offsetX, offsetY)
+        love.graphics.scale(scale, scale)
         LoadCannonLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY)
+        love.graphics.pop()
     end
 end
 
