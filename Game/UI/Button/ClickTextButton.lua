@@ -51,6 +51,17 @@ function ClickTextButton:draw(scale, offsetX, offsetY)
     )
 
     if self.infocus then
+        love.graphics.setColor(0.95, 0.95, 0.95, 1)
+        love.graphics.setLineWidth(4)
+        love.graphics.rectangle(
+            "line",
+            self.x - self.pad,
+            self.y - self.pad,
+            self.width + self.pad * 2,
+            self.height + self.pad * 2,
+            borderRadius,
+            borderRadius
+        )
         love.graphics.setColor(0, 0, 0, 1)
     else 
         love.graphics.setColor(0.8, 0.8, 0.8, 1)
