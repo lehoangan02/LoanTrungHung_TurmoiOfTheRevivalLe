@@ -109,7 +109,7 @@ function LoadRoleSoldier:update(dt)
     LoadRoleSoldier.crankValue = LoadRoleSoldier.crankValue + InputManager:getCrankValue()
 
     local moveSpeed = 1000
-    local carrySpeed = 800
+    LoadRoleSoldier.carrySpeed = 800
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle or LoadRoleSoldier.state == SoldierStateEnum.Falling) then
         -- Do nothing
@@ -120,11 +120,11 @@ function LoadRoleSoldier:update(dt)
         local crankVal = InputManager:getCrankValue()
         if (LoadRoleSoldier.crankValue <= -15.75) then 
         else
-            LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * carrySpeed * dt
+            LoadRoleSoldier.positionX = LoadRoleSoldier.positionX + crankVal * LoadRoleSoldier.carrySpeed * dt
         end
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkRight) then
         local crankVal = InputManager:getCrankValue()
-        LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * carrySpeed * dt
+        LoadRoleSoldier.positionX = LoadRoleSoldier.positionX - crankVal * LoadRoleSoldier.carrySpeed * dt
     end
 
     if (LoadRoleSoldier.state == SoldierStateEnum.Idle) then

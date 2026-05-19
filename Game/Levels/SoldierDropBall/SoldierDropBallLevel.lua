@@ -77,7 +77,6 @@ function SoldierDropBallLevel:update(dt)
         SoldierDropBallLevel.loadScreen:update(dt)
         return -1
     end
-    local LevelEnum = require("Game.Levels.LevelEnum")
     return SoldierDropBallLevel.soldier:update(dt)
 end
 

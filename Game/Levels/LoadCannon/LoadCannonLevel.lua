@@ -3,6 +3,7 @@ local LoadCannonLevel = setmetatable({}, {__index = Level})
 LoadCannonLevel.__index = LoadCannonLevel
 
 local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+local InputManager = require("Game.Input.InputManager")
 
 local bf = require("Game/Libraries/breezefield-master")
 local DEBUG = false
@@ -65,6 +66,13 @@ function LoadCannonLevel:load()
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
 
+    LoadCannonLevel.headColliderPosition = { X = 120, Y = 128}
+    LoadCannonLevel.headCollider = LoadCannonLevel.world:newCollider("Circle",
+        {LoadCannonLevel.headColliderPosition.X, LoadCannonLevel.headColliderPosition.Y, 4}
+    )
+    LoadCannonLevel.headCollider:setType("kinematic")
+    LoadCannonLevel.headCollider:setFixedRotation(true)
+
     -- Breezefield callback
     LoadCannonLevel.strawDampingCollider.enter = function(self, other, contact)
         if other == LoadCannonLevel.cannonBallCollider and not LoadCannonLevel.hasHitStraw then
@@ -75,6 +83,8 @@ function LoadCannonLevel:load()
 
     LoadCannonLevel.backCannonBallsSprite = love.graphics.newImage("Resources/Images/BackCannonBalls.png")
     LoadCannonLevel.backCannonBallsSprite:setFilter("nearest", "nearest")
+
+    LoadCannonLevel.previousCrankVal = InputManager:getCrankValue()
 
 end
 
@@ -130,6 +140,15 @@ function LoadCannonLevel:update(dt)
             print("Ball Y position: " .. ballY)
         end
     end
+
+    if (LoadCannonLevel.soldier.crankValue <= -13.9 and LoadCannonLevel.soldier.crankValue >= -15.75) then
+        print("Moving head collider")
+        LoadCannonLevel.headColliderPosition.X = LoadCannonLevel.headColliderPosition.X + InputManager:getCrankValue() * LoadCannonLevel.soldier.carrySpeed * dt
+        LoadCannonLevel.headCollider:setPosition(
+            LoadCannonLevel.headColliderPosition.X, LoadCannonLevel.headColliderPosition.Y
+        )
+    end
+
     
     if LoadCannonLevel.shakeTime and LoadCannonLevel.shakeTime > 0 then
         LoadCannonLevel.shakeTime = LoadCannonLevel.shakeTime - dt
