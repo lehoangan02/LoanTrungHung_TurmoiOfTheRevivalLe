@@ -29,8 +29,9 @@ function WinScreenUI.new(onComplete)
     
     -- Second Button (Main Menu)
     self.mainMenuButton = HoldTextButton:new(0, 0, 80, 20, function()
-        -- You can replace this with your actual scene transition logic
-        print("Returning to Main Menu...")
+        local LevelEnum = require("Game.Levels.LevelEnum")
+        local GameManager = require("Game.GameManager")
+        GameManager:loadLevel(LevelEnum.StartMenu)
     end, {r = 0.8, g = 0.8, b = 0.8, a = 1}, "Main Menu")
     self.mainMenuButton:setFocus(false)
     self.winBanner:addChild(self.mainMenuButton)
