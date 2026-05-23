@@ -66,7 +66,7 @@ function LoadCannonLevel:load()
     LoadCannonLevel.strawDampingCollider = LoadCannonLevel.world:newCollider("Rectangle", {95, 152, 30, 6})
     LoadCannonLevel.strawDampingCollider:setType("static")
 
-    LoadCannonLevel.headColliderPosition = { X = 119, Y = 128}
+    LoadCannonLevel.headColliderPosition = { X = 120, Y = 128}
     LoadCannonLevel.headCollider = LoadCannonLevel.world:newCollider("Circle",
         {LoadCannonLevel.headColliderPosition.X, LoadCannonLevel.headColliderPosition.Y, 4}
     )
@@ -89,10 +89,6 @@ function LoadCannonLevel:load()
             if LoadCannonLevel.soldier.state ~= fallingState then
                 LoadCannonLevel.soldier.state = fallingState
                 LoadCannonLevel.soldier.fallingAnimation:gotoFrame(1)
-                
-                -- Temporarily remove the callback so the lost banner DOES NOT appear
-                -- allowing you to inspect the drawing position of the falling animation!
-                LoadCannonLevel.soldier.onLostAnimationComplete = nil
             end
         end
     end
