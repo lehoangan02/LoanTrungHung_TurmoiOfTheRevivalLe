@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="191">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="196">
  <editorsettings>
   <export target="testMap.lua" format="lua"/>
  </editorsettings>
@@ -334,7 +334,7 @@
 2147484798,0,0,0,0,0,0,0,0,0,0,0,0,0,1150,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="14" name="Blocker" width="30" height="140">
+ <layer id="14" name="Blocker" width="30" height="140" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -478,7 +478,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="12" name="Magnetic" width="30" height="140">
+ <layer id="12" name="Magnetic" width="30" height="140" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -622,7 +622,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="NonCollidable" width="30" height="140">
+ <layer id="3" name="NonCollidable" width="30" height="140" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -766,7 +766,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="5" name="StaticCollidable">
+ <objectgroup id="5" name="StaticCollidable" locked="1">
   <object id="26" x="0" y="144" width="16" height="1776"/>
   <object id="27" x="16" y="416" width="48" height="16"/>
   <object id="28" x="80" y="416" width="32" height="16"/>
@@ -816,10 +816,10 @@
   <object id="188" x="208" y="1136" width="16" height="16"/>
   <object id="190" x="80" y="1280" width="28" height="16"/>
  </objectgroup>
- <objectgroup id="15" name="BlockerCollidable">
+ <objectgroup id="15" name="BlockerCollidable" locked="1">
   <object id="176" x="112" y="1264" width="32" height="12"/>
  </objectgroup>
- <objectgroup id="11" name="Hinge">
+ <objectgroup id="11" name="Hinge" locked="1">
   <object id="74" gid="1529" x="132" y="1080" width="16" height="16" rotation="90">
    <properties>
     <property name="machine_id" type="int" value="2"/>
@@ -1041,13 +1041,13 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="7" name="EnemiesCollidable">
+ <objectgroup id="7" name="EnemiesCollidable" locked="1">
   <object id="53" x="196" y="728" width="28" height="8"/>
   <object id="54" x="20" y="728" width="8" height="8"/>
   <object id="56" x="16" y="488" width="16" height="8"/>
   <object id="58" x="32" y="616" width="16" height="8"/>
  </objectgroup>
- <layer id="8" name="Enemies" width="30" height="140">
+ <layer id="8" name="Enemies" width="30" height="140" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1192,7 +1192,8 @@
 </data>
  </layer>
  <objectgroup id="10" name="Stars">
-  <object id="62" gid="2167" x="128" y="400" width="16" height="16"/>
-  <object id="63" gid="2167" x="112" y="400" width="16" height="16"/>
+  <object id="63" gid="2167" x="16" y="608" width="16" height="16"/>
+  <object id="193" gid="2167" x="208" y="1104" width="16" height="16"/>
+  <object id="195" gid="2167" x="144" y="1104" width="16" height="16"/>
  </objectgroup>
 </map>
