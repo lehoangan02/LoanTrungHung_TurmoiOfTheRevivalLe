@@ -231,7 +231,7 @@ function DialogCloud:draw(scale, fontScale, offsetX, offsetY)
         local textScale = scale
         print("Text scale " .. self.fontSize * textScale)
         self.font = FontLoader:loadFont("Geo", self.fontSize * fontScale)
-        self:processText()
+        self:processText(fontScale)
         love.graphics.setFont(self.font)
         local lineHeight = self.font:getHeight()
         for i, line in ipairs(self.lines) do
@@ -301,8 +301,9 @@ function DialogCloud:fixLeadingPunctuation(lines)
     end
 end
 
-function DialogCloud:processText()
-    local maxWidth = self.textBounds.endX - self.textBounds.startX
+function DialogCloud:processText(fontScale)
+    fontScale = fontScale or 1
+    local maxWidth = (self.textBounds.endX - self.textBounds.startX) * fontScale
     self.lines = self:splitTextByWidth(self.text, maxWidth)
     self:fixLeadingPunctuation(self.lines)
 end

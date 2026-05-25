@@ -69,8 +69,8 @@ function SiegeTower:new(world, x, y, onCannonFireShakeScreen)
     self.startCountingDownGuy1PrepareToSpeak = false
     self.guy1DialogCloud = DialogCloud.new(
         "Cannon is disabled!",
-        150,
-        57,
+        160,
+        62,
         40,
         20,
         {0, 0, 0},
