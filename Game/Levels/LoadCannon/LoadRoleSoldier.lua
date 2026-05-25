@@ -143,7 +143,9 @@ function LoadRoleSoldier:update(dt)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.WalkRight) then
         LoadRoleSoldier.carryingBallAnimation:update(dt * - InputManager:getCrankValue() * 60)
     elseif (LoadRoleSoldier.state == SoldierStateEnum.LiftingBall) then
-        LoadRoleSoldier.loadingCannonAnimation:update(dt * - InputManager:getCrankValue() * 60)
+        if LoadRoleSoldier.loadingCannonAnimation.position < 38 then
+            LoadRoleSoldier.loadingCannonAnimation:update(dt * - InputManager:getCrankValue() * 60)
+        end
         if (LoadRoleSoldier.loadingCannonAnimation.position >= 38) then
             if DEBUG then
                 print("Finished loading cannon ball")
