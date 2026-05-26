@@ -153,7 +153,15 @@ function BallDropLevel:load()
 
     BallDropLevel.successY = 1720
     BallDropLevel.success = false
-    BallDropLevel.timeToLinger = 1
+    BallDropLevel.timeToLinger = 1.0
+
+    local LostScreenUI = require("Game.UI.LostScreenUI")
+    BallDropLevel.lostScreen = LostScreenUI.new(function()
+        local GameManager = require("Game.GameManager")
+        local LevelEnum = require("Game.Levels.LevelEnum")
+        GameManager:loadLevel(LevelEnum.BallDrop)
+    end)
+    BallDropLevel.isLost = false
     
     print("Total magnets found: " .. #BallDropLevel.magnets)
     print("Spike block starts at: " .. BallDropLevel.spikeBlockInitPosition.x .. ", " .. BallDropLevel.spikeBlockInitPosition.y)
@@ -302,6 +310,13 @@ function BallDropLevel:update(dt)
         if BallDropLevel.timeToLinger <= 0 then
             return LevelEnum.SoldierLoadCannon
         end
+    end
+    
+    if BallDropLevel.isLost then
+        BallDropLevel.lostScreen:update(dt)
+    elseif BallDropLevel.ball.exploded and BallDropLevel.ball.explodeAnimation.status == 'paused' then
+        BallDropLevel.isLost = true
+        BallDropLevel.lostScreen:trigger("You Lost!", "Retry")
     end
 
     return LevelEnum.Nothing
@@ -459,6 +474,13 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()
     love.graphics.pop()
+    
+    if BallDropLevel.isLost and BallDropLevel.lostScreen then
+        love.graphics.push()
+        love.graphics.origin()
+        BallDropLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY)
+        love.graphics.pop()
+    end
 end
 
 function BallDropLevel:unload()
