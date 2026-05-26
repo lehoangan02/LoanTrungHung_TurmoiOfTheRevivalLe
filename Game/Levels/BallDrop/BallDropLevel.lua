@@ -101,6 +101,10 @@ function BallDropLevel:load()
     BallDropLevel.starsCollected = 0
     BallDropLevel.loneStarImage = love.graphics.newImage("Resources/Images/lone_star.png")
     BallDropLevel.loneStarImage:setFilter("nearest", "nearest")
+    
+    BallDropLevel.starTrails = {}
+    BallDropLevel.starTrailImage = love.graphics.newImage("Resources/Images/star1_horizontal.png")
+    BallDropLevel.starTrailImage:setFilter("nearest", "nearest")
 
     BallDropLevel.ball = BallClass.new(BallDropLevel.world, BallDropLevel.cameraX, BallDropLevel.cameraY)
 
@@ -219,6 +223,48 @@ function BallDropLevel:update(dt)
     end
 
     BallDropLevel.starActivateAnimation:update(dt)
+    
+    local GameManager = require("Game.GameManager")
+    local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+    local scale = ResizeWindowTransform.getTransform(GameManager.windowWidth, GameManager.windowHeight, BASE_W, BASE_H)
+    
+    local targetX = 10 + 8 * scale
+    local targetY = 10 + 8 * scale
+
+    for i = #BallDropLevel.starTrails, 1, -1 do
+        local trail = BallDropLevel.starTrails[i]
+        
+        if trail.progress < 1 then
+            trail.progress = trail.progress + dt * 1.5
+            if trail.progress > 1 then trail.progress = 1 end
+            
+            local t = trail.progress
+            t = t * t * (3 - 2 * t) -- smoothstep
+            
+            trail.currentX = trail.startX + (targetX - trail.startX) * t
+            trail.currentY = trail.startY + (targetY - trail.startY) * t
+            
+            table.insert(trail.traces, {
+                x = trail.currentX,
+                y = trail.currentY,
+                life = 1.0
+            })
+        end
+        
+        trail.anim:update(dt)
+        
+        for j = #trail.traces, 1, -1 do
+            local trace = trail.traces[j]
+            trace.life = trace.life - dt * 3
+            if trace.life <= 0 then
+                table.remove(trail.traces, j)
+            end
+        end
+        
+        if trail.progress >= 1 and #trail.traces == 0 then
+            table.remove(BallDropLevel.starTrails, i)
+        end
+    end
 
     BallDropLevel:controlEnvironment(dt)
 
@@ -395,6 +441,20 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     local textX = 10 + (BallDropLevel.loneStarImage:getWidth() * scale) + 5
     local textY = 10 + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - 6
     love.graphics.print(tostring(BallDropLevel.starsCollected), textX, textY)
+    
+    -- Draw star trails (with traces)
+    for _, trail in ipairs(BallDropLevel.starTrails) do
+        for _, trace in ipairs(trail.traces) do
+            love.graphics.setColor(1, 1, 1, trace.life)
+            -- scale is 0.5 times the window scale times trace life
+            trail.anim:draw(BallDropLevel.starTrailImage, trace.x, trace.y, 0, 0.5 * scale * trace.life, 0.5 * scale * trace.life, 8, 8)
+        end
+        -- Draw the leading star
+        if trail.progress < 1 then
+            love.graphics.setColor(1, 1, 1, 1)
+            trail.anim:draw(BallDropLevel.starTrailImage, trail.currentX, trail.currentY, 0, 0.5 * scale, 0.5 * scale, 8, 8)
+        end
+    end
     
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()

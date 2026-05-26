@@ -41,6 +41,28 @@ function Ball.new(world, x, y)
             local starX, starY = other:getPosition()
             local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
             BallDropLevel.starActivateAnimation:play(starX, starY)
+            
+            local cx, cy = BallDropLevel.cam:cameraCoords(starX, starY)
+            local GameManager = require("Game.GameManager")
+            local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
+            local scale, _, _, _, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(GameManager.windowWidth, GameManager.windowHeight, BASE_W, BASE_H)
+            local screenX = offsetXCameraMode + cx * scale
+            local screenY = offsetYCameraMode + cy * scale
+            
+            local anim8 = require "Game/Libraries/anim8"
+            local grid = anim8.newGrid(16, 16, BallDropLevel.starTrailImage:getWidth(), BallDropLevel.starTrailImage:getHeight())
+            local anim = anim8.newAnimation(grid('1-6', 1), 0.1)
+            
+            table.insert(BallDropLevel.starTrails, {
+                startX = screenX,
+                startY = screenY,
+                currentX = screenX,
+                currentY = screenY,
+                progress = 0,
+                traces = {},
+                anim = anim
+            })
+            
             if BallDropLevel.gameMap.layers["Stars"] then
                 for idx, tObj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
                     if tObj == other.tiledObject then
