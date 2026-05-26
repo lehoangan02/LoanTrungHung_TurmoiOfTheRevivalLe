@@ -5,6 +5,7 @@ function StarActivateAnimation.new()
     instance.collected = false
     instance.anim8 = require "Game/Libraries/anim8"
     instance.animationSpriteSheet = love.graphics.newImage("Resources/Images/star_explode.png")
+    instance.animationSpriteSheet:setFilter("nearest", "nearest")
     instance.grid = instance.anim8.newGrid(32, 32, instance.animationSpriteSheet:getWidth(), instance.animationSpriteSheet:getHeight())
     instance.jobList = {}
     return instance

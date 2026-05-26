@@ -97,6 +97,10 @@ function BallDropLevel:load()
         end
     end
     BallDropLevel.starActivateAnimation = require("Game.Levels.StarAnimation").new()
+    
+    BallDropLevel.starsCollected = 0
+    BallDropLevel.loneStarImage = love.graphics.newImage("Resources/Images/lone_star.png")
+    BallDropLevel.loneStarImage:setFilter("nearest", "nearest")
 
     BallDropLevel.ball = BallClass.new(BallDropLevel.world, BallDropLevel.cameraX, BallDropLevel.cameraY)
 
@@ -377,8 +381,21 @@ function BallDropLevel:draw(windowWidth, windowHeight)
 
     love.graphics.push()
     love.graphics.origin()
+    
+    -- FPS Counter on the right
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
+    local fpsText = "FPS: " .. tostring(love.timer.getFPS())
+    love.graphics.print(fpsText, windowWidth - 60, 10)
+    
+    -- Star Counter on the left
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(BallDropLevel.loneStarImage, 10, 10, 0, scale, scale)
+    
+    love.graphics.setColor(0, 0, 0, 1)
+    local textX = 10 + (BallDropLevel.loneStarImage:getWidth() * scale) + 5
+    local textY = 10 + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - 6
+    love.graphics.print(tostring(BallDropLevel.starsCollected), textX, textY)
+    
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.pop()
     love.graphics.pop()

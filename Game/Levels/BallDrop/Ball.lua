@@ -41,11 +41,16 @@ function Ball.new(world, x, y)
             local starX, starY = other:getPosition()
             local BallDropLevel = require("Game.Levels.BallDrop.BallDropLevel")
             BallDropLevel.starActivateAnimation:play(starX, starY)
-
-            if other.tiledObject then
-                other.tiledObject.visible = false
+            if BallDropLevel.gameMap.layers["Stars"] then
+                for idx, tObj in pairs(BallDropLevel.gameMap.layers["Stars"].objects) do
+                    if tObj == other.tiledObject then
+                        table.remove(BallDropLevel.gameMap.layers["Stars"].objects, idx)
+                        break
+                    end
+                end
             end
             other:destroy()
+            BallDropLevel.starsCollected = (BallDropLevel.starsCollected or 0) + 1
         end
     end
     
