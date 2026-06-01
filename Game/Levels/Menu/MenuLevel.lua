@@ -56,7 +56,7 @@ function MenuLevel:draw(windowWidth, windowHeight)
     
     local text = "Loạn Trung Hưng"
     local textWidth = font:getWidth(text)
-    love.graphics.print(text, math.floor(windowWidth / 2 - textWidth / 2), math.floor(offsetY + 10))
+    love.graphics.print(text, math.floor(windowWidth / 2 - textWidth / 2), math.floor(offsetY + 6 * scale))
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(defaultFont)
 
