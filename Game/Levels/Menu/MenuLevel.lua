@@ -28,8 +28,12 @@ function MenuLevel:load()
     MenuLevel.showStar = false
     MenuLevel.starAnimTimer = 0
     MenuLevel.starDuration = 0.8
-    MenuLevel.starX = 140
-    MenuLevel.starY = 78
+    MenuLevel.starX = 140 -- Tweak this value to change the star's X position
+    MenuLevel.starY = 78 -- Tweak this value to change the star's Y position
+
+    MenuLevel.showFlash = false
+    MenuLevel.flashAnimTimer = 0
+    MenuLevel.flashDuration = 0.4
 
     local musicManager = require("Game.Music.MusicManager")
     local MusicEnum = require("Game.Music.MusicEnum")
@@ -67,9 +71,16 @@ function MenuLevel:update(dt)
                 end
             end
         else
-            MenuLevel.starAnimTimer = MenuLevel.starAnimTimer + dt
-            if MenuLevel.starAnimTimer >= MenuLevel.starDuration then
-                MenuLevel.nextLevel = MenuLevel.targetLevel
+            if not MenuLevel.showFlash then
+                MenuLevel.starAnimTimer = MenuLevel.starAnimTimer + dt
+                if MenuLevel.starAnimTimer >= MenuLevel.starDuration then
+                    MenuLevel.showFlash = true
+                end
+            else
+                MenuLevel.flashAnimTimer = MenuLevel.flashAnimTimer + dt
+                if MenuLevel.flashAnimTimer >= MenuLevel.flashDuration then
+                    MenuLevel.nextLevel = MenuLevel.targetLevel
+                end
             end
         end
     else
@@ -91,7 +102,7 @@ function MenuLevel:draw(windowWidth, windowHeight)
     love.graphics.draw(MenuLevel.background, MenuLevel.backgroundQuads[MenuLevel.currentBgFrame], 0, 0)
     
     if MenuLevel.showStar then
-        local starProgress = MenuLevel.starAnimTimer / MenuLevel.starDuration
+        local starProgress = math.min(1, MenuLevel.starAnimTimer / MenuLevel.starDuration)
         local alpha = math.sin(starProgress * math.pi)
         local mainRadius = 30 * math.sin(starProgress * math.pi)
         
@@ -132,6 +143,28 @@ function MenuLevel:draw(windowWidth, windowHeight)
         
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.pop()
+    end
+    
+    if MenuLevel.showFlash then
+        local flashProgress = MenuLevel.flashAnimTimer / MenuLevel.flashDuration
+        -- Accelerate outwards
+        local expandY = (flashProgress * flashProgress) * 240 
+        
+        local topY = MenuLevel.starY - expandY
+        local bottomY = MenuLevel.starY + expandY
+        
+        -- Draw white block (extra wide to cover any screen aspect ratio)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle("fill", -1000, topY, 2000, bottomY - topY)
+        
+        -- Draw black horizontal lines
+        local originalLineWidth = love.graphics.getLineWidth()
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.setLineWidth(2)
+        love.graphics.line(-1000, topY, 1000, topY)
+        love.graphics.line(-1000, bottomY, 1000, bottomY)
+        love.graphics.setLineWidth(originalLineWidth)
+        love.graphics.setColor(1, 1, 1, 1) -- Reset color so the background isn't tinted black next frame
     end
     
     love.graphics.pop()
