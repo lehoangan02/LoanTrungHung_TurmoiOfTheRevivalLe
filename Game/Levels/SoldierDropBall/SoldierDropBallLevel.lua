@@ -87,6 +87,7 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
     end
 
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
+    love.graphics.push()
     love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
     love.graphics.scale(scale, scale)
 
@@ -98,6 +99,7 @@ function SoldierDropBallLevel:draw(windowWidth, windowHeight)
         love.graphics.draw(self.frontSupportSprite, 0, 0)
         love.graphics.draw(self.frontCannonBallsSprite, 0, 0)
     SoldierDropBallLevel.cam:detach()
+    love.graphics.pop()
 end
 
 function SoldierDropBallLevel:unload()

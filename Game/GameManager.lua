@@ -22,7 +22,7 @@ function GameManager:start()
     local w, h = love.graphics.getDimensions()
     GameManager.pauseScreen = Pause.new(w, h)
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.StartMenu)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SoldierDropBall)
 end
 function GameManager:update(dt)
     -- Cap delta time to prevent physics explosions and animation skips during heavy synchronous loads
@@ -86,34 +86,49 @@ function GameManager:draw(windowWidth, windowHeight)
         TransitionManager:draw(windowWidth, windowHeight)
     end
 
-    -- love.graphics.setCanvas()
-    -- love.graphics.setScissor()
-    -- love.graphics.origin()
+    local scale = math.min(
+        windowWidth / BASE_W,
+        windowHeight / BASE_H
+    )
 
+    local gameWidth = BASE_W * scale
+    local gameHeight = BASE_H * scale
 
-    -- local scale = math.min(
-    --     windowWidth / BASE_W,
-    --     windowHeight / BASE_H
-    -- )
+    local offsetX = (windowWidth - gameWidth) / 2
+    local offsetY = (windowHeight - gameHeight) / 2
 
-    -- local gameWidth = BASE_W * scale
-    -- local gameHeight = BASE_H * scale
+    love.graphics.setColor(255/255, 200/255, 51/255, 1)
+    
+    if offsetX > 0 then
+        -- Left border
+        love.graphics.rectangle("fill", 0, 0, offsetX, windowHeight)
+        -- Right border
+        love.graphics.rectangle("fill", windowWidth - offsetX, 0, offsetX, windowHeight)
+    end
+    
+    if offsetY > 0 then
+        -- Top border
+        love.graphics.rectangle("fill", 0, 0, windowWidth, offsetY)
+        -- Bottom border
+        love.graphics.rectangle("fill", 0, windowHeight - offsetY, windowWidth, offsetY)
+    end
 
-    -- local offsetX = (windowWidth - gameWidth) / 2
-    -- local offsetY = (windowHeight - gameHeight) / 2
+    -- Draw 4px (scaled) black outer border around the game window
+    local borderThickness = 4 * scale
+    love.graphics.setColor(0, 0, 0, 1)
+    local prevLineWidth = love.graphics.getLineWidth()
+    love.graphics.setLineWidth(borderThickness)
+    -- Shift out by half thickness so it sits completely outside the 240x240 area
+    love.graphics.rectangle("line", 
+        offsetX - borderThickness / 2, 
+        offsetY - borderThickness / 2, 
+        gameWidth + borderThickness, 
+        gameHeight + borderThickness
+    )
+    love.graphics.setLineWidth(prevLineWidth)
 
-    -- love.graphics.setColor(1, 0, 0, 1)
-    -- love.graphics.setLineWidth(2)
-    -- love.graphics.rectangle(
-    --     "line",
-    --     offsetX,
-    --     offsetY,
-    --     gameWidth,
-    --     gameHeight
-    -- )
-
-    -- love.graphics.setColor(1, 1, 1, 1)
-    -- love.graphics.setLineWidth(1)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setLineWidth(1)
 end
 
 

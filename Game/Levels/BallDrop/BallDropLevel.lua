@@ -446,15 +446,16 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     -- FPS Counter on the right
     love.graphics.setColor(0, 0, 0, 1)
     local fpsText = "FPS: " .. tostring(love.timer.getFPS())
-    love.graphics.print(fpsText, windowWidth - 60, 10)
+    local gameWidth = BASE_W * scale
+    love.graphics.print(fpsText, offsetX + gameWidth - 60 * scale, offsetY + 10 * scale)
     
     -- Star Counter on the left
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(BallDropLevel.loneStarImage, 10, 10, 0, scale, scale)
+    love.graphics.draw(BallDropLevel.loneStarImage, offsetX + 10 * scale, offsetY + 10 * scale, 0, scale, scale)
     
     love.graphics.setColor(0, 0, 0, 1)
-    local textX = 10 + (BallDropLevel.loneStarImage:getWidth() * scale) + 5
-    local textY = 10 + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - 6
+    local textX = offsetX + 10 * scale + (BallDropLevel.loneStarImage:getWidth() * scale) + 5 * scale
+    local textY = offsetY + 10 * scale + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - 6 * scale
     love.graphics.print(tostring(BallDropLevel.starsCollected), textX, textY)
     
     -- Draw star trails (with traces)
@@ -478,6 +479,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     if BallDropLevel.isLost and BallDropLevel.lostScreen then
         love.graphics.push()
         love.graphics.origin()
+        love.graphics.translate(offsetX, offsetY)
         BallDropLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY)
         love.graphics.pop()
     end
