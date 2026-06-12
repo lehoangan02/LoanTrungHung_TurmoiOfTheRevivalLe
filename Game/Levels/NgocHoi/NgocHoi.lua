@@ -46,6 +46,17 @@ function NgocHoi:load()
 
     NgocHoi.ground = love.graphics.newImage("Resources/Images/Ground.png")
     NgocHoi.ground:setFilter("nearest", "nearest")
+
+    local topR, topG, topB = 0x6f/255, 0x93/255, 0xc4/255
+    local botR, botG, botB = 0xbd/255, 0x9c/255, 0x9c/255
+    local skyVertices = {
+        { -1000, -500, 0, 0, topR, topG, topB, 1 },
+        {  1000, -500, 0, 0, topR, topG, topB, 1 },
+        {  1000,  204, 0, 0, botR, botG, botB, 1 },
+        { -1000,  204, 0, 0, botR, botG, botB, 1 },
+    }
+    NgocHoi.skyMesh = love.graphics.newMesh(skyVertices, "fan", "static")
+
     NgocHoi.soldier_spritesheet = love.graphics.newImage("Resources/Images/Soldier-24-sprite-sheet.png")
     NgocHoi.soldier_spritesheet:setFilter("nearest", "nearest")
     NgocHoi.soldier_grid = anim8.newGrid(24, 37, NgocHoi.soldier_spritesheet:getWidth(), NgocHoi.soldier_spritesheet:getHeight())
@@ -234,6 +245,7 @@ function NgocHoi:draw(windowWidth, windowHeight)
     love.graphics.scale(scale, scale)
 
     NgocHoi.cam:attach()
+        love.graphics.draw(NgocHoi.skyMesh)
         NgocHoi.world:draw()
 
         love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX, NgocHoi.groundPositionY)
