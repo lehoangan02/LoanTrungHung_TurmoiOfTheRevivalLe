@@ -57,6 +57,16 @@ function NgocHoi:load()
     }
     NgocHoi.skyMesh = love.graphics.newMesh(skyVertices, "fan", "static")
 
+    NgocHoi.cloudImage = love.graphics.newImage("Resources/Images/nuvem.png")
+    NgocHoi.cloudImage:setFilter("nearest", "nearest")
+    NgocHoi.clouds = {
+        {x = 20, y = -140, speed = 8},
+        {x = 120, y = -120, speed = 12},
+        {x = 210, y = -160, speed = 10},
+        {x = -40, y = -110, speed = 6},
+        {x = 280, y = -150, speed = 15}
+    }
+
     NgocHoi.soldier_spritesheet = love.graphics.newImage("Resources/Images/Soldier-24-sprite-sheet.png")
     NgocHoi.soldier_spritesheet:setFilter("nearest", "nearest")
     NgocHoi.soldier_grid = anim8.newGrid(24, 37, NgocHoi.soldier_spritesheet:getWidth(), NgocHoi.soldier_spritesheet:getHeight())
@@ -75,6 +85,7 @@ function NgocHoi:load()
     NgocHoi.bullet_spritesheet:setFilter("nearest", "nearest")
     NgocHoi.bullet_grid = anim8.newGrid(50, 9, NgocHoi.bullet_spritesheet:getWidth(), NgocHoi.bullet_spritesheet:getHeight())
     NgocHoi.bullet_animation = anim8.newAnimation(NgocHoi.bullet_grid('1-3', 1), 0.1, 'pauseAtEnd')
+    NgocHoi.bullet_animation:pause()
     NgocHoi.bulletX = NgocHoi.siege_tower_positionX + 85
     NgocHoi.bulletY = NgocHoi.siege_tower_positionY + 45
     NgocHoi.TimeBullet1 = 6
@@ -89,6 +100,7 @@ function NgocHoi:load()
     NgocHoi.missed_bullet_spritesheet:setFilter("nearest", "nearest")
     NgocHoi.missed_bullet_grid = anim8.newGrid(240, 3, NgocHoi.missed_bullet_spritesheet:getWidth(), NgocHoi.missed_bullet_spritesheet:getHeight())
     NgocHoi.missed_bullet_animation = anim8.newAnimation(NgocHoi.missed_bullet_grid('1-3', 1), 0.1, 'pauseAtEnd')
+    NgocHoi.missed_bullet_animation:pause()
     NgocHoi.missed_bulletX = 0
     NgocHoi.missed_bulletY = 120
     NgocHoi.missed_bullet_fired = false
@@ -140,6 +152,14 @@ function NgocHoi:update(dt)
     if (NgocHoi.groundPositionX <= -NgocHoi.groundWidth) then
         NgocHoi.groundPositionX = NgocHoi.groundPositionX + NgocHoi.groundWidth
     end
+
+    for _, cloud in ipairs(NgocHoi.clouds) do
+        cloud.x = cloud.x - cloud.speed * dt
+        if cloud.x < -100 then
+            cloud.x = 350
+        end
+    end
+
     for i = 1, 3 do
         NgocHoi.soldier_animations[i]:update(dt)
     end
@@ -246,6 +266,11 @@ function NgocHoi:draw(windowWidth, windowHeight)
 
     NgocHoi.cam:attach()
         love.graphics.draw(NgocHoi.skyMesh)
+        
+        for _, cloud in ipairs(NgocHoi.clouds) do
+            love.graphics.draw(NgocHoi.cloudImage, cloud.x, cloud.y)
+        end
+
         NgocHoi.world:draw()
 
         love.graphics.draw(NgocHoi.ground, NgocHoi.groundPositionX, NgocHoi.groundPositionY)
