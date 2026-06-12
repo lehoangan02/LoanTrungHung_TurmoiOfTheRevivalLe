@@ -443,20 +443,30 @@ function BallDropLevel:draw(windowWidth, windowHeight)
     love.graphics.push()
     love.graphics.origin()
     
+    local FontLoader = require("Game.Fonts.FontLoader")
+    local fontLoader = FontLoader:getInstance()
+    local previousFont = love.graphics.getFont()
+    local fontSize = math.max(1, math.floor(12 * fontScale))
+    local font = fontLoader:loadFont("Geo", fontSize)
+    love.graphics.setFont(font)
+    
     -- FPS Counter on the right
     love.graphics.setColor(0, 0, 0, 1)
     local fpsText = "FPS: " .. tostring(love.timer.getFPS())
     local gameWidth = BASE_W * scale
-    love.graphics.print(fpsText, offsetX + gameWidth - 60 * scale, offsetY + 10 * scale)
+    local textWidth = font:getWidth(fpsText)
+    love.graphics.print(fpsText, math.floor(offsetX + gameWidth - textWidth - 10 * scale), math.floor(offsetY + 10 * scale))
     
     -- Star Counter on the left
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(BallDropLevel.loneStarImage, offsetX + 10 * scale, offsetY + 10 * scale, 0, scale, scale)
+    love.graphics.draw(BallDropLevel.loneStarImage, math.floor(offsetX + 10 * scale), math.floor(offsetY + 10 * scale), 0, scale, scale)
     
     love.graphics.setColor(0, 0, 0, 1)
     local textX = offsetX + 10 * scale + (BallDropLevel.loneStarImage:getWidth() * scale) + 5 * scale
-    local textY = offsetY + 10 * scale + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - 6 * scale
-    love.graphics.print(tostring(BallDropLevel.starsCollected), textX, textY)
+    local textY = offsetY + 10 * scale + (BallDropLevel.loneStarImage:getHeight() * scale / 2) - font:getHeight() / 2
+    love.graphics.print(tostring(BallDropLevel.starsCollected), math.floor(textX), math.floor(textY))
+    
+    love.graphics.setFont(previousFont)
     
     -- Draw star trails (with traces)
     for _, trail in ipairs(BallDropLevel.starTrails) do

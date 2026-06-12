@@ -22,7 +22,7 @@ function GameManager:start()
     local w, h = love.graphics.getDimensions()
     GameManager.pauseScreen = Pause.new(w, h)
     inputManager:load(GameManager.pause)
-    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.SoldierDropBall)
+    GameManager.currentLevel = levelLoader:loadLevel(LevelEnum.NgocHoi)
 end
 function GameManager:update(dt)
     -- Cap delta time to prevent physics explosions and animation skips during heavy synchronous loads
