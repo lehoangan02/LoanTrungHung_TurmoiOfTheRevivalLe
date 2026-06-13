@@ -25,7 +25,7 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
         endY = y + height - instance.padding
     }
 
-    instance.animationTime = 1.0
+    instance.animationTime = 0.36
     instance.started = false
     instance.ended = false
 
@@ -40,7 +40,7 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.sproutSpritesheet = love.graphics.newImage("Resources/Images/DialogCloudSprout.png")
     instance.sproutSpritesheet:setFilter("nearest", "nearest")
     instance.sproutGrid = anim8.newGrid(5, 4, instance.sproutSpritesheet:getWidth(), instance.sproutSpritesheet:getHeight())
-    instance.sproutAnimation = anim8.newAnimation(instance.sproutGrid('1-4', 1), 0.2, 'pauseAtEnd')
+    instance.sproutAnimation = anim8.newAnimation(instance.sproutGrid('1-4', 1), 0.08, 'pauseAtEnd')
     instance.sproutAnimation:gotoFrame(1)
     instance.sproutAnimation:pause()
     instance.sproutX = instance.x
@@ -66,7 +66,7 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.topLeftCornerSpriteSheet = love.graphics.newImage("Resources/Images/CloudTopLeftCorner.png")
     instance.topLeftCornerSpriteSheet:setFilter("nearest", "nearest")
     instance.topLeftCornerGrid = anim8.newGrid(3, 3, instance.topLeftCornerSpriteSheet:getWidth(), instance.topLeftCornerSpriteSheet:getHeight())
-    instance.topLeftCornerAnimation = anim8.newAnimation(instance.topLeftCornerGrid('1-3', 1), 0.1, 'pauseAtEnd')
+    instance.topLeftCornerAnimation = anim8.newAnimation(instance.topLeftCornerGrid('1-3', 1), 0.04, 'pauseAtEnd')
     instance.topLeftCornerAnimation:gotoFrame(1)
     instance.topLeftCornerAnimation:pause()
     instance.drawTopLeft = false
@@ -74,7 +74,7 @@ function DialogCloud.new(text, x, y, width, height, borderColor, backgroundColor
     instance.bottomRightCornerSpriteSheet = love.graphics.newImage("Resources/Images/CloudBottomRightCorner.png")
     instance.bottomRightCornerSpriteSheet:setFilter("nearest", "nearest")
     instance.bottomRightCornerGrid = anim8.newGrid(3, 3, instance.bottomRightCornerSpriteSheet:getWidth(), instance.bottomRightCornerSpriteSheet:getHeight())
-    instance.bottomRightCornerAnimation = anim8.newAnimation(instance.bottomRightCornerGrid('1-3', 1), 0.1, 'pauseAtEnd')
+    instance.bottomRightCornerAnimation = anim8.newAnimation(instance.bottomRightCornerGrid('1-3', 1), 0.04, 'pauseAtEnd')
     instance.bottomRightCornerAnimation:gotoFrame(1)
     instance.bottomRightCornerAnimation:pause()
     instance.drawBottomRight = false
