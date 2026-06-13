@@ -232,8 +232,22 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     BlastFortLevel.world:draw()
     love.graphics.pop()
     
-    if BlastFortLevel.winScreen then BlastFortLevel.winScreen:draw(scale, fontScale, offsetX, offsetY) end
-    if BlastFortLevel.lostScreen then BlastFortLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY) end
+    if BlastFortLevel.winScreen then 
+        love.graphics.push()
+        love.graphics.origin()
+        love.graphics.translate(offsetX, offsetY)
+        love.graphics.scale(scale, scale)
+        BlastFortLevel.winScreen:draw(scale, fontScale, offsetX, offsetY) 
+        love.graphics.pop()
+    end
+    if BlastFortLevel.lostScreen then 
+        love.graphics.push()
+        love.graphics.origin()
+        love.graphics.translate(offsetX, offsetY)
+        love.graphics.scale(scale, scale)
+        BlastFortLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY) 
+        love.graphics.pop()
+    end
 end
 
 function BlastFortLevel:unload()

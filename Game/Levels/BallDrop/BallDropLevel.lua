@@ -371,7 +371,7 @@ function BallDropLevel:trackBall(dt)
 end
 
 function BallDropLevel:controlEnvironment(dt)
-    if not BallDropLevel.success then
+    if not BallDropLevel.success and not BallDropLevel.isLost then
         InputManager = require("Game.Input.InputManager")
         if InputManager:isRightRudderPressed() then
             BallDropLevel.worldRotation = BallDropLevel.worldRotation + dt * BallDropLevel.worldRotateSpeed
@@ -393,12 +393,12 @@ function BallDropLevel:controlEnvironment(dt)
 end
 
 function BallDropLevel:draw(windowWidth, windowHeight)
-    love.graphics.push()
     if not BallDropLevel.loadScreen:isDone() then
         BallDropLevel.loadScreen:draw()
         return
     end
 
+    love.graphics.push()
     love.graphics.clear(176/255, 174/255, 167/255, 1)
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
     love.graphics.translate(offsetXCameraMode, offsetYCameraMode)
@@ -490,6 +490,7 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         love.graphics.push()
         love.graphics.origin()
         love.graphics.translate(offsetX, offsetY)
+        love.graphics.scale(scale, scale)
         BallDropLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY)
         love.graphics.pop()
     end
