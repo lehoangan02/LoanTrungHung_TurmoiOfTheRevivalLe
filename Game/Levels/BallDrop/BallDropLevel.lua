@@ -234,10 +234,10 @@ function BallDropLevel:update(dt)
     
     local GameManager = require("Game.GameManager")
     local ResizeWindowTransform = require("Game.Custom.ResizeWindowTransform")
-    local scale = ResizeWindowTransform.getTransform(GameManager.windowWidth, GameManager.windowHeight, BASE_W, BASE_H)
+    local scale, fontScale, offsetX, offsetY = ResizeWindowTransform.getTransform(GameManager.windowWidth, GameManager.windowHeight, BASE_W, BASE_H)
     
-    local targetX = 10 + 8 * scale
-    local targetY = 10 + 8 * scale
+    local targetX = offsetX + 10 * scale + (BallDropLevel.loneStarImage:getWidth() * scale) / 2
+    local targetY = offsetY + 10 * scale + (BallDropLevel.loneStarImage:getHeight() * scale) / 2
 
     for i = #BallDropLevel.starTrails, 1, -1 do
         local trail = BallDropLevel.starTrails[i]
