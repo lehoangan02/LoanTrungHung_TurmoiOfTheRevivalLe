@@ -51,6 +51,26 @@ function BlastFortLevel:load()
 
     BlastFortLevel.timer = 0
 
+    local WinScreenUI = require("Game.UI.WinScreenUI")
+    BlastFortLevel.winScreen = WinScreenUI.new(function()
+        local LevelEnum = require("Game.Levels.LevelEnum")
+        local GameManager = require("Game.GameManager")
+        GameManager:loadLevel(LevelEnum.StartMenu)
+    end)
+    local LostScreenUI = require("Game.UI.LostScreenUI")
+    BlastFortLevel.lostScreen = LostScreenUI.new(function()
+        local LevelEnum = require("Game.Levels.LevelEnum")
+        local GameManager = require("Game.GameManager")
+        GameManager:loadLevel(LevelEnum.TowerBlastFort)
+    end)
+    
+    BlastFortLevel.isWon = false
+    BlastFortLevel.isLost = false
+    BlastFortLevel.winTimer = 0
+    BlastFortLevel.winBannerTriggered = false
+    BlastFortLevel.shakeTime = 0
+    BlastFortLevel.shakeMagnitude = 0
+
     BlastFortLevel.controlBooleans = {}
     BlastFortLevel.controlBooleans.pulledTowerToPosition = false
     BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
@@ -106,6 +126,12 @@ function BlastFortLevel:load()
             BlastFortLevel.fortStatefulObject:setState(2)
             BlastFortLevel.targetCollider:destroy()
             BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
+            
+            if not BlastFortLevel.isWon and not BlastFortLevel.isLost then
+                BlastFortLevel.isWon = true
+                BlastFortLevel.shakeTime = 0.3
+                BlastFortLevel.shakeMagnitude = 3
+            end
         end
     end
 
@@ -119,6 +145,11 @@ function BlastFortLevel:load()
             print("Ball hit the ground")
             other.parent.to_explode = true
             BlastFortLevel.controlBooleans.displayTrajectoryVisualization = false
+            
+            if not BlastFortLevel.isWon and not BlastFortLevel.isLost then
+                BlastFortLevel.isLost = true
+                BlastFortLevel.lostScreen:trigger("You Missed!", "Retry")
+            end
         end
     end
 end
@@ -155,6 +186,21 @@ function BlastFortLevel:update(dt)
 
     BlastFortLevel.world:update(dt)
 
+    if BlastFortLevel.shakeTime > 0 then
+        BlastFortLevel.shakeTime = BlastFortLevel.shakeTime - dt
+    end
+
+    if BlastFortLevel.isWon and not BlastFortLevel.winBannerTriggered then
+        BlastFortLevel.winTimer = BlastFortLevel.winTimer + dt
+        if BlastFortLevel.winTimer >= 1.0 then
+            BlastFortLevel.winScreen:trigger("You Won!", "Next Level")
+            BlastFortLevel.winBannerTriggered = true
+        end
+    end
+
+    if BlastFortLevel.winScreen then BlastFortLevel.winScreen:update(dt) end
+    if BlastFortLevel.lostScreen then BlastFortLevel.lostScreen:update(dt) end
+
     return LevelEnum.Nothing
 end
 
@@ -166,7 +212,14 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
 
     love.graphics.push()
     local scale, fontScale, offsetX, offsetY, offsetXCameraMode, offsetYCameraMode = ResizeWindowTransform.getTransform(windowWidth, windowHeight, BASE_W, BASE_H)
-    love.graphics.translate(offsetX, offsetY)
+    
+    local shakeX, shakeY = 0, 0
+    if BlastFortLevel.shakeTime > 0 then
+        shakeX = (math.random() * 2 - 1) * BlastFortLevel.shakeMagnitude
+        shakeY = (math.random() * 2 - 1) * BlastFortLevel.shakeMagnitude
+    end
+    
+    love.graphics.translate(offsetX + shakeX * scale, offsetY + shakeY * scale)
     love.graphics.scale(scale, scale)
 
     BlastFortLevel.fortStatefulObject:draw(0, 0)
@@ -178,6 +231,9 @@ function BlastFortLevel:draw(windowWidth, windowHeight)
     BlastFortLevel.cannonBall:draw()
     BlastFortLevel.world:draw()
     love.graphics.pop()
+    
+    if BlastFortLevel.winScreen then BlastFortLevel.winScreen:draw(scale, fontScale, offsetX, offsetY) end
+    if BlastFortLevel.lostScreen then BlastFortLevel.lostScreen:draw(scale, fontScale, offsetX, offsetY) end
 end
 
 function BlastFortLevel:unload()
