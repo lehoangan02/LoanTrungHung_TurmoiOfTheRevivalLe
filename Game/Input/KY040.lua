@@ -31,4 +31,10 @@ function KY040:isEventPressed(eventName)
     return self.state[eventName] or false
 end
 
+function KY040:close()
+    if self.udp then
+        self.udp:close()
+    end
+end
+
 return KY040

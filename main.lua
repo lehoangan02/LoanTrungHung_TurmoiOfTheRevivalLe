@@ -32,6 +32,13 @@ function love.draw()
     love.graphics.pop()
 end
 
+function love.quit()
+    local KY040 = require("Game.Input.KY040")
+    if KY040.close then
+        KY040:close()
+    end
+end
+
 -- function love.load()
 --     love.physics.setMeter(64)
 
