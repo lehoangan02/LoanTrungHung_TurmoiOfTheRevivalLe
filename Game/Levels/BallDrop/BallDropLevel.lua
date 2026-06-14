@@ -424,8 +424,6 @@ function BallDropLevel:draw(windowWidth, windowHeight)
         if BallDropLevel.ball.ballY < BallDropLevel.successY + 100 then
             BallDropLevel.ball:draw()
         end
-        BallDropLevel.blocker:draw()
-        BallDropLevel.lever1:draw()
         local spikeBlockX, spikeBlockY = BallDropLevel.spikeBlockCollider:getPosition()
         love.graphics.draw(
             BallDropLevel.spikeBlockImage,
@@ -434,10 +432,10 @@ function BallDropLevel:draw(windowWidth, windowHeight)
             1, 1,
             BallDropLevel.spikeBlockImage:getWidth() / 2, BallDropLevel.spikeBlockImage:getHeight() / 2
         )
-        love.graphics.setColor(1, 0, 0, 1)
-            -- Debug: draw a red circle at the spike block's initial position
-            -- love.graphics.circle("fill", BallDropLevel.spikeBlockInitPosition.x, BallDropLevel.spikeBlockInitPosition.y, 5)
         love.graphics.setColor(1, 1, 1, 1)
+
+        BallDropLevel.lever1:draw()
+        BallDropLevel.blocker:draw()
     BallDropLevel.cam:detach()
 
     love.graphics.push()
