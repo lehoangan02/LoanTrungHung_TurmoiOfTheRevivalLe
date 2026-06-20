@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="introduction">introduction</h1>
+<h2 id="why-breezefield">why breezefield?</h2>
+<p>The love physics library is very flexible, but doing relatively
+simple things with it can be tedious. A good solution is the <a
+href="https://github.com/adnzzzzZ/windfield">windfield</a> library, but
+a few things didn't quite sit right for me.</p>
+<p>I've used windfield for a few practice projects, and I liked it very
+much. It makes protoyping faster, and massively reduces the time and
+mental effort spent putting together all the pieces of love.physics. so
+far however, I've encountered the occaisional issue that was tricky to
+track down due to (in particular) the collision-management system in
+place in windfield. When I needed to modify parts of it to my purposes,
+I found its size and complexity made it take a little longer than it
+could have with a simpler library.</p>
+<p>Breezefield is a lightweight alternative that takes the parts that I
+liked best about windfield and leaves out what I felt held it back.</p>
+<h1 id="functionality">functionality</h1>
+<h2 id="easily-create-physics-objects-body-shape-fixture">easily create
+physics objects (body + shape + fixture)</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">world</span><span class="op">:</span>newCollider<span class="op">(&lt;</span><span class="va">shape_type</span><span class="op">&gt;,</span> <span class="op">&lt;</span><span class="va">shape_args</span><span class="op">&gt;,</span> <span class="op">&lt;</span><span class="va">table_to_use</span><span class="op">&gt;(</span><span class="va">optional</span><span class="op">))</span></span></code></pre></div>
+<h2 id="query-rectangle-circle-edge-or-polygon-areas">query rectangle,
+circle, edge, or polygon areas</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">world</span><span class="op">:</span>queryRectangleArea<span class="op">(</span><span class="va">x1</span><span class="op">,</span> <span class="va">y1</span><span class="op">,</span> <span class="va">x2</span><span class="op">,</span> <span class="va">y2</span><span class="op">)</span></span></code></pre></div>
+<h2
+id="love.physics.object-methods-mapped-to-breezefield-objects">love.physics.&lt;object&gt;
+methods mapped to breezefield objects</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">Collider</span><span class="op">:&lt;</span><span class="va">methodname</span><span class="op">&gt;</span> <span class="op">(</span><span class="va">e</span><span class="op">.</span><span class="va">g</span><span class="op">.</span> <span class="va">get</span><span class="op">/</span><span class="va">setRestitution</span><span class="op">,</span> <span class="va">get</span><span class="op">/</span><span class="va">setX</span><span class="op">,</span> <span class="va">etc</span><span class="op">...)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">World</span><span class="op">:&lt;</span><span class="va">methodname</span><span class="op">&gt;</span> <span class="op">(</span><span class="va">e</span><span class="op">.</span><span class="va">g</span><span class="op">.</span> <span class="va">update</span><span class="op">)</span></span></code></pre></div>
+<p>So you can make a collider move rightwards with</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">collider</span><span class="op">:</span>setLinearVelocity<span class="op">(</span><span class="dv">100</span><span class="op">,</span> <span class="dv">0</span><span class="op">)</span></span></code></pre></div>
+<h2 id="collision-handling">Collision handling</h2>
+<p>You can set collision events for a Collider by overwriting some
+methods:</p>
+<ul>
+<li>`:enter(other, collision) called on each collider when two colliders
+come into contact</li>
+<li>`:exit(other, collision) called on each collider when two colliders
+cease to be in contact</li>
+<li>`:preSolve(other, collision)` called on each collider before their
+collision(e.g. bounce) has been resolved</li>
+<li>`:postSolve(other, collision, normalimpulse, tangentimpulse)` called
+on each collider after their collision has been resolved</li>
+</ul>
+<p>The collision argument to each will be the `love.physics.Contact` (<a
+href="https://love2d.org/wiki/Contact">https://love2d.org/wiki/Contact</a>)
+object associated with the collision. A handy trick to prevent colliders
+from colliding with each other is to do `collision:setEnabled(False)`
+inside the preSolve method. You may notice that these correspond to the
+four callbacks in <a
+href="https://love2d.org/wiki/Tutorial:PhysicsCollisionCallbacks">https://love2d.org/wiki/Tutorial:PhysicsCollisionCallbacks</a>
+.</p>
+<p>If you wish to handle collisions differently, you can also just
+overwrite those callbacks with `world:setCallbacks`</p>
+<h2 id="draw-physics-objects-with-one-command">draw physics objects with
+one command</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">world</span><span class="op">:</span>draw<span class="op">()</span></span></code></pre></div>
+<h3 id="can-be-repurposed-to-draw-in-game-shapessprites">can be
+repurposed to draw in-game shapes/sprites!</h3>
+<p>Just redefine :draw on your collider objects, add other objects with
+:draw methods to world.colliders.</p>
+<p>Call world:draw(&lt;alpha&gt;, true) to draw physics boundaries in
+addition to self-defined :draw methods</p>
+<p>You can ensure some colliders are drawn over others with
+`Collider:setDrawOrder(number)`. Colliders with higher draw orders will
+be drawn over those with smaller draw orders. The default is 0, and the
+draw order can be negative.</p>
+<h2
+id="access-to-love.physics-objects-if-you-have-something-more-creative-in-mind">access
+to love.physics objects if you have something more creative in mind</h2>
+<p>World.<sub>physworld</sub> contains the regular love.physics.world
+object. Collider.fixture, Collider.body, Collider.shape all contain the
+respective physics objects</p>
+<h3 id="please-let-me-know-if-there-are-any-issues">please let me know
+if there are any issues</h3>
+<p>if there are any issues in breezefields implementation that
+complicates using love.physics together with it, let me know, or better
+yet, send a pull request</p>
+<h1 id="installation">Installation</h1>
+<p>I reccomend you ensure you understand love.physics, as breezefield
+mostly just wraps that. You can start <a
+href="https://love2d.org/wiki/Tutorial:Physics">here</a>. To install
+simply clone or download the repository and place breezefield anywhere
+in your lua path or in your project directory.</p>
+<h1 id="exampletutorial">example/tutorial</h1>
+<h2 id="basics">Basics</h2>
+<h3 id="setting-up-a-basic-world">setting up a basic world</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">bf</span> <span class="op">=</span> <span class="fu">require</span><span class="op">(</span><span class="st">&quot;breezefield&quot;</span><span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">love</span><span class="op">.</span>load<span class="op">()</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="va">world</span> <span class="op">=</span> <span class="va">bf</span><span class="op">.</span>newWorld<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">90.81</span><span class="op">,</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>   <span class="co">-- bf.World:new also works</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   <span class="co">-- any function of love.physics.world should work on World</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">print</span><span class="op">(</span><span class="va">world</span><span class="op">:</span>getGravity<span class="op">())</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>   <span class="va">ground</span> <span class="op">=</span> <span class="va">bf</span><span class="op">.</span><span class="va">Collider</span><span class="op">.</span>new<span class="op">(</span><span class="va">world</span><span class="op">,</span> <span class="st">&quot;Polygon&quot;</span><span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                    <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">550</span><span class="op">,</span> <span class="dv">650</span><span class="op">,</span> <span class="dv">550</span> <span class="op">,</span> <span class="dv">650</span><span class="op">,</span> <span class="dv">650</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">650</span><span class="op">})</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>   <span class="va">ground</span><span class="op">:</span>setType<span class="op">(</span><span class="st">&quot;static&quot;</span><span class="op">)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>   <span class="va">ball</span> <span class="op">=</span> <span class="va">bf</span><span class="op">.</span><span class="va">Collider</span><span class="op">.</span>new<span class="op">(</span><span class="va">world</span><span class="op">,</span> <span class="st">&quot;Circle&quot;</span><span class="op">,</span> <span class="dv">325</span><span class="op">,</span> <span class="dv">325</span><span class="op">,</span> <span class="dv">20</span><span class="op">)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>   <span class="va">ball</span><span class="op">:</span>setRestitution<span class="op">(</span><span class="dv">0.8</span><span class="op">)</span> <span class="co">-- any function of shape/body/fixture works</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>   <span class="va">block1</span> <span class="op">=</span> <span class="va">bf</span><span class="op">.</span><span class="va">Collider</span><span class="op">.</span>new<span class="op">(</span><span class="va">world</span><span class="op">,</span> <span class="st">&quot;Polygon&quot;</span><span class="op">,</span> <span class="op">{</span><span class="dv">150</span><span class="op">,</span> <span class="dv">375</span><span class="op">,</span> <span class="dv">250</span><span class="op">,</span> <span class="dv">375</span><span class="op">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                           <span class="dv">250</span><span class="op">,</span> <span class="dv">425</span><span class="op">,</span> <span class="dv">150</span><span class="op">,</span> <span class="dv">425</span><span class="op">})</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<h3 id="forces-movement-and-control">forces, movement and control</h3>
+<p>any functions for shape, body, or fixture work on Colliders</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">love</span><span class="op">.</span>update<span class="op">(</span><span class="va">dt</span><span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   <span class="va">world</span><span class="op">:</span>update<span class="op">(</span><span class="va">dt</span><span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> <span class="va">love</span><span class="op">.</span><span class="va">keyboard</span><span class="op">.</span>isDown<span class="op">(</span><span class="st">&quot;right&quot;</span><span class="op">)</span> <span class="cf">then</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">ball</span><span class="op">:</span>applyForce<span class="op">(</span><span class="dv">400</span><span class="op">,</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elseif</span> <span class="va">love</span><span class="op">.</span><span class="va">keyboard</span><span class="op">.</span>isDown<span class="op">(</span><span class="st">&quot;left&quot;</span><span class="op">)</span> <span class="cf">then</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">ball</span><span class="op">:</span>applyForce<span class="op">(-</span><span class="dv">400</span><span class="op">,</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elseif</span> <span class="va">love</span><span class="op">.</span><span class="va">keyboard</span><span class="op">.</span>isDown<span class="op">(</span><span class="st">&quot;up&quot;</span><span class="op">)</span> <span class="cf">then</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">ball</span><span class="op">:</span>setPosition<span class="op">(</span><span class="dv">325</span><span class="op">,</span> <span class="dv">325</span><span class="op">)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">ball</span><span class="op">:</span>setLinearVelocity<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">)</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elseif</span> <span class="va">love</span><span class="op">.</span><span class="va">keyboard</span><span class="op">.</span>isDown<span class="op">(</span><span class="st">&quot;down&quot;</span><span class="op">)</span> <span class="cf">then</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>     <span class="va">ball</span><span class="op">:</span>applyForce<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">600</span><span class="op">)</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span></code></pre></div>
+<h3 id="easily-draw-physics">easily draw physics</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">love</span><span class="op">.</span>draw<span class="op">()</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   <span class="va">world</span><span class="op">:</span>draw<span class="op">()</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<h2 id="call-functions-on-collision">call functions on collision</h2>
+<p>default collision callbacks of World will locate the colliders from a
+fixture's userData and call the relevant :enter :exit :postSolve or
+:preSolve method</p>
+<p>pre: make that function and object to play with</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">little_ball</span> <span class="op">=</span> <span class="op">{}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">little_ball</span><span class="op">.</span><span class="va">__index</span> <span class="op">=</span> <span class="va">little_ball</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setmetatable</span><span class="op">(</span><span class="va">little_ball</span><span class="op">,</span> <span class="va">bf</span><span class="op">.</span><span class="va">Collider</span><span class="op">)</span> <span class="co">-- this is important</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- otherwise setting the new object&#39;s metatable to little_ball overwrites</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> spawn_random_ball<span class="op">()</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>   <span class="va">little_ball</span><span class="op">.</span>new<span class="op">(</span><span class="va">love</span><span class="op">.</span><span class="va">math</span><span class="op">.</span>random<span class="op">(</span><span class="va">love</span><span class="op">.</span><span class="va">graphics</span><span class="op">.</span>getWidth<span class="op">()),</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">little_ball</span><span class="op">.</span>new<span class="op">(</span><span class="va">x</span><span class="op">,</span> <span class="va">y</span><span class="op">)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>   <span class="kw">local</span> <span class="va">n</span> <span class="op">=</span> <span class="va">bf</span><span class="op">.</span><span class="va">Collider</span><span class="op">.</span>new<span class="op">(</span><span class="va">world</span><span class="op">,</span> <span class="st">&#39;Circle&#39;</span><span class="op">,</span> <span class="va">x</span><span class="op">,</span> <span class="va">y</span><span class="op">,</span> <span class="dv">5</span><span class="op">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">setmetatable</span><span class="op">(</span><span class="va">n</span><span class="op">,</span> <span class="va">little_ball</span><span class="op">)</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="va">n</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span></code></pre></div>
+<h3 id="define-collision-function">define collision function</h3>
+<p>one feature is that any function callbacks returned by
+Collider:enter/exit/&lt;post/pre&gt;Solve are run in world:update() this
+lets us easily create and destroy objects in collision callbacks without
+crashing Box2D (love.physics's backend)</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">ball</span><span class="op">:</span>postSolve<span class="op">(</span><span class="va">other</span><span class="op">)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> <span class="va">other</span> <span class="op">==</span> <span class="va">block1</span> <span class="cf">then</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- creating Collder.new should never be called inside a callback</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- a limitation of (box2d)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- instead, return a function to be called during World:update()</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">spawn_random_ball</span> <span class="co">-- see above for definition</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span></code></pre></div>
+<h2 id="change-appearance-of-physics-objects">change appearance of
+physics objects</h2>
+<p>simply define the :draw function on your collider (you can still
+access the default draw as :_<sub>draw</sub>__)</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">little_ball</span><span class="op">:</span>draw<span class="op">(</span><span class="va">alpha</span><span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   <span class="va">love</span><span class="op">.</span><span class="va">graphics</span><span class="op">.</span>setColor<span class="op">(</span><span class="dv">0.9</span><span class="op">,</span> <span class="dv">0.9</span><span class="op">,</span> <span class="dv">0.0</span><span class="op">)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   <span class="va">love</span><span class="op">.</span><span class="va">graphics</span><span class="op">.</span>circle<span class="op">(</span><span class="st">&#39;fill&#39;</span><span class="op">,</span> <span class="va">self</span><span class="op">:</span>getX<span class="op">(),</span> <span class="va">self</span><span class="op">:</span>getY<span class="op">(),</span> <span class="va">self</span><span class="op">:</span>getRadius<span class="op">())</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<h2
+id="query-the-world-supports-rectangle-circle-polygon-and-edge">query
+the world (supports rectangle, circle, polygon and edge)</h2>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">love</span><span class="op">.</span>mousepressed<span class="op">()</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>   <span class="kw">local</span> <span class="va">x</span><span class="op">,</span> <span class="va">y</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   <span class="kw">local</span> <span class="va">radius</span> <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   <span class="va">x</span><span class="op">,</span> <span class="va">y</span> <span class="op">=</span> <span class="va">love</span><span class="op">.</span><span class="va">mouse</span><span class="op">.</span>getPosition<span class="op">()</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>   <span class="kw">local</span> <span class="va">colls</span> <span class="op">=</span> <span class="va">world</span><span class="op">:</span>queryCircleArea<span class="op">(</span><span class="va">x</span><span class="op">,</span> <span class="va">y</span><span class="op">,</span> <span class="va">radius</span><span class="op">)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> <span class="cn">_</span><span class="op">,</span> <span class="va">collider</span> <span class="kw">in</span> <span class="fu">ipairs</span><span class="op">(</span><span class="va">colls</span><span class="op">)</span> <span class="cf">do</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="va">collider</span><span class="op">.</span><span class="va">identity</span> <span class="op">==</span> <span class="va">little_ball</span> <span class="cf">then</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>     <span class="kw">local</span> <span class="va">dx</span> <span class="op">=</span> <span class="va">love</span><span class="op">.</span><span class="va">mouse</span><span class="op">.</span>getX<span class="op">()</span> <span class="op">-</span> <span class="va">collider</span><span class="op">:</span>getX<span class="op">()</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>     <span class="kw">local</span> <span class="va">dy</span> <span class="op">=</span> <span class="va">love</span><span class="op">.</span><span class="va">mouse</span><span class="op">.</span>getY<span class="op">()</span> <span class="op">-</span> <span class="va">collider</span><span class="op">:</span>getY<span class="op">()</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>     <span class="kw">local</span> <span class="va">power</span> <span class="op">=</span> <span class="op">-</span><span class="dv">5</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>     <span class="va">collider</span><span class="op">:</span>applyLinearImpulse<span class="op">(</span><span class="va">power</span> <span class="op">*</span> <span class="va">dx</span><span class="op">,</span> <span class="va">power</span> <span class="op">*</span> <span class="va">dy</span><span class="op">)</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="cf">end</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>and after little<sub>ball</sub>'s declaration</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="va">little_ball</span><span class="op">.</span><span class="va">identity</span> <span class="op">=</span> <span class="va">little_ball</span></span></code></pre></div>
+<h2 id="define-some-form-of-collision-filtering"><span
+class="todo TODO">TODO</span> define some form of collision
+filtering</h2>
+<p>for now, see: <a
+href="https://love2d.org/wiki/Contact:setEnabled">https://love2d.org/wiki/Contact:setEnabled</a>
+<a
+href="https://love2d.org/wiki/Fixture:setFilterData">https://love2d.org/wiki/Fixture:setFilterData</a></p>
+<h1 id="links">links</h1>
+<h2 id="forum">forum</h2>
+<p><a
+href="https://love2d.org/forums/viewtopic.php?f=5&amp;t=86113&amp;p=224718#p224718">forum</a></p>
+</body>
+</html>
